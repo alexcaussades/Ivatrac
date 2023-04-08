@@ -4,6 +4,7 @@ use App\Http\Controllers\AtcController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
+use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,7 @@ Route::get('/atc', function (AtcController $atcController) {
 });
 
 Route::get('/atc/add/{vid}', function (AtcController $atcController, Request $request) {
+    
     $request->merge([
         "vid" => $request->vid
     ]);
