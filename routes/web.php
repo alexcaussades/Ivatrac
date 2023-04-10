@@ -4,6 +4,7 @@ use App\Http\Controllers\AtcController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
+use App\Http\Controllers\DiscordNotfyController;
 use Illuminate\Support\Facades\Validator;
 
 /*
@@ -55,6 +56,11 @@ Route::get('/atc/add/{vid}', function (AtcController $atcController, Request $re
 
     return redirect("atc/view");
 });
+
+Route::get('discord', function (DiscordNotfyController $discordNotfyController) {
+    return $discordNotfyController->PostNotify2();
+});
+    
 
 Route::get('/atc/view', function (AtcController $atcController) {
     $essais_bdd = \App\Models\Essais::all(["id", "name"]);
