@@ -53,11 +53,11 @@ Route::get('/atc/add/{vid}', function (AtcController $atcController, Request $re
     $essais_bdd->name = $request->vid;
     $essais_bdd->save();
 
-    return $essais_bdd;
+    return redirect("atc/view");
 });
 
 Route::get('/atc/view', function (AtcController $atcController) {
-    $essais_bdd = \App\Models\Essais::all();
+    $essais_bdd = \App\Models\Essais::all(["id", "name"]);
     return $essais_bdd;
 })->name("atc.view");
 
