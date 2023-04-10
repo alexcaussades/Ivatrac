@@ -48,7 +48,28 @@ Route::get('/atc/add/{vid}', function (AtcController $atcController, Request $re
     $request->merge([
         "vid" => $request->vid
     ]);
-    return $atcController->add($request);
+    
+    $essais_bdd = new \App\Models\Essais();
+    $essais_bdd->name = $request->vid;
+    $essais_bdd->save();
+
+    return $essais_bdd;
+});
+
+Route::get('/atc/view', function (AtcController $atcController) {
+    $essais_bdd = \App\Models\Essais::all();
+    return $essais_bdd;
+})->name("atc.view");
+
+Route::get('/atc/view/{id}', function (AtcController $atcController, Request $request) {
+    $essais_bdd = \App\Models\Essais::find($request->id);
+    return $essais_bdd;
+});
+
+Route::get('/atc/delect/{id}', function(AtcController $atcController, Request $request) {
+    $essais_bdd = \App\Models\Essais::find($request->id);
+    $essais_bdd->delete();
+    return redirect("atc/view");
 });
 
 Route::prefix("auth/")->group(function () {
