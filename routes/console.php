@@ -38,6 +38,4 @@ Artisan::command('cache:gen', function () {
     $this->call('cache:clear-all');
 })->purpose('Total cache generation');
 
-Artisan::Command('serv:run', function () {
-    $this->call('serve');
-})->purpose('Run the server');
+

@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Validator;
 
 Route::get('/welcome', function () {
     return view('welcome');
-});
+})->name("welcome");
 
 Route::get('/', function (Request $request) {
     $auth = "";
@@ -40,42 +40,45 @@ Route::get('/', function (Request $request) {
     ];
 })->where('client', '[0-9]+');
 
-Route::get('/atc', function (AtcController $atcController) {
-    return $atcController->new();
-});
-
-Route::get('/atc/add/{vid}', function (AtcController $atcController, Request $request) {
-    
-    $request->merge([
-        "vid" => $request->vid
-    ]);
-    
-    $essais_bdd = new \App\Models\Essais();
-    $essais_bdd->name = $request->vid;
-    $essais_bdd->save();
-
-    return redirect("atc/view");
-});
 
 Route::get('discord', function (DiscordNotfyController $discordNotfyController) {
-    return $discordNotfyController->PostNotify2();
+    $discordNotfyController->PostNotify2();
+    return redirect()->route("welcome");
 });
+
+
+Route::prefix("atc/")->group(function () {
+    Route::get('/', function (AtcController $atcController) {
+        return $atcController->new();
+    });
+
+    Route::get('add/{vid}', function (AtcController $atcController, Request $request) {
+
+        $request->merge([
+            "vid" => $request->vid
+        ]);
+
+        $essais_bdd = new \App\Models\Essais();
+        $essais_bdd->name = $request->vid;
+        $essais_bdd->save();
+
+        return redirect("atc/view");
+    });
+
+    Route::get('view/{id}', function (AtcController $atcController, Request $request) {
+        $essais_bdd = \App\Models\Essais::find($request->id);
+        return $essais_bdd;
+    });
+    Route::get('view', function (AtcController $atcController) {
+        $essais_bdd = \App\Models\Essais::all(["id", "name"]);
+        return $essais_bdd;
+    })->name("atc.view");
+    Route::get('delect/{id}', function (AtcController $atcController, Request $request) {
+        $essais_bdd = \App\Models\Essais::find($request->id);
+        $essais_bdd->delete();
+        return redirect()->route("atc.view");
+    });
     
-
-Route::get('/atc/view', function (AtcController $atcController) {
-    $essais_bdd = \App\Models\Essais::all(["id", "name"]);
-    return $essais_bdd;
-})->name("atc.view");
-
-Route::get('/atc/view/{id}', function (AtcController $atcController, Request $request) {
-    $essais_bdd = \App\Models\Essais::find($request->id);
-    return $essais_bdd;
-});
-
-Route::get('/atc/delect/{id}', function(AtcController $atcController, Request $request) {
-    $essais_bdd = \App\Models\Essais::find($request->id);
-    $essais_bdd->delete();
-    return redirect("atc/view");
 });
 
 Route::prefix("auth/")->group(function () {
