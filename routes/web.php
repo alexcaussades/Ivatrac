@@ -87,4 +87,7 @@ Route::prefix("auth/")->group(function () {
         return $creatAuhUniqueUsersController->verifid($request);
     });
     Route::get("delete", [CreatAuhUniqueUsersController::class, "deleteUID"]);
+    Route::get("login", function(){
+        return view("auth.login");
+    });
 });
