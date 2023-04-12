@@ -89,5 +89,24 @@ Route::prefix("auth/")->group(function () {
     Route::get("delete", [CreatAuhUniqueUsersController::class, "deleteUID"]);
     Route::get("login", function(){
         return view("auth.login");
+    })->name("auth.login");
+    
+    Route::post("login", function(Request $request){
+        $validator = Validator::make($request->all(), [
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'password' => ['required', 'string', 'min:8'],
+        ]);
+        if ($validator->fails()) {
+            return redirect()->route("auth.login")
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        
+
+        return redirect()->route("auth.login");
     });
+
+    Route::get("register", function(){
+        return view("auth.register");
+    })->name("auth.register");
 });

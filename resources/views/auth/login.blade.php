@@ -5,11 +5,11 @@
 @section('content')
 
 <div class="container">
-    <h1> Login The Internet </h1>
+    <h1> Login The Intranet </h1>
 
     <div class="row">
     <div class="col-sm">
-        <form action="" method="POST">
+        <form action="{{ route("auth.login") }}" method="POST">
             @csrf
             <div class="form-group">
                 <label for="email">Email</label>
