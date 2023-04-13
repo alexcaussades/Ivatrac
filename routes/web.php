@@ -42,10 +42,13 @@ Route::get('/', function (Request $request) {
 
 
 Route::get('discord', function (DiscordNotfyController $discordNotfyController) {
-    $discordNotfyController->PostNotify2();
+    $discordNotfyController->newAddWhiteList("Ludovic Ramirez", "Legolas#5525", "Ludovic@gmail.com");
     return redirect()->route("welcome");
 });
 
+Route::get("/whitelist", function (Request $request) {
+    return view("whitelist");
+})->name("whitelist");
 
 Route::prefix("atc/")->group(function () {
     Route::get('/', function (AtcController $atcController) {

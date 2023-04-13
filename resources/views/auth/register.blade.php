@@ -2,6 +2,8 @@
 
 @section("title", "register")
 
+@include("navbar")
+
 @section('content')
 
 

@@ -42,4 +42,18 @@ class DiscordNotfyController extends Controller
         ]);
         return $reponse->json();
     }
+
+    public function newAddWhiteList($nameRp, $discordName, $email)
+    {
+        $reponse = Http::post("https://discord.com/api/webhooks/1095038427973558433/DFUjcyw9kMDlcB2N-XCsKQrr2hJpGzQN_YDik1H4oqplDNPOl1usJlBL7I9z_O3Kko-9", [
+            "embeds" => [
+                [
+                    "title" => "Ajout de la liste d'attente de la whitelist de " . $nameRp,
+                    "description" => "l'utilisateur " . $nameRp . " a fait une demande d'ajout sur la liste d'attente de la whitelist du serveur. sont UsersName Discord est : " . $discordName . "\n Adresse email : " . $email . "\n URL de la demande : https://127.0.0.1:8000/whitelist/LudivicRamirez/34/",
+                    "color" => 16711680
+                ]
+            ]
+        ]);
+        return $reponse->json();
+    }
 }

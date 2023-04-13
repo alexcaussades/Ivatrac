@@ -1,6 +1,8 @@
 @extends("base")
 
-@section("title", "welcome")
+@section("title", "Connect to the Intranet")
+
+@include("navbar")
 
 @section('content')
 
@@ -32,9 +34,9 @@
     <div class="col-sm mt-3">
 
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        <a href="{{ route('auth.register') }}"> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
             Register
-        </button>
+        </button></a>
 
     </div>
     </div>
