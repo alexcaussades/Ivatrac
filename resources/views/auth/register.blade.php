@@ -11,7 +11,7 @@
 
     <h1>Enregistrement</h1>
 
-    <form action="{{ route("auth.register") }}" method="POST">
+    <form action="#" method="POST">
         @csrf
         <div class="form-group mt-2">
             <label for="name">Name RP</label>
@@ -20,7 +20,7 @@
         </div>
         <div class="form-group mt-2">
             <label for="name">Discord Name</label>
-            <input type="text" name="discord" id="discord" class="form-control" placeholder="username#5525" aria-describedby="helpId">
+            <input type="text" name="discordusers" id="discord" class="form-control" placeholder="username#5525" aria-describedby="helpId">
             
         </div>
         <div class="form-group mt-2">
@@ -41,14 +41,14 @@
 
         <div class="form-check mt-2">
           <label class="form-check-label">
-            <input type="checkbox" class="form-check-input" name="ages" id="" value="checkedValue">
+            <input type="checkbox" class="form-check-input" name="ages" id="" value="age">
             J'ai plus de 16 ans
           </label>
         </div>
 
         <div class="form-check mt-2">
           <label class="form-check-label">
-            <input type="checkbox" class="form-check-input" name="condition" id="" value="checkedValue">
+            <input type="checkbox" class="form-check-input" name="condition" id="" value="cgu">
             J'accepte les conditions d'utilisation <a href="#">ici</a>
           </label>
         </div>

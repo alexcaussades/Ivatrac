@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
 use App\Http\Controllers\DiscordNotfyController;
+use App\Http\Requests\registerValidationRequest;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 
 /*
@@ -81,7 +83,6 @@ Route::prefix("atc/")->group(function () {
         $essais_bdd->delete();
         return redirect()->route("atc.view");
     });
-    
 });
 
 Route::prefix("auth/")->group(function () {
@@ -90,26 +91,42 @@ Route::prefix("auth/")->group(function () {
         return $creatAuhUniqueUsersController->verifid($request);
     });
     Route::get("delete", [CreatAuhUniqueUsersController::class, "deleteUID"]);
-    Route::get("login", function(){
+    Route::get("login", function () {
         return view("auth.login");
     })->name("auth.login");
-    
-    Route::post("login", function(Request $request){
+
+    Route::post("login", function (Request $request) {
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
         ]);
         if ($validator->fails()) {
             return redirect()->route("auth.login")
-                        ->withErrors($validator)
-                        ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
-        
+
 
         return redirect()->route("auth.login");
     });
 
-    Route::get("register", function(){
+    Route::get("register", function () {
+
         return view("auth.register");
     })->name("auth.register");
+
+    Route::post("register", function (registerValidationRequest $request) {
+        if ($request->password == $request->password_confirmation) {
+            if ($request->condition == "true") {
+                $user = new \App\Models\User();
+                $user->name = $request->name_rp;
+                $user->email = $request->email;
+                //$user->discordusers = $request->discordusers;
+                $user->password = bcrypt($request->password);
+                //$user->save();
+                return redirect()->route("auth.login");
+            }
+        }
+        return view("auth.login");
+    });
 });
