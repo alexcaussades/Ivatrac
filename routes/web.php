@@ -5,9 +5,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
 use App\Http\Controllers\DiscordNotfyController;
+use App\Http\Controllers\RolesController;
+use App\Http\Controllers\usersController;
 use App\Http\Requests\registerValidationRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
+use PhpParser\Node\Stmt\While_;
 
 /*
 |--------------------------------------------------------------------------
@@ -116,17 +119,74 @@ Route::prefix("auth/")->group(function () {
     })->name("auth.register");
 
     Route::post("register", function (registerValidationRequest $request) {
+        dd($request->all());
         if ($request->password == $request->password_confirmation) {
             if ($request->condition == "true") {
-                $user = new \App\Models\User();
+                $user = new \App\Models\Users();
                 $user->name = $request->name_rp;
                 $user->email = $request->email;
                 //$user->discordusers = $request->discordusers;
                 $user->password = bcrypt($request->password);
                 //$user->save();
+                dd($user);
                 return redirect()->route("auth.login");
             }
         }
         return view("auth.login");
     });
+});
+
+
+Route::prefix("install/")->group(function () {
+    Route::get("roles", function (RolesController $rolesController) {   
+        $rolesController->create("register", "en attente de validation de sont compte");
+        $rolesController->create("user", "utilisateur sans whitelist");
+        $rolesController->create("whitelist", "utilisateur avec whitelist");
+        $rolesController->create("moderator_groupe_whitelist", "moderateur de sont groupe de whitelist");
+        $rolesController->create("administrateur_groupe_whitelist", "administrateur de sont groupe de la whitelist");
+        $rolesController->create("moderator_whitelist", "moderateur de la whitelist");
+        $rolesController->create("administrateur_whitelist", "administrateur de la whitelist");
+        $rolesController->create("staff", "Staff de la whitelist");
+        $rolesController->create("administrateur", "administrateur du site");
+        $rolesController->create("super_administrateur", "super administrateur du site");
+        $roles_get = \App\Models\Roles::all();
+        return  $roles_get;        
+    });
+
+    Route::get("roles/{id}", function (RolesController $rolesController, Request $request) {
+            $roles_get = \App\Models\Roles::find($request->id);
+            return  $roles_get;
+        
+    });
+
+    Route::get("/", function () {
+        return [
+            "roles" => "install/roles",
+            "users" => "install/users",
+            "whitelist" => "install/whitelist",
+            "discord" => "install/discord",
+            "atc" => "install/atc",
+            "auth" => "install/auth",
+        ];
+    });
+
+    Route::get("admin", function (usersController $users_websiteController, Request $request) {
+        $request->merge([
+            "name" => "Alexandre Caussades",
+            "email" => "alexcaussades@gmail.com",
+            "password" => "@L11022f1@",
+            "role" => "10",
+            "whitelist" => "1",
+            "discordusers" => "Legolas#5525",
+            "condition" => "1",
+            "age" => "1",
+            "discord" => "1",
+            "name_rp" => "Darius Lambert",
+        ]);
+        $users_websiteController->install_superadmin($request);
+        $users_websiteController = \App\Models\users::all();
+        return $users_websiteController;
+        
+    });
+
 });
