@@ -1,7 +1,7 @@
 <?php 
 
 use Illuminate\Support\Facades\DB;
-$users = DB::table('users')->where('id', session()->get("id"))->first() 
+
 ?>
 
 <!DOCTYPE html>
@@ -38,15 +38,9 @@ $users = DB::table('users')->where('id', session()->get("id"))->first()
             @endif
                 
             @if (session()->get("role") == "10")
+                @dump($users->name_rp)
+               <!-- recherche du nom en base de donnée -->
                 
-                <div class="container">
-                    <div class="alert alert-primary" role="alert">
-                        Welcome {{ session()->get("discord_users") }}
-                    </div>
-                </div>
-
-                <!-- recherche du nom en base de donnée -->
-                {{ $users->name }}
                 
             @endif
                 

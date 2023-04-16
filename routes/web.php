@@ -1,17 +1,19 @@
 <?php
 
-use App\Http\Controllers\AtcController;
+
+use Illuminate\Support\Env;
 use Illuminate\Http\Request;
+use PhpParser\Node\Stmt\While_;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CreatAuhUniqueUsersController;
-use App\Http\Controllers\DiscordNotfyController;
+use App\Http\Controllers\AtcController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\usersController;
-use App\Http\Requests\registerValidationRequest;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
-use PhpParser\Node\Stmt\While_;
-use Illuminate\Support\Env;
+use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Controllers\DiscordNotfyController;
+use App\Http\Requests\registerValidationRequest;
+use App\Http\Controllers\CreatAuhUniqueUsersController;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +26,9 @@ use Illuminate\Support\Env;
 |
 */
 
-Route::get('/welcome', function () {
-    return view('welcome');
+Route::get('/welcome', function (usersController $usersController, Request $request, Session $session) {
+    $users = $usersController->get_info_user(session()->get("id"));
+    return view('welcome', ["users" => $users]);
 })->name("welcome");
 
 Route::get('/', function (Request $request) {
@@ -122,7 +125,7 @@ Route::prefix("auth/")->group(function () {
     })->name("auth.register");
 
     Route::post("register", function (registerValidationRequest $request) {
-        
+
         if ($request->password == $request->password_confirmation) {
             if ($request->condition == "1") {
 
@@ -136,7 +139,7 @@ Route::prefix("auth/")->group(function () {
                         ->withErrors($validator)
                         ->withInput();
                 }
-                
+
                 $usersController = new usersController();
                 $usersController->create($request);
                 return redirect()->route("auth.login");
@@ -152,6 +155,11 @@ Route::prefix("auth/")->group(function () {
         }
         return view("auth.login");
     });
+
+    Route::get("logout", function (usersController $usersController, Request $request) {
+        $usersController->logout($request);
+        return redirect()->route("auth.login");
+    })->name("auth.logout");
 });
 
 
@@ -203,5 +211,14 @@ Route::prefix("install/")->group(function () {
         $users_websiteController->install_superadmin($request);
         $users_websiteController = \App\Models\users::all();
         return $users_websiteController;
+    });
+});
+
+
+Route::prefix("serveur/")->group(function () {
+    Route::get("/", function (usersController $usersController) {
+        $users = $usersController->get_info_user(session()->get("id"));
+        $role = $usersController->get_role_user(session()->get("role"));
+        return view("serveur.index", ["users" => $users, "role" => $role]);
     });
 });

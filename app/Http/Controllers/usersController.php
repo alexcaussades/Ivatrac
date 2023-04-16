@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\roles;
 use App\Models\users;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class usersController extends Controller
 {
@@ -68,4 +70,22 @@ class usersController extends Controller
                 ->withInput();
         }
     }
+
+    public function logout(Request $request)
+    {
+        $request->session()->flush();
+    }
+
+    public function get_info_user()
+    {
+        $user = users::where("id", session()->get("id"))->first();
+        return $user;
+    }
+
+    public function get_role_user()
+    {
+        $roles = roles::where("id", session()->get("role"))->first();
+        return $roles;
+    }
+    
 }
