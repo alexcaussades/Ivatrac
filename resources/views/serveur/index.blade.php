@@ -6,6 +6,7 @@
 
 @section('content')
 
+
 <style>
     .card-text,
     status {
@@ -32,9 +33,18 @@
 
 <div class="container">
     <h1> Bienvenue {{ $users->name_rp }} </h1>
-    <form action="{{ Route("auth.logout") }}" method="get">
-        <button type="submit" class="btn btn-danger">Se déconnecter</button>
-    </form>
+
+    <div class="d-flex justify-content-start">
+        <form action="{{ Route("auth.logout") }}" method="get">
+            <button type="submit" class="btn btn-danger btn-sm">Se déconnecter</button>
+        </form>
+        <form action="#" method="get">
+            <button type="submit" class="ms-1 btn btn-primary btn-sm">Modifier</button>
+        </form>
+        <form action="#" method="get">
+            <button type="submit" class="ms-1 btn btn-dark btn-sm">Demande de supression</button>
+        </form>
+    </div>
 </div>
 
 <div class="container">
@@ -53,7 +63,7 @@
                         @elseif ($users->whiteList == 2)
                         <li><strong> Whitelist :</strong> <status-good>Accepté</status-good> </li>
                         @else
-                        <li><strong> Whitelist :</strong> <status-off> Pas de demande </status-off></li>
+                        <li><strong> Whitelist :</strong> <a href="#"><button type="submit" class="btn btn-success btn-sm">Je fais ma demande</button></a></li>
                         @endif
                         <li><strong> Discord :</strong> {{ $users->discord_users }} </li>
                     </ul>
@@ -80,5 +90,22 @@
                 </div>
             </div>
         </div>
+        <hr class="mt-2">
+        @if ($users->whiteList == 1)
+        <div class="container">
+            <h4 class="mt-2"> Crée votre Personnage </h4>
+
+            @include("serveur.creat_perso")
+        </div>
+        @endif
+
+        @if ($users->whiteList == 2)
+        <div class="container">
+            <h4 class="mt-2"> Votre Personnage </h4>
+        </div>
+        @endif
+
+
+
     </div>
     @endsection

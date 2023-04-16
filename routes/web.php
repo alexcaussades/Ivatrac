@@ -4,8 +4,10 @@
 use Illuminate\Support\Env;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\While_;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AtcController;
+use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
@@ -13,7 +15,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Controllers\DiscordNotfyController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
-use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,9 +115,7 @@ Route::prefix("auth/")->group(function () {
                 ->withErrors($validator)
                 ->withInput();
         }
-
-
-        return redirect()->route("welcome");
+        return redirect("serveur");
     });
 
     Route::get("register", function () {
@@ -217,8 +216,11 @@ Route::prefix("install/")->group(function () {
 
 Route::prefix("serveur/")->group(function () {
     Route::get("/", function (usersController $usersController) {
+        if(session()->get("id") == null){
+            return redirect("auth/login");
+        }
         $users = $usersController->get_info_user(session()->get("id"));
         $role = $usersController->get_role_user(session()->get("role"));
         return view("serveur.index", ["users" => $users, "role" => $role]);
-    });
+    })->name("serveur.index");
 });
