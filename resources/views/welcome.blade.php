@@ -1,3 +1,9 @@
+<?php 
+
+use Illuminate\Support\Facades\DB;
+$users = DB::table('users')->where('id', session()->get("id"))->first() 
+?>
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -31,7 +37,18 @@
                 </div>
             @endif
                 
-                    @dump($tt = "dsfsdfsd");
+            @if (session()->get("role") == "10")
+                
+                <div class="container">
+                    <div class="alert alert-primary" role="alert">
+                        Welcome {{ session()->get("discord_users") }}
+                    </div>
+                </div>
+
+                <!-- recherche du nom en base de donnée -->
+                {{ $users->name }}
+                
+            @endif
                 
             <div class="max-w-7xl mx-auto p-6 lg:p-8">
                 <div class="flex justify-center">

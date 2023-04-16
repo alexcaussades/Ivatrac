@@ -11,6 +11,7 @@ use App\Http\Requests\registerValidationRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Stmt\While_;
+use Illuminate\Support\Env;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,11 +99,13 @@ Route::prefix("auth/")->group(function () {
         return view("auth.login");
     })->name("auth.login");
 
-    Route::post("login", function (Request $request) {
+    Route::post("login", function (Request $request, usersController $usersController) {
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
         ]);
+        $usersController->login($request);
+
         if ($validator->fails()) {
             return redirect()->route("auth.login")
                 ->withErrors($validator)
@@ -110,7 +113,7 @@ Route::prefix("auth/")->group(function () {
         }
 
 
-        return redirect()->route("auth.login");
+        return redirect()->route("welcome");
     });
 
     Route::get("register", function () {
@@ -119,18 +122,33 @@ Route::prefix("auth/")->group(function () {
     })->name("auth.register");
 
     Route::post("register", function (registerValidationRequest $request) {
-        dd($request->all());
+        
         if ($request->password == $request->password_confirmation) {
-            if ($request->condition == "true") {
-                $user = new \App\Models\Users();
-                $user->name = $request->name_rp;
-                $user->email = $request->email;
-                //$user->discordusers = $request->discordusers;
-                $user->password = bcrypt($request->password);
-                //$user->save();
-                dd($user);
+            if ($request->condition == "1") {
+
+                $validator = Validator::make($request->all(), [
+                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                    'password' => ['required', 'string', 'min:8', 'confirmed'],
+                    'discordusers' => ['required', 'string', 'min:3', 'max:255', 'unique:users', 'regex:/^([a-zA-Z0-9]+)#([0-9]{4})$/'],
+                ]);
+                if ($validator->fails()) {
+                    return redirect()->route("auth.register")
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+                
+                $usersController = new usersController();
+                $usersController->create($request);
                 return redirect()->route("auth.login");
+            } else {
+                return redirect()->route("auth.register")
+                    ->withErrors("Vous devez accepter la CGU")
+                    ->withInput();
             }
+        } else {
+            return redirect()->route("auth.register")
+                ->withErrors("Les mots de passe ne sont pas identique !")
+                ->withInput();
         }
         return view("auth.login");
     });
@@ -138,7 +156,7 @@ Route::prefix("auth/")->group(function () {
 
 
 Route::prefix("install/")->group(function () {
-    Route::get("roles", function (RolesController $rolesController) {   
+    Route::get("roles", function (RolesController $rolesController) {
         $rolesController->create("register", "en attente de validation de sont compte");
         $rolesController->create("user", "utilisateur sans whitelist");
         $rolesController->create("whitelist", "utilisateur avec whitelist");
@@ -150,13 +168,12 @@ Route::prefix("install/")->group(function () {
         $rolesController->create("administrateur", "administrateur du site");
         $rolesController->create("super_administrateur", "super administrateur du site");
         $roles_get = \App\Models\Roles::all();
-        return  $roles_get;        
+        return  $roles_get;
     });
 
     Route::get("roles/{id}", function (RolesController $rolesController, Request $request) {
-            $roles_get = \App\Models\Roles::find($request->id);
-            return  $roles_get;
-        
+        $roles_get = \App\Models\Roles::find($request->id);
+        return  $roles_get;
     });
 
     Route::get("/", function () {
@@ -174,7 +191,7 @@ Route::prefix("install/")->group(function () {
         $request->merge([
             "name" => "Alexandre Caussades",
             "email" => "alexcaussades@gmail.com",
-            "password" => "@L11022f1@",
+            "password" => Env("MY_PASS_APP"),
             "role" => "10",
             "whitelist" => "1",
             "discordusers" => "Legolas#5525",
@@ -186,7 +203,5 @@ Route::prefix("install/")->group(function () {
         $users_websiteController->install_superadmin($request);
         $users_websiteController = \App\Models\users::all();
         return $users_websiteController;
-        
     });
-
 });
