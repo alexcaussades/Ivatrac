@@ -15,6 +15,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Controllers\DiscordNotfyController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
+use App\Http\Controllers\whitelistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -215,12 +216,13 @@ Route::prefix("install/")->group(function () {
 
 
 Route::prefix("serveur/")->group(function () {
-    Route::get("/", function (usersController $usersController) {
+    Route::get("/", function (usersController $usersController, whitelistController $whitelistController) {
         if(session()->get("id") == null){
             return redirect("auth/login");
         }
         $users = $usersController->get_info_user(session()->get("id"));
         $role = $usersController->get_role_user(session()->get("role"));
+        //$whitelist = $whitelistController->linkUser(session()->get("id"));
         return view("serveur.index", ["users" => $users, "role" => $role]);
     })->name("serveur.index");
 });

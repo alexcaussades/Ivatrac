@@ -60,7 +60,7 @@
                         <li><strong> Whitelist :</strong>
                             <status>En attente</status>
                         </li>
-                        @elseif ($users->whiteList == 2)
+                        @elseif ($users->whiteList == 3)
                         <li><strong> Whitelist :</strong> <status-good>Accepté</status-good> </li>
                         @else
                         <li><strong> Whitelist :</strong> <a href="#"><button type="submit" class="btn btn-success btn-sm">Je fais ma demande</button></a></li>
@@ -79,12 +79,7 @@
                     <p class="card-text">
                     <ul>
                         <li> <strong>Role :</strong> {{ $role->name }} </li>
-                        @if ($users->age == 1)
-                        <li> <strong>Age :</strong> <status-good>Check condition</status-good> </li>
-                        @endif
-                        @if ($users->condition == 1)
-                        <li> <strong>Condition :</strong> <status-good>Check condition</status-good> </li>
-                        @endif
+                        <li> </li>
                     </ul>
                     </p>
                 </div>
