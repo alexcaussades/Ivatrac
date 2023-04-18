@@ -12,10 +12,11 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\DiscordNotfyController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
-use App\Http\Controllers\whitelistController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -104,7 +105,7 @@ Route::prefix("auth/")->group(function () {
         return view("auth.login");
     })->name("auth.login");
 
-    Route::post("login", function (Request $request, usersController $usersController) {
+    Route::post("login", function (Request $request, usersController $usersController) { 
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
@@ -217,12 +218,17 @@ Route::prefix("install/")->group(function () {
 
 Route::prefix("serveur/")->group(function () {
     Route::get("/", function (usersController $usersController, whitelistController $whitelistController) {
-        if(session()->get("id") == null){
-            return redirect("auth/login");
-        }
         $users = $usersController->get_info_user(session()->get("id"));
         $role = $usersController->get_role_user(session()->get("role"));
         //$whitelist = $whitelistController->linkUser(session()->get("id"));
         return view("serveur.index", ["users" => $users, "role" => $role]);
+    })->name("serveur.index");
+
+    Route::post("/", function (usersController $usersController, whitelistController $whitelistController, Request $request) {
+        $whitelistController->create($request);
+        $users = $usersController->get_info_user(session()->get("id"));
+        $role = $usersController->get_role_user(session()->get("role"));
+        $whitelist = $whitelistController->linkUser(session()->get("id"));
+        return view("serveur.index", ["users" => $users, "role" => $role, "whitelist" => $whitelist]);
     })->name("serveur.index");
 });

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Session;
 
 class usersController extends Controller
 {
-    
+
     public function install_superadmin(Request $request)
     {
         $user = new users();
@@ -58,16 +58,10 @@ class usersController extends Controller
                 $request->session()->put("role", $user->role);
                 $request->session()->put("whitelist", $user->whiteList);
                 $request->session()->put("discord_users", $user->discord_users);
-                return redirect()->route("welcome");
+                return view("serveur.index");
             } else {
-                return redirect()->route("auth.login")
-                    ->withErrors("Mot de passe incorrect !")
-                    ->withInput();
+                return view("auth.login");
             }
-        } else {
-            return redirect()->route("auth.login")
-                ->withErrors("Email incorrect !")
-                ->withInput();
         }
     }
 
@@ -87,5 +81,4 @@ class usersController extends Controller
         $roles = roles::where("id", session()->get("role"))->first();
         return $roles;
     }
-    
 }

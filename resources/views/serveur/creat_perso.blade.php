@@ -15,7 +15,7 @@
       <div class="col-md-3">
         <div class="form-group">
           <label for="">Date de naissance :</label>
-          <input type="date" name="date" id="" class="form-control" aria-describedby="helpId">
+          <input type="date" name="dateofnaissance" id="" class="form-control" aria-describedby="helpId">
         </div>
       </div>
       <div class="col-md-3">
