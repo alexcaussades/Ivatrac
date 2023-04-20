@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\loggin;
 use App\Models\roles;
 use App\Models\users;
+use App\Models\loggin;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\logginController;
 
 class usersController extends Controller
 {
@@ -62,7 +63,7 @@ class usersController extends Controller
                 $request->session()->put("discord_users", $user->discord_users);
                 Log::info("Connexion de " . $user->name . " (" . $user->email . ")");
                 $logginController = new logginController();
-                $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->name, $request->ip(), $user->id);
+                $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
                 return view("serveur.index");
             } else {
                 return view("auth.login");
@@ -74,7 +75,7 @@ class usersController extends Controller
     {
         $user = users::where("id", session()->get("id"))->first();
         $logginController = new logginController();
-        $logginController->infoLog("Logout de " . $user->name . " (" . $user->email . ")", $user->name, $request->ip(),null);
+        $logginController->infoLog("Logout de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
         $request->session()->flush();
     }
 
@@ -88,5 +89,18 @@ class usersController extends Controller
     {
         $roles = roles::where("id", session()->get("role"))->first();
         return $roles;
+    }
+
+    public function get_email_user(Request $request)
+    {
+        $user = users::where("email", $request->email)->first();
+        return $user->id;
+    }
+
+    public function loggin_form_register($id){
+        $user = users::where("id", $id)->first();
+        $logginController = new logginController();
+        $logginController->infoLog("inscription de " . $user->name . " (" . $user->email . ")", $user->id, null, null);
+        
     }
 }

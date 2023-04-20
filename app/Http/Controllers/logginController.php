@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 class logginController extends Controller
 {
     
-    public function log($type, $message, $user, $ip, $users_admin_id)
+    public function logg($type, $message, $user, $ip, $users_admin_id)
     {
         $log = new loggin();
         $log->type = $type;
         $log->message = $message;
-        $log->user = $user;
+        $log->user = $user->id;
         $log->ip = $ip;
         $log->users_admin_id = $users_admin_id;
         $log->save();
@@ -24,7 +24,7 @@ class logginController extends Controller
         $log = new loggin();
         $log->type = "warning";
         $log->message = $message;
-        $log->user = $user;
+        $log->user = $user->id;
         $log->ip = $ip;
         $log->users_admin_id = $users_admin_id;
         $log->save();
@@ -35,7 +35,7 @@ class logginController extends Controller
         $log = new loggin();
         $log->type = "error";
         $log->message = $message;
-        $log->user = $user;
+        $log->user = $user->id;
         $log->ip = $ip;
         $log->users_admin_id = $users_admin_id;
         $log->save();
@@ -57,7 +57,7 @@ class logginController extends Controller
         $log = new loggin();
         $log->type = "debug";
         $log->message = $message;
-        $log->user = $user;
+        $log->user = $user->id;
         $log->ip = $ip;
         $log->users_admin_id = $users_admin_id;
         $log->save();
@@ -68,7 +68,7 @@ class logginController extends Controller
         $log = new loggin();
         $log->type = "success";
         $log->message = $message;
-        $log->user = $user;
+        $log->user = $user->id;
         $log->ip = $ip;
         $log->users_admin_id = $users_admin_id;
         $log->save();
@@ -79,7 +79,7 @@ class logginController extends Controller
         $log = new loggin();
         $log->type = "critical";
         $log->message = $message;
-        $log->user = $user;
+        $log->user = $user->id;
         $log->ip = $ip;
         $log->users_admin_id = $users_admin_id;
         $log->save();

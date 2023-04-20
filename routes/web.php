@@ -1,9 +1,11 @@
 <?php
 
 
+
 use Illuminate\Support\Env;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\While_;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AtcController;
@@ -11,6 +13,7 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\logginController;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\DiscordNotfyController;
@@ -143,6 +146,8 @@ Route::prefix("auth/")->group(function () {
 
                 $usersController = new usersController();
                 $usersController->create($request);
+                $lastId = DB::getPdo()->lastInsertId();
+                $usersController->loggin_form_register($lastId);
                 return redirect()->route("auth.login");
             } else {
                 return redirect()->route("auth.register")
@@ -231,4 +236,10 @@ Route::prefix("serveur/")->group(function () {
         $whitelist = $whitelistController->linkUser(session()->get("id"));
         return view("serveur.index", ["users" => $users, "role" => $role, "whitelist" => $whitelist]);
     })->name("serveur.index");
+});
+
+
+Route::get("logs", function (logginController $logginController) {
+    $logs = $logginController->getLoggins();
+    return $logs;
 });
