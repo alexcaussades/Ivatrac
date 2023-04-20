@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\loggin;
 use App\Models\roles;
 use App\Models\users;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class usersController extends Controller
@@ -48,7 +50,7 @@ class usersController extends Controller
         $user->save();
     }
 
-    public function login(Request $request)
+    public function login(Request $request,)
     {
         $user = users::where("email", $request->email)->first();
         if ($user) {
@@ -58,6 +60,9 @@ class usersController extends Controller
                 $request->session()->put("role", $user->role);
                 $request->session()->put("whitelist", $user->whiteList);
                 $request->session()->put("discord_users", $user->discord_users);
+                Log::info("Connexion de " . $user->name . " (" . $user->email . ")");
+                $logginController = new logginController();
+                $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->name, $request->ip(), $user->id);
                 return view("serveur.index");
             } else {
                 return view("auth.login");
@@ -67,6 +72,9 @@ class usersController extends Controller
 
     public function logout(Request $request)
     {
+        $user = users::where("id", session()->get("id"))->first();
+        $logginController = new logginController();
+        $logginController->infoLog("Logout de " . $user->name . " (" . $user->email . ")", $user->name, $request->ip(),null);
         $request->session()->flush();
     }
 
