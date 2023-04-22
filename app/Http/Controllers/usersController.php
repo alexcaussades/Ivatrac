@@ -65,6 +65,9 @@ class usersController extends Controller
             $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
             return redirect()->intended('serveur');
         }
+        return to_route("auth.login")->withErrors([
+            'error' => 'Les informations de connexion sont incorrectes. Veuillé vérifier votre adresse email et votre mot de passe.'
+        ]);
     }
 
     public function logout(Request $request)
@@ -93,10 +96,10 @@ class usersController extends Controller
         return $user->id;
     }
 
-    public function loggin_form_register($id){
+    public function loggin_form_register($id)
+    {
         $user = users::where("id", $id)->first();
         $logginController = new logginController();
         $logginController->infoLog("inscription de " . $user->name . " (" . $user->email . ")", $user->id, null, null);
-        
     }
 }

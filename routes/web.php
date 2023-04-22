@@ -2,7 +2,9 @@
 
 
 
+use App\Models\whitelist;
 use Illuminate\Support\Env;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\While_;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +21,6 @@ use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\DiscordNotfyController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +65,15 @@ Route::get('discord', function (DiscordNotfyController $discordNotfyController) 
 Route::get("/whitelist", function (Request $request) {
     return view("whitelist");
 })->name("whitelist");
+
+Route::get("/whitelist/{slug}", function (Request $request, whitelistController $whitelistController) {
+    $request->merge([
+        "slug" => $request->slug
+    ]);
+    
+    $whitelistController = $whitelistController->view($request);
+    return view("whitelist-name", ["slug" => $whitelistController]);
+})->name("whitelist.slug");
 
 Route::prefix("atc/")->group(function () {
     Route::get('/', function (AtcController $atcController) {
@@ -228,6 +238,18 @@ Route::prefix("serveur/")->group(function () {
         $whitelist = $whitelistController->linkUser(auth()->user()->id);
         return view("serveur.index", ["users" => $users, "role" => $role, "whitelist" => $whitelist]);
     })->name("serveur.index");
+
+    Route::get("slug", function () {
+        $whitelistbdd = whitelist::where("id_users", auth()->user()->id)->first();
+        $changename = $whitelistbdd->name_rp;
+        $newname = Str::slug($changename);
+        $whitelistbdd->slug = $newname;
+        // mise a jour du slug
+        $whitelistbdd->save();
+        return redirect()->route("serveur.index");
+
+        
+    })->name("serveur.slug");
 });
 
 

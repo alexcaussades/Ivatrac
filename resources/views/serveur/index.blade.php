@@ -79,7 +79,7 @@
                     <p class="card-text">
                     <ul>
                         <li> <strong>Role :</strong> {{ $role->name }} </li>
-                        <li> </li>
+                        <li> URL: {{route("whitelist")}} </li>
                     </ul>
                     </p>
                 </div>

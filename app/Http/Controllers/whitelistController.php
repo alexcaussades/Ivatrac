@@ -6,6 +6,7 @@ use App\Models\users;
 use App\Models\whitelist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Termwind\Components\Dd;
 
 class whitelistController extends Controller
 {
@@ -21,7 +22,6 @@ class whitelistController extends Controller
         $whitelist->save();
         Log::notice("Demande de whitelist de " . $request->name_rp . " par " . $request->id_users);
         users::where('id', $request->id_users)->update(['whiteList' => 2]);
-        
     }
 
     public function update(Request $request, $id)
@@ -53,4 +53,10 @@ class whitelistController extends Controller
         return $url_whitelist;
     }
 
+    public function view(Request $request)
+    {
+
+        $whitelist = whitelist::where('slug', $request->slug)->first();
+        return $whitelist;
+    }
 }
