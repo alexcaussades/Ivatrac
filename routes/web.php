@@ -108,20 +108,7 @@ Route::prefix("auth/")->group(function () {
         return view("auth.login");
     })->name("auth.login");
 
-    Route::post("login", function (Request $request, usersController $usersController) { 
-        $validator = Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => ['required', 'string', 'min:8'],
-        ]);
-        $usersController->login($request);
-
-        if ($validator->fails()) {
-            return redirect()->route("auth.login")
-                ->withErrors($validator)
-                ->withInput();
-        }
-        return redirect("serveur");
-    });
+    Route::post("login", [\App\Http\Controllers\usersController::class, "autentification"]);
 
     Route::get("register", function () {
 
@@ -222,24 +209,33 @@ Route::prefix("install/")->group(function () {
 
 
 Route::prefix("serveur/")->group(function () {
-    Route::get("/", function (usersController $usersController, whitelistController $whitelistController) {
-        $users = $usersController->get_info_user(session()->get("id"));
-        $role = $usersController->get_role_user(session()->get("role"));
-        //$whitelist = $whitelistController->linkUser(session()->get("id"));
-        return view("serveur.index", ["users" => $users, "role" => $role]);
-    })->name("serveur.index");
+    Route::get("/", function (usersController $usersController, whitelistController $whitelistController, Request $request) {
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+
+            $users = $usersController->get_info_user(auth()->user()->id);
+            $role = $usersController->get_role_user(auth()->user()->role);
+            //$whitelist = $whitelistController->linkUser(session()->get("id"));
+            return view("serveur/index", ["users" => $users, "role" => $role]);
+        }
+    })->name("serveur");
 
     Route::post("/", function (usersController $usersController, whitelistController $whitelistController, Request $request) {
         $whitelistController->create($request);
-        $users = $usersController->get_info_user(session()->get("id"));
-        $role = $usersController->get_role_user(session()->get("role"));
-        $whitelist = $whitelistController->linkUser(session()->get("id"));
+        $users = $usersController->get_info_user(auth()->user()->id);
+        $role = $usersController->get_role_user(auth()->user()->role);
+        $whitelist = $whitelistController->linkUser(auth()->user()->id);
         return view("serveur.index", ["users" => $users, "role" => $role, "whitelist" => $whitelist]);
     })->name("serveur.index");
 });
 
 
 Route::get("logs", function (logginController $logginController) {
-    $logs = $logginController->getLoggins();
-    return $logs;
+    if (!Auth::user()) {
+        return redirect()->route("auth.login");
+    } else {
+        $logs = $logginController->getLoggins();
+        return $logs;
+    }
 });

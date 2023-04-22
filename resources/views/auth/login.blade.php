@@ -11,7 +11,7 @@
 
     <div class="row">
     <div class="col-sm">
-        <form action="{{ route("auth.login") }}" method="POST">
+        <form action="{{ route("auth.login") }}" method="post">
             @csrf
             <div class="form-group">
                 <label for="email">Email</label>

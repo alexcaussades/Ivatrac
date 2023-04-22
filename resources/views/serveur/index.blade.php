@@ -1,6 +1,6 @@
 @extends("base")
 
-@section("title", "Serveur - $users->name_rp ")
+@section("title", "Serveur - Dashboard ")
 
 @include("navbar")
 
@@ -32,7 +32,7 @@
 </style>
 
 <div class="container">
-    <h1> Bienvenue {{ $users->name_rp }} </h1>
+    <h1> Bienvenue  </h1>
 
     <div class="d-flex justify-content-start">
         <form action="{{ Route("auth.logout") }}" method="get">
@@ -55,17 +55,17 @@
                     <h4 class="card-title account">Information de contact</h4>
                     <p class="card-text">
                     <ul>
-                        <li> <strong>Email :</strong> {{ $users->email }} </li>
-                        @if ($users->whiteList == 1)
+                        <li> <strong>Email :</strong> {{ auth()->user()->email }} </li>
+                        @if (auth()->user()->whiteList == 2)
                         <li><strong> Whitelist :</strong>
-                            <status>En attente</status>
+                            <status>En attente de validation</status>
                         </li>
-                        @elseif ($users->whiteList == 3)
+                        @elseif (auth()->user()->whiteList == 3)
                         <li><strong> Whitelist :</strong> <status-good>Accepté</status-good> </li>
                         @else
                         <li><strong> Whitelist :</strong> <a href="#"><button type="submit" class="btn btn-success btn-sm">Je fais ma demande</button></a></li>
                         @endif
-                        <li><strong> Discord :</strong> {{ $users->discord_users }} </li>
+                        <li><strong> Discord :</strong> {{ auth()->user()->discord_users }} </li>
                     </ul>
                     </p>
                 </div>
@@ -86,7 +86,7 @@
             </div>
         </div>
         <hr class="mt-2">
-        @if ($users->whiteList == 1)
+        @if (auth()->user()->whiteList == 1)
         <div class="container">
             <h4 class="mt-2"> Crée votre Personnage </h4>
 
@@ -94,7 +94,7 @@
         </div>
         @endif
 
-        @if ($users->whiteList == 2)
+        @if (auth()->user()->whiteList == 2)
         <div class="container">
             <h4 class="mt-2"> Votre Personnage </h4>
         </div>

@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\logginController;
+use App\Http\Requests\loginValidatorRequest;
+use Illuminate\Support\Facades\Auth;
+use SNMP;
 
 class usersController extends Controller
 {
@@ -51,43 +54,36 @@ class usersController extends Controller
         $user->save();
     }
 
-    public function login(Request $request,)
+    public function autentification(loginValidatorRequest $request)
     {
-        $user = users::where("email", $request->email)->first();
-        if ($user) {
-            if (Hash::check($request->password, $user->password)) {
-                $request->session()->put("user", $user);
-                $request->session()->put("id", $user->id);
-                $request->session()->put("role", $user->role);
-                $request->session()->put("whitelist", $user->whiteList);
-                $request->session()->put("discord_users", $user->discord_users);
-                Log::info("Connexion de " . $user->name . " (" . $user->email . ")");
-                $logginController = new logginController();
-                $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
-                return view("serveur.index");
-            } else {
-                return view("auth.login");
-            }
+        $credentials = $request->validated();
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            $user = users::where("id", auth()->user()->id)->first();
+            $logginController = new logginController();
+            $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
+            return redirect()->intended('serveur');
         }
     }
 
     public function logout(Request $request)
     {
-        $user = users::where("id", session()->get("id"))->first();
+        $user = users::where("id", auth()->user()->id)->first();
         $logginController = new logginController();
         $logginController->infoLog("Logout de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
         $request->session()->flush();
     }
 
-    public function get_info_user()
+    public function get_info_user($id)
     {
-        $user = users::where("id", session()->get("id"))->first();
+        $user = users::where("id", $id)->first();
         return $user;
     }
 
-    public function get_role_user()
+    public function get_role_user($id)
     {
-        $roles = roles::where("id", session()->get("role"))->first();
+        $roles = roles::where("id", $id)->first();
         return $roles;
     }
 
