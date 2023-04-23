@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\users;
 use App\Models\whitelist;
+use Illuminate\Support\Str;
+use Termwind\Components\Dd;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Termwind\Components\Dd;
 
 class whitelistController extends Controller
 {
@@ -19,6 +20,7 @@ class whitelistController extends Controller
         $whitelist->Profession = $request->profession;
         $whitelist->savoir = $request->savoir;
         $whitelist->description = $request->description;
+        $whitelist->slug = Str::slug($request->name_rp);
         $whitelist->save();
         Log::notice("Demande de whitelist de " . $request->name_rp . " par " . $request->id_users);
         users::where('id', $request->id_users)->update(['whiteList' => 2]);
@@ -47,10 +49,7 @@ class whitelistController extends Controller
     public function linkUser($id)
     {
         $whitelist = whitelist::where('id_users', $id)->first();
-        $name = trim($whitelist->name_rp);
-        $id_demande = $whitelist->id;
-        $url_whitelist = "http://127.0.0.1:8000/whitelist/$name/$id_demande";
-        return $url_whitelist;
+        return $whitelist;
     }
 
     public function view(Request $request)

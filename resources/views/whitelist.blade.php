@@ -47,4 +47,16 @@
       </div>
     </div>
 
+    @foreach ($accounts as $account )
+
+    <div class="card mt-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ $account->name_rp }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ $account->Profession }}</h6>
+          <p class="card-text">{{ $account->description }}</p>
+          <a href="{{ route('whitelist.slug', $account->slug) }}" class="card-link">Voir plus</a>
+        </div>
+      </div>
+      
+    @endforeach
 </div>

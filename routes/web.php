@@ -63,15 +63,19 @@ Route::get('discord', function (DiscordNotfyController $discordNotfyController) 
 });
 
 Route::get("/whitelist", function (Request $request) {
-    return view("whitelist");
+    $accounts = whitelist::all();
+    return view("whitelist", ["accounts" => $accounts]);
 })->name("whitelist");
 
 Route::get("/whitelist/{slug}", function (Request $request, whitelistController $whitelistController) {
     $request->merge([
         "slug" => $request->slug
     ]);
-    
+
     $whitelistController = $whitelistController->view($request);
+    if ($whitelistController == null) {
+        return redirect()->route("whitelist");
+    }
     return view("whitelist-name", ["slug" => $whitelistController]);
 })->name("whitelist.slug");
 
@@ -226,8 +230,9 @@ Route::prefix("serveur/")->group(function () {
 
             $users = $usersController->get_info_user(auth()->user()->id);
             $role = $usersController->get_role_user(auth()->user()->role);
-            //$whitelist = $whitelistController->linkUser(session()->get("id"));
-            return view("serveur/index", ["users" => $users, "role" => $role]);
+            $whitelist = $whitelistController->linkUser(auth()->user()->id);
+            
+            return view("serveur/index", ["users" => $users, "role" => $role, "whitelist" => $whitelist]);
         }
     })->name("serveur");
 
@@ -247,8 +252,6 @@ Route::prefix("serveur/")->group(function () {
         // mise a jour du slug
         $whitelistbdd->save();
         return redirect()->route("serveur.index");
-
-        
     })->name("serveur.slug");
 });
 
