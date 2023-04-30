@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use SNMP;
+use App\Models\modo;
+use App\Models\Admin;
 use App\Models\roles;
 use App\Models\users;
 use App\Models\loggin;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\logginController;
-use App\Http\Middleware\Authenticate;
 use App\Http\Requests\loginValidatorRequest;
-use App\Models\Admin;
-use Illuminate\Support\Facades\Auth;
-use SNMP;
 
 class usersController extends Controller
 {
@@ -69,6 +70,12 @@ class usersController extends Controller
             if($check){
                 Auth::guard('admin')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
             }
+            $modo = new modo();
+            $check = $modo::where('email', $credentials['email'])->first();
+            if($check){
+                Auth::guard('modo')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
+            }
+
             $logginController = new logginController();
             $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
             return redirect()->intended('serveur');

@@ -101,6 +101,11 @@ class logginController extends Controller
         loggin::truncate();
     }
 
+    public function deleteLogginForId($id)
+    {
+        $loggin = loggin::findOrFail($id);
+        $loggin->delete();
+    }
         
     public function searchTypeLoggin($type)
     {

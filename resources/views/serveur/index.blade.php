@@ -36,7 +36,14 @@
     
     @auth('admin')
         <div class="alert alert-info" role="alert">
-            Votre compte administrateur est connecté ! Besoin des logs ? <a href="{{ Route("logs") }}" class="alert-link">Cliquez ici</a>.
+            Type de compte est : Administrateur ! Besoin des logs ? <a href="{{ Route("logs") }}" class="alert-link">Cliquez ici</a>.
+            
+        </div>
+        
+    @endauth
+    @auth('modo')
+        <div class="alert alert-info" role="alert">
+        Type de compte est : Modérateur ! Besoin des logs ? <a href="{{ Route("logs.modo") }}" class="alert-link">Cliquez ici</a>.
         </div>
         
     @endauth

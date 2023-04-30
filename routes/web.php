@@ -119,6 +119,9 @@ Route::prefix("auth/")->group(function () {
     });
     Route::get("delete", [CreatAuhUniqueUsersController::class, "deleteUID"]);
     Route::get("login", function () {
+        if(Auth::user() != null){
+            return redirect()->route("serveur");
+        }
         return view("auth.login");
     })->name("auth.login");
 
@@ -260,6 +263,32 @@ Route::get("logs", function (logginController $logginController) {
         return redirect()->route("auth.login");
     } else {
         $logs = $logginController->getLoggins();
-        return $logs;
+        return view("auth.logs", ["logs" => $logs]);
     }
-})->middleware("auth:admin")->name("logs");
+})->middleware(["auth:admin"])->name("logs");
+
+Route::get("logs-modo", function (logginController $logginController) {
+    if (!Auth::user()) {
+        return redirect()->route("auth.login");
+    } else {
+        $logs = $logginController->getLoggins();
+        $loggin = new logginController();
+        return view("auth.logs", ["logs" => $logs, "loggin" => $loggin]);
+    }
+})->middleware(["auth:modo"])->name("logs.modo");
+
+Route::delete("logs/{id}", function (logginController $logginController, Request $request) {
+    $request->merge([
+        "id" => $request->id,
+    ]);
+    $logginController->deleteLogginForId($request->id);
+    return redirect()->route("logs");
+})->middleware(["auth:admin"])->name("logs.delete");
+
+Route::delete("logs-modo/{id}", function (logginController $logginController, Request $request) {
+    $request->merge([
+        "id" => $request->id,
+    ]);
+    $logginController->deleteLogginForId($request->id);
+    return redirect()->route("logs.modo");
+})->middleware(["auth:modo"])->name("logs.modo.delete");
