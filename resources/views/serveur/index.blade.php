@@ -34,6 +34,13 @@
 <div class="container">
     <h1> Bienvenue </h1>
     
+    @auth('admin')
+        <div class="alert alert-info" role="alert">
+            Votre compte administrateur est connecté ! Besoin des logs ? <a href="{{ Route("logs") }}" class="alert-link">Cliquez ici</a>.
+        </div>
+        
+    @endauth
+
     <div class="d-flex justify-content-start">
         <form action="{{ Route("auth.logout") }}" method="get">
             <button type="submit" class="btn btn-danger btn-sm" title="Déconnection de votre compte du site intenet">Se déconnecter</button>
@@ -79,7 +86,7 @@
                     <p class="card-text">
                     <ul>
                         <li> <strong>Role :</strong> {{ $role->name }} </li>
-                        <li> URL: <a href="{{ route('whitelist.slug', $whitelist->slug) }}" target="_bank" title="Liens de votre personnage a destination du monde"><button type="submit" class="btn btn-success btn-sm">Lien Public</button></a></li>
+                        <li> <strong> URL: </strong> <a href="{{ route('whitelist.slug', $whitelist->slug) }}" target="_bank" title="Liens de votre personnage a destination du monde"><button type="submit" class="btn btn-success btn-sm">Lien Public</button></a></li>
                     </ul>
                     </p>
                 </div>
@@ -100,7 +107,6 @@
             @include("serveur.perso")
         </div>
         @endif
-
 
 
     </div>

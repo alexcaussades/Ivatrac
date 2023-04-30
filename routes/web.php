@@ -227,7 +227,6 @@ Route::prefix("serveur/")->group(function () {
         if (!Auth::user()) {
             return redirect()->route("auth.login");
         } else {
-
             $users = $usersController->get_info_user(auth()->user()->id);
             $role = $usersController->get_role_user(auth()->user()->role);
             $whitelist = $whitelistController->linkUser(auth()->user()->id);
@@ -263,4 +262,4 @@ Route::get("logs", function (logginController $logginController) {
         $logs = $logginController->getLoggins();
         return $logs;
     }
-});
+})->middleware("auth:admin")->name("logs");

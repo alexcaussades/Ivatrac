@@ -48,12 +48,12 @@
             {{ $slug->description }}
         </div>
 
+        @auth("admin")
         <div class="row mt-4">
             <div class="col">
                 <h5>Creation le :</h5>
                 {{ date('d/m/Y', strtotime($slug->created_at)) }}
             </div>
-            @auth("web")
             <div class="col">
                 <h5>Modification le :</h5>
                 {{ date('d/m/Y', strtotime($slug->updated_at)) }}
@@ -70,9 +70,7 @@
                     Signaler
                 </button>
             </div>
-
             @endauth
-
         </div>
 
         @endsection

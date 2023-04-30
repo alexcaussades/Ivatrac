@@ -11,7 +11,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\logginController;
+use App\Http\Middleware\Authenticate;
 use App\Http\Requests\loginValidatorRequest;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use SNMP;
 
@@ -61,6 +63,12 @@ class usersController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $user = users::where("id", auth()->user()->id)->first();
+            //** Check if user is admin */
+            $admin = new Admin();
+            $check = $admin::where('email', $credentials['email'])->first();
+            if($check){
+                Auth::guard('admin')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
+            }
             $logginController = new logginController();
             $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
             return redirect()->intended('serveur');
