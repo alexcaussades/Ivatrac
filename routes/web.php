@@ -56,7 +56,6 @@ Route::get('/', function (Request $request) {
     ];
 })->where('client', '[0-9]+');
 
-
 Route::get('discord', function (DiscordNotfyController $discordNotfyController) {
     $discordNotfyController->newAddWhiteList("Ludovic Ramirez", "Legolas#5525", "Ludovic@gmail.com");
     return redirect()->route("welcome");
@@ -78,39 +77,6 @@ Route::get("/whitelist/{slug}", function (Request $request, whitelistController 
     }
     return view("whitelist-name", ["slug" => $whitelistController]);
 })->name("whitelist.slug");
-
-Route::prefix("atc/")->group(function () {
-    Route::get('/', function (AtcController $atcController) {
-        return $atcController->new();
-    });
-
-    Route::get('add/{vid}', function (AtcController $atcController, Request $request) {
-
-        $request->merge([
-            "vid" => $request->vid
-        ]);
-
-        $essais_bdd = new \App\Models\Essais();
-        $essais_bdd->name = $request->vid;
-        $essais_bdd->save();
-
-        return redirect("atc/view");
-    });
-
-    Route::get('view/{id}', function (AtcController $atcController, Request $request) {
-        $essais_bdd = \App\Models\Essais::find($request->id);
-        return $essais_bdd;
-    });
-    Route::get('view', function (AtcController $atcController) {
-        $essais_bdd = \App\Models\Essais::all(["id", "name"]);
-        return $essais_bdd;
-    })->name("atc.view");
-    Route::get('delect/{id}', function (AtcController $atcController, Request $request) {
-        $essais_bdd = \App\Models\Essais::find($request->id);
-        $essais_bdd->delete();
-        return redirect()->route("atc.view");
-    });
-});
 
 Route::prefix("auth/")->group(function () {
     Route::get("add", [CreatAuhUniqueUsersController::class, "creatAuthUniqueUses"]);
@@ -172,7 +138,6 @@ Route::prefix("auth/")->group(function () {
     })->name("auth.logout");
 });
 
-
 Route::prefix("install/")->group(function () {
     Route::get("roles", function (RolesController $rolesController) {
         $rolesController->create("register", "en attente de validation de sont compte");
@@ -224,7 +189,6 @@ Route::prefix("install/")->group(function () {
     });
 });
 
-
 Route::prefix("serveur/")->group(function () {
     Route::get("/", function (usersController $usersController, whitelistController $whitelistController, Request $request) {
         if (!Auth::user()) {
@@ -246,50 +210,34 @@ Route::prefix("serveur/")->group(function () {
         $whitelist = $whitelistController->linkUser(auth()->user()->id);
         return view("serveur.index", ["users" => $users, "role" => $role, "whitelist" => $whitelist]);
     })->name("serveur.index");
-
-    Route::get("slug", function () {
-        $whitelistbdd = whitelist::where("id_users", auth()->user()->id)->first();
-        $changename = $whitelistbdd->name_rp;
-        $newname = Str::slug($changename);
-        $whitelistbdd->slug = $newname;
-        // mise a jour du slug
-        $whitelistbdd->save();
-        return redirect()->route("serveur.index");
-    })->name("serveur.slug");
 });
 
+Route::prefix("logs")->group(function () {
+    Route::get("/", function (logginController $logginController) {
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            $logs = $logginController->getLoggins();
+            return view("auth.logs", ["logs" => $logs]);
+        }
+    })->middleware(["auth:admin"])->name("logs");
 
-Route::get("logs", function (logginController $logginController) {
-    if (!Auth::user()) {
-        return redirect()->route("auth.login");
-    } else {
-        $logs = $logginController->getLoggins();
-        return view("auth.logs", ["logs" => $logs]);
-    }
-})->middleware(["auth:admin"])->name("logs");
+    Route::get("modo", function (logginController $logginController) {
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            $logs = $logginController->getLoggins();
+            return view("auth.logs", ["logs" => $logs]);
+        }
+    })->middleware(["auth:modo"])->name("logs.modo");
 
-Route::get("logs-modo", function (logginController $logginController) {
-    if (!Auth::user()) {
-        return redirect()->route("auth.login");
-    } else {
-        $logs = $logginController->getLoggins();
-        $loggin = new logginController();
-        return view("auth.logs", ["logs" => $logs, "loggin" => $loggin]);
-    }
-})->middleware(["auth:modo"])->name("logs.modo");
+    Route::delete("{id}", function (logginController $logginController, Request $request) {
+        $logginController->delete($request);
+        return redirect()->route("logs");
+    })->middleware(["auth:admin"])->name("logs.delete");
 
-Route::delete("logs/{id}", function (logginController $logginController, Request $request) {
-    $request->merge([
-        "id" => $request->id,
-    ]);
-    $logginController->deleteLogginForId($request->id);
-    return redirect()->route("logs");
-})->middleware(["auth:admin"])->name("logs.delete");
-
-Route::delete("logs-modo/{id}", function (logginController $logginController, Request $request) {
-    $request->merge([
-        "id" => $request->id,
-    ]);
-    $logginController->deleteLogginForId($request->id);
-    return redirect()->route("logs.modo");
-})->middleware(["auth:modo"])->name("logs.modo.delete");
+    Route::delete("modo/{id}", function (logginController $logginController, Request $request) {
+        $logginController->delete($request);
+        return redirect()->route("logs.modo");
+    })->middleware(["auth:modo"])->name("logs.modo.delete");
+});
