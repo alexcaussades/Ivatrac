@@ -33,19 +33,19 @@
 
 <div class="container">
     <h1> Bienvenue </h1>
-    
+
     @auth('admin')
-        <div class="alert alert-info" role="alert">
-            Type de compte est : Administrateur ! Besoin des logs ? <a href="{{ Route("logs") }}" class="alert-link">Cliquez ici</a>.
-            
-        </div>
-        
+    <div class="alert alert-info" role="alert">
+        Type de compte est : Administrateur ! Besoin des logs ? <a href="{{ Route("logs") }}" class="alert-link">Cliquez ici</a>.
+
+    </div>
+
     @endauth
     @auth('modo')
-        <div class="alert alert-info" role="alert">
+    <div class="alert alert-info" role="alert">
         Type de compte est : Modérateur ! Besoin des logs ? <a href="{{ Route("logs.modo") }}" class="alert-link">Cliquez ici</a>.
-        </div>
-        
+    </div>
+
     @endauth
 
     <div class="d-flex justify-content-start">
@@ -58,6 +58,17 @@
         <form action="#" method="get">
             <button type="submit" class="ms-1 btn btn-dark btn-sm" title="Une demande de supression de votre c'est ici !" disabled>Demande de supression</button>
         </form>
+        @auth('admin')
+        <form action="#" method="get">
+            <button type="submit" class="ms-1 btn btn-success btn-sm" title="Accès au panel administrateur">Panel Admin</button>
+        </form>
+        <form action="#" method="get">
+            <button type="submit" class="ms-1 btn btn-warning btn-sm" title="Accès au panel modérateur">Panel Modo</button>
+        </form>
+        <form action="#">
+            <button type="submit" class="ms-1 btn btn-info btn-sm" title="Personnes en attente !">Whitelist <span class="badge text-bg-secondary">{{ $whitelistAttente }}</span></button>
+        </form>
+        @endauth
     </div>
 </div>
 

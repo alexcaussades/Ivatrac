@@ -7,7 +7,7 @@ use App\Models\Admin;
 use App\Models\whitelist;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use Illuminate\Support\Facades\Auth;
 
 class whitelistResource extends JsonResource
 {
@@ -27,8 +27,10 @@ class whitelistResource extends JsonResource
             'savoir' => $this->savoir,
             'description' => $this->description,
             //** si lutisateur est admin afficher en dessous creat_at */
-            'created_at' => $this->created_at->format('d/m/Y H:i:s', 'Europe/Paris'),
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at ? $this->created_at->format('d/m/Y H:m') : null,
+            'updated_at' => $this->updated_at ? $this->updated_at->format('d/m/Y H:m') : null,
+            'time' => $this->created_at->diffForHumans(),
+            'timestanp' => $this->created_at->timestamp,
         ];
     }
 

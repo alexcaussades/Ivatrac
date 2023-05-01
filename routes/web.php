@@ -233,8 +233,9 @@ Route::prefix("serveur/")->group(function () {
             $users = $usersController->get_info_user(auth()->user()->id);
             $role = $usersController->get_role_user(auth()->user()->role);
             $whitelist = $whitelistController->linkUser(auth()->user()->id);
+            $whitelistAttente = $whitelistController->count_whitelist_attente();
             
-            return view("serveur/index", ["users" => $users, "role" => $role, "whitelist" => $whitelist]);
+            return view("serveur/index", ["users" => $users, "role" => $role, "whitelist" => $whitelist, "whitelistAttente" => $whitelistAttente]);
         }
     })->name("serveur");
 

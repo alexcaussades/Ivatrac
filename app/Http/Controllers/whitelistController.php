@@ -58,4 +58,10 @@ class whitelistController extends Controller
         $whitelist = whitelist::where('slug', $request->slug)->first();
         return $whitelist;
     }
+
+    public function count_whitelist_attente()
+    {
+        $users = users::where('whiteList', 2)->count();
+        return $users;
+    }
 }
