@@ -1,14 +1,12 @@
 <?php
 
-use App\Http\Controllers\api\usersApiController as ApiUsersApiController;
-use App\Http\Controllers\usersApiController;
+use App\Http\Controllers\whitelistController;
 use App\Models\whitelist;
 use Illuminate\Http\Request;
-use Laravel\Sanctum\Sanctum;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
-use App\Http\Resources\whitelistResource;
-use App\Http\Controllers\whitelistController;
-
+use symfony\component\httpfoundation\cookie;
+use Illuminate\Support\Facades\Cookie as FacadesCookie;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,78 +19,59 @@ use App\Http\Controllers\whitelistController;
 |
 */
 
-
-Route::get("/", function () {
-    return [
-        "Route" => [
-            "GET" => [
-                "/whitelist",
-                "/whitelist/{id}",
-                "/whitelist/name/{name}"
-            ],
-            "POST" => [
-                "/whitelist"
-            ],
-            "PUT" => [
-                "/whitelist/{id}"
-            ],
-            "DELETE" => [
-                "/whitelist/{id}"
-            ]
-        ],
-        "whitelist" => [
-            "id" => "int",
-            "name_rp" => "string",
-            "name" => "string",
-            "steam" => "string",
-            "discord" => "string",
-            "reason" => "string",
-            "date" => "string",
-            "status" => "string",
-            "created_at" => "string",
-            "updated_at" => "string"
-        ],
-        "user" => [
-            "id" => "int",
-            "name" => "string",
-            "email" => "string",
-            "email_verified_at" => "string",
-            "created_at" => "string",
-            "updated_at" => "string"
-        ],
-        "auth" => [
-            "login" => [
-                "email" => "string",
-                "password" => "string"
-            ],
-            "register" => [
-                "name" => "string",
-                "email" => "string",
-                "password" => "string",
-                "password_confirmation" => "string"
-            ]
-        ]
-    ];
-});
-
-Route::get("/whitelist", function () {
-    return whitelistResource::collection(whitelist::all());
-});
-
-Route::get("/whitelist/{id}", function (Request $request) {
-    return new whitelistResource(whitelist::find($request->id));
-});
-
-Route::get("/whitelist/name/{name}", function (Request $request) {
-    /** search name and jocker */
-    $name = $request->name;
-    return whitelistResource::collection(whitelist::where('name_rp', 'LIKE', '%' . $name . '%')->get());
-});
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post("/whitelist", [whitelistController::class, 'store']);
-Route::put("/whitelist/{id}", [whitelistController::class, 'update']);
-Route::delete("/whitelist/{id}", [whitelistController::class, 'destroy']);
+Route::get('/test', function (Request $request) {
+    Http::withToken("Bearer " . $request->bearerToken());
+    $value = $request->header('Client-Id'); 
+
+    if(FacadesCookie::get("Auth") == true){
+        return [
+            "auth" => "Hello",
+            "value" => $value,
+            "cookie" => FacadesCookie::get('Client-Id'),
+            "bearer" => FacadesCookie::get('Bearer'),
+            "auth" => FacadesCookie::get('Auth')
+        
+        ];
+    }
+
+    if ($request->bearerToken() == "123456789") {
+       /** Cookie create session  */
+        $response_Set_Cookie = cookie::create('Client-Id', $value, 0, null, null, false, false);
+        $response_Set_Cookie_Bearer = cookie::create('Bearer', $request->bearerToken(), 0, null, null, false, false);
+        $response_Set_Cookie_Auth = cookie::create('Auth', true, 0, null, null, false, false);
+        $response = response('Hello World')->withCookie($response_Set_Cookie)->withCookie($response_Set_Cookie_Bearer)->withCookie($response_Set_Cookie_Auth);
+        return $response;
+
+    } 
+});
+
+Route::get('/whitelist/{id}', function (Request $request) {
+    $request->merge([
+        'id' => $request->id,
+        'value' => $request->header('Client-Id')
+    ]);
+    Http::withToken("Bearer " . $request->bearerToken());
+    dd($request->bearerToken());
+    if ($request->bearerToken() == "123456789") {
+        $whitelist = whitelist::where('id', $request->id)->get();
+        if($whitelist){
+            return whitelist::where('id', $request->id)->get();
+        } else{
+            if($whitelist == null){
+                return "No whitelist found with this id";
+            }
+        }
+    } else {
+        return [
+            "auth" => false,
+            "message" => "You are not authorized to access this page",
+            "error" => "401 Unauthorized",
+            "status" => "401",
+            "Token" => "Bearer is not valid"
+        ];
+    }
+});

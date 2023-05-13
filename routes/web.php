@@ -210,6 +210,11 @@ Route::prefix("serveur/")->group(function () {
         $whitelist = $whitelistController->linkUser(auth()->user()->id);
         return view("serveur.index", ["users" => $users, "role" => $role, "whitelist" => $whitelist]);
     })->name("serveur.index");
+
+    Route::get("api", function (Request $request) {
+        $authorisation = 4;
+        return view("serveur.api", ["authorisation" => $authorisation]);
+    })->name("serveur.api");
 });
 
 Route::prefix("logs")->group(function () {
@@ -240,4 +245,14 @@ Route::prefix("logs")->group(function () {
         $logginController->delete($request);
         return redirect()->route("logs.modo");
     })->middleware(["auth:modo"])->name("logs.modo.delete");
+});
+
+Route::get('/test', function (Request $request) {
+    
+    if($request->bearerToken()=="123456789"){
+        return "autentification reussie";
+    }else{
+        return "autentification echoué";
+    }
+    
 });
