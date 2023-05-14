@@ -10,11 +10,14 @@
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Request Access API Serveur</h4>
-            @if($authorisation != 0 || null)
-            <button type="button" class="btn btn-danger btn-sm">Delect My Api Keys</button>
+            @if($information["role"] != 0 || null)
+            <form action="./api/delete" method="post">
+                @csrf
+                <button type="submit" class="btn btn-danger btn-sm"> Delect My Api Keys </button>
+            </form>
             @endif
             <hr>
-            @if($authorisation != 0 || null)
+            @if($information["role"] != 0 || null)
             <div class="card-text">
                 <div class="row">
                     <div class="col">
@@ -34,11 +37,21 @@
                     <div class="col">
                         <div>
                             <h5>Access Keys</h5>
-                            <p><code>dkqsjdlizdjqlzidqlzidjqizjdlqzidjiqzdjlqzidjlqizjdlqizdljqzldijqlzd</code></p>
+                            @if($information['visible'] == false)
+                                <p><code>{{Str::mask($information["token"], '*', 10)}}</code></p>
+                            @else
+                               <p><code>{{$information["token"]}}</code></p>
+                            @endif
+                            
+                            
                         </div>
                         <div>
                             <h5>Client ID</h5>
-                            <p><code>dmlkqsdozkdozkdmqlzkdoqkzdmqzkdmqozkd</code></p>
+                            @if($information['visible'] == false)
+                                <p><code>{{Str::mask($information["client_id"], '*', 10)}}</code></p>
+                            @else
+                               <p><code>{{$information["client_id"]}}</code></p> 
+                            @endif
                         </div>
                         <div>
                             <h5>Source IP adress</h5>
@@ -61,22 +74,22 @@
                     <h5>Authorisation</h5>
 
                     <div class="d-flex justify-content-center">
-                        @if($authorisation == 1)
+                        @if($information["role"] == 1)
                         <button type="button" class="btn btn-success mx-2">Read</button>
                         <button type="button" class="btn btn-danger mx-2">Write</button>
                         <button type="button" class="btn btn-danger mx-2">Delect</button>
                         <button type="button" class="btn btn-danger mx-2">Update</button>
-                        @elseif($authorisation == 2)
+                        @elseif($information["role"] == 2)
                         <button type="button" class="btn btn-success mx-2">Read</button>
                         <button type="button" class="btn btn-success mx-2">Write</button>
                         <button type="button" class="btn btn-danger mx-2">Delect</button>
                         <button type="button" class="btn btn-danger mx-2">Update</button>
-                        @elseif($authorisation == 3)
+                        @elseif($information["role"] == 3)
                         <button type="button" class="btn btn-success mx-2">Read</button>
                         <button type="button" class="btn btn-success mx-2">Write</button>
                         <button type="button" class="btn btn-success mx-2">Update</button>
                         <button type="button" class="btn btn-danger mx-2">Delect</button>
-                        @elseif($authorisation == 4)
+                        @elseif($information["role"] == 4)
                         <button type="button" class="btn btn-success mx-2">Read</button>
                         <button type="button" class="btn btn-success mx-2">Write</button>
                         <button type="button" class="btn btn-success mx-2">Update</button>
@@ -91,14 +104,17 @@
                 </div>
             </div>
             @endif
-            @if($authorisation == 0)
+            @if($information["role"] == 0)
             <div class="card-text">
                 <p> Request My API Keys </p>
                 <div class="alert alert-info" role="alert">
                     <strong>Only one key per user can be issued</strong>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-success"> Create my API keys </button>
+                    <form action="./api" method="post">
+                        @csrf
+                        <button type="submit" class="btn btn-success"> Create my API keys </button>
+                    </form>
                 </div>
             </div>
             @endif

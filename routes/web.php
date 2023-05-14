@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\logginController;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Controllers\whitelistController;
+use App\Http\Controllers\ApiGestionController;
 use App\Http\Controllers\DiscordNotfyController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
@@ -212,9 +213,22 @@ Route::prefix("serveur/")->group(function () {
     })->name("serveur.index");
 
     Route::get("api", function (Request $request) {
-        $authorisation = 4;
-        return view("serveur.api", ["authorisation" => $authorisation]);
+        $api = new ApiGestionController();
+        $information = $api->check_Informations(Auth::user()->id);
+        return view("serveur.api", ["information" => $information]);
     })->name("serveur.api");
+    
+    Route::post("api", function (Request $request) {
+        $api = new ApiGestionController();
+        $information = $api->creat_keys_api();
+        return view("serveur.api", ["information" => $information]);
+    })->name("serveur.api.post");
+
+    Route::post("api/delete", function (Request $request) {
+        $api = new ApiGestionController();
+        $information = $api->delete_keys_api($request);
+        return view("serveur.api");
+    })->name("serveur.api.delete");
 });
 
 Route::prefix("logs")->group(function () {
