@@ -31,7 +31,7 @@
                         </div>
                         <div>
                             <h5>Event Name</h5>
-                            <p>Request API serveur !!</p>
+                            <p>Request API serveur !</p>
                         </div>
                     </div>
                     <div class="col">
