@@ -23,7 +23,7 @@
                     <div class="col">
                         <div>
                             <h5>Event Time</h5>
-                            <p>12-09-2023 15:57:23 (UTC+2:00)</p>
+                            <p>12-09-2023 15:57:26 (UTC+2:00)</p>
                         </div>
                         <div>
                             <h5>User Name</h5>
