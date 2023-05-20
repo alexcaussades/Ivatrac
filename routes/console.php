@@ -17,3 +17,25 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+
+Artisan::command('cache:all', function () {
+    $this->call('cache:clear');
+    $this->call('config:cache');
+    $this->call('route:cache');
+    $this->call('view:cache');
+})->purpose('Clear all cache');
+
+Artisan::command('cache:clear-all', function () {
+    $this->call('cache:clear');
+    $this->call('config:clear');
+    $this->call('route:clear');
+    $this->call('view:clear');
+})->purpose('Clear all cache');
+
+Artisan::command('cache:gen', function () {
+    $this->call('cache:all');
+    $this->call('cache:clear-all');
+})->purpose('Total cache generation');
+
+

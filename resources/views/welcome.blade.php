@@ -1,3 +1,9 @@
+<?php 
+
+use Illuminate\Support\Facades\DB;
+
+?>
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -31,7 +37,12 @@
                 </div>
             @endif
                 
-                    @dump($tt = "dsfsdfsd");
+            @if (session()->get("role") == "10")
+                @dump($users->name_rp)
+               <!-- recherche du nom en base de donnée -->
+                
+                
+            @endif
                 
             <div class="max-w-7xl mx-auto p-6 lg:p-8">
                 <div class="flex justify-center">

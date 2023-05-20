@@ -11,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('list', function (Blueprint $table) {
             $table->id()->autoIncrement();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('discord_users')->unique();
-            $table->string('name_rp')->unique();
-            $table->integer('age');
-            $table->integer('condition');
-            $table->integer('role');
-            $table->integer('whiteList');
-            $table->integer('discord');
+            $table->string('role')->default('user');
+            $table->string('avatar')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('id_unique')->unique();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -34,9 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        //
     }
-
-    
-    
 };
