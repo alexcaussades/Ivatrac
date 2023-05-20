@@ -84,4 +84,10 @@ class ApiGestionController extends Controller
         $api->delete();
             
     }
+
+    Public function update_visible(){
+        $api = ApiUsers::where('users_id', auth()->user()->id)->first();
+        $api->visible = false;
+        $api->save();
+    }
 }

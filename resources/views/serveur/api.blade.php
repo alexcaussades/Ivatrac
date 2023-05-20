@@ -11,7 +11,7 @@
         <div class="card-body">
             <h4 class="card-title">Request Access API Serveur</h4>
             @if($information["role"] != 0 || null)
-            <form action="./api/delete" method="post">
+            <form action="{{Route("serveur.api.delete")}}" method="post">
                 @csrf
                 <button type="submit" class="btn btn-danger btn-sm"> Delect My Api Keys </button>
             </form>
@@ -23,11 +23,11 @@
                     <div class="col">
                         <div>
                             <h5>Event Time</h5>
-                            <p>12-09-2023 15:57:27 (UTC+2:00)</p>
+                            <p>{{ $information['created_at'] }} (UTC)</p>
                         </div>
                         <div>
                             <h5>User Name</h5>
-                            <p>testeur</p>
+                            <p>{{ $information['email'] }}</p>
                         </div>
                         <div>
                             <h5>Event Name</h5>
@@ -111,7 +111,7 @@
                     <strong>Only one key per user can be issued</strong>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <form action="./api" method="post">
+                    <form action="{{Route("serveur.api.create")}}" method="post">
                         @csrf
                         <button type="submit" class="btn btn-success"> Create my API keys </button>
                     </form>

@@ -221,13 +221,21 @@ Route::prefix("serveur/")->group(function () {
     Route::post("api", function (Request $request) {
         $api = new ApiGestionController();
         $information = $api->creat_keys_api();
+        /** Faire une function de masquage */
+        
         return view("serveur.api", ["information" => $information]);
     })->name("serveur.api.post");
 
+    Route::post("api/create", function (Request $request) {
+        $api = new ApiGestionController();
+        $api->creat_keys_api();
+        return to_route("serveur.api");
+    })->name("serveur.api.create");
+
     Route::post("api/delete", function (Request $request) {
         $api = new ApiGestionController();
-        $information = $api->delete_keys_api($request);
-        return view("serveur.api");
+        $api->delete_keys_api($request);
+        return to_route("serveur.api");
     })->name("serveur.api.delete");
 });
 
