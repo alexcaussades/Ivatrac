@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\loggin;
 use App\Models\ApiUsers;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\logginController;
+use PHPUnit\TextUI\XmlConfiguration\Logging\Logging;
 
 class ApiGestionController extends Controller
 {
@@ -89,5 +93,16 @@ class ApiGestionController extends Controller
         $api = ApiUsers::where('users_id', auth()->user()->id)->first();
         $api->visible = false;
         $api->save();
+    }
+
+    public function verifyToken(Request $request){
+        $api = ApiUsers::where('token', $request->bearerToken())->first();
+        if($api != null){
+            $loogin = new logginController();
+            $loogin->infoLog("Connexion API", $api->users_id, $request->ip(), $api->users_id);
+            return true;
+        }else{
+            return false;
+        }
     }
 }

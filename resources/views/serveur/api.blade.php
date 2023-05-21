@@ -22,21 +22,21 @@
                 <div class="row">
                     <div class="col">
                         <div>
-                            <h5>Event Time</h5>
+                            <h5>Event Time :</h5>
                             <p>{{ $information['created_at'] }} (UTC)</p>
                         </div>
                         <div>
-                            <h5>User Name</h5>
+                            <h5>User Name :</h5>
                             <p>{{ $information['email'] }}</p>
                         </div>
                         <div>
-                            <h5>Event Name</h5>
+                            <h5>Event Name :</h5>
                             <p>Request API serveur !</p>
                         </div>
                     </div>
                     <div class="col">
                         <div>
-                            <h5>Access Keys</h5>
+                            <h5>Token Bearaer :</h5>
                             @if($information['visible'] == false)
                                 <p><code>{{Str::mask($information["token"], '*', 10)}}</code></p>
                             @else
@@ -46,7 +46,7 @@
                             
                         </div>
                         <div>
-                            <h5>Client ID</h5>
+                            <h5>Client ID :</h5>
                             @if($information['visible'] == false)
                                 <p><code>{{Str::mask($information["client_id"], '*', 10)}}</code></p>
                             @else
@@ -54,24 +54,24 @@
                             @endif
                         </div>
                         <div>
-                            <h5>Source IP adress</h5>
+                            <h5>Source IP adress :</h5>
                             <p>127.0.0.1</p>
                         </div>
 
                     </div>
                     <div class="col">
-                        <h5>Region API</h5>
+                        <h5>Region API :</h5>
                         <p>European</p>
 
                         <div>
-                            <h5>Error Code </h5>
+                            <h5>Error Code :</h5>
                             <p>-</p>
                         </div>
                     </div>
                 </div>
                 <hr>
                 <div class="col-md-1-12">
-                    <h5>Authorisation</h5>
+                    <h5>Authorisation :</h5>
 
                     <div class="d-flex justify-content-center">
                         @if($information["role"] == 1)

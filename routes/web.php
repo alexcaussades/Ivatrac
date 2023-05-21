@@ -86,7 +86,7 @@ Route::prefix("auth/")->group(function () {
     });
     Route::get("delete", [CreatAuhUniqueUsersController::class, "deleteUID"]);
     Route::get("login", function () {
-        if(Auth::user() != null){
+        if (Auth::user() != null) {
             return redirect()->route("serveur");
         }
         return view("auth.login");
@@ -199,7 +199,7 @@ Route::prefix("serveur/")->group(function () {
             $role = $usersController->get_role_user(auth()->user()->role);
             $whitelist = $whitelistController->linkUser(auth()->user()->id);
             $whitelistAttente = $whitelistController->count_whitelist_attente();
-            
+
             return view("serveur/index", ["users" => $users, "role" => $role, "whitelist" => $whitelist, "whitelistAttente" => $whitelistAttente]);
         }
     })->name("serveur");
@@ -213,30 +213,50 @@ Route::prefix("serveur/")->group(function () {
     })->name("serveur.index");
 
     Route::get("api", function (Request $request) {
-        $api = new ApiGestionController();
-        $information = $api->check_Informations(Auth::user()->id);
-        return view("serveur.api", ["information" => $information]);
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            $api = new ApiGestionController();
+            $information = $api->check_Informations(Auth::user()->id);
+            return view("serveur.api", ["information" => $information]);
+        }
     })->name("serveur.api");
-    
+
     Route::post("api", function (Request $request) {
-        $api = new ApiGestionController();
-        $information = $api->creat_keys_api();
-        /** Faire une function de masquage */
-        
-        return view("serveur.api", ["information" => $information]);
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            $api = new ApiGestionController();
+            $information = $api->creat_keys_api();
+            /** Faire une function de masquage */
+
+            return view("serveur.api", ["information" => $information]);
+        }
     })->name("serveur.api.post");
 
     Route::post("api/create", function (Request $request) {
-        $api = new ApiGestionController();
-        $api->creat_keys_api();
-        return to_route("serveur.api");
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            $api = new ApiGestionController();
+            $api->creat_keys_api();
+            return to_route("serveur.api");
+        }
     })->name("serveur.api.create");
 
     Route::post("api/delete", function (Request $request) {
-        $api = new ApiGestionController();
-        $api->delete_keys_api($request);
-        return to_route("serveur.api");
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            $api = new ApiGestionController();
+            $api->delete_keys_api($request);
+            return to_route("serveur.api");
+        }
     })->name("serveur.api.delete");
+    
+    Route::get("api/documentation", function (Request $request) {
+         return url("https://github.com/alexcaussades/L10/wiki/API");
+    })->name("serveur.api.documentation");
 });
 
 Route::prefix("logs")->group(function () {
@@ -270,11 +290,10 @@ Route::prefix("logs")->group(function () {
 });
 
 Route::get('/test', function (Request $request) {
-    
-    if($request->bearerToken()=="123456789"){
+
+    if ($request->bearerToken() == "123456789") {
         return "autentification reussie";
-    }else{
+    } else {
         return "autentification echoué";
     }
-    
 });
