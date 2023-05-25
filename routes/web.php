@@ -19,6 +19,7 @@ use App\Http\Controllers\logginController;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
+use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\DiscordNotfyController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
@@ -38,6 +39,14 @@ Route::get('/welcome', function (usersController $usersController, Request $requ
     $users = $usersController->get_info_user(session()->get("id"));
     return view('welcome', ["users" => $users]);
 })->name("welcome");
+
+Route::get('/login', function (Request $request) {
+    return to_route("auth.login");
+})->name("login");
+
+Route::get('/logout', function (Request $request) {
+    return to_route("auth.logout");
+})->name("logout");
 
 Route::get('/', function (Request $request) {
     $auth = "";
@@ -253,9 +262,10 @@ Route::prefix("serveur/")->group(function () {
             return to_route("serveur.api");
         }
     })->name("serveur.api.delete");
-    
+
     Route::get("api/documentation", function (Request $request) {
-         return url("https://github.com/alexcaussades/L10/wiki/API");
+        /** verification des buttons d'action serveur */
+        return url("https://github.com/alexcaussades/L10/wiki/API");
     })->name("serveur.api.documentation");
 });
 
@@ -278,6 +288,43 @@ Route::prefix("logs")->group(function () {
         }
     })->middleware(["auth:modo"])->name("logs.modo");
 
+    Route::get("{id}", function (logginController $logginController, Request $request) {
+        $request->merge([
+            "id" => $request->id
+        ]);
+        $logs = $logginController->getLoggin($request->id);
+        $users = new usersController();
+        $users = $users->get_info_user($logs->user);
+        $admin = new AutAdminController();
+        $admin = $admin->get_admin($logs->users_admin_id);
+        
+        return [
+            "logs" => [
+                "id" => $logs->id ?? Null,
+                "user" => $logs->user ?? Null,
+                "users_admin_id" => $logs->users_admin_id ?? Null,
+                "action" => $logs->message,
+                "ip" => $logs->ip ?? Null,
+                "created_at" => date("d/m/Y H:i:s", strtotime($logs->created_at)) ?? Null,
+            ],
+            "user" => [
+                "name" => $users->name ?? Null,
+                "email" => $users->email ?? Null,
+                "discord" => $users->discord ?? Null,
+                "discordusers" => $users->discord_users ?? Null,
+                "role" => $users->role ?? Null,
+                "whiteList" => $users->whiteList ?? Null,
+                "name_rp" => $users->name_rp ?? Null,
+            ],
+            "admin" => [
+                "id" => $admin->id ?? Null,
+                "users_id" => $admin->users_id ?? Null,
+                "E-mail" => $admin->email ?? Null
+            ]
+
+            ];
+    })->middleware(["auth:admin"])->name("logs.modo.id");
+
     Route::delete("{id}", function (logginController $logginController, Request $request) {
         $logginController->delete($request);
         return redirect()->route("logs");
@@ -287,13 +334,4 @@ Route::prefix("logs")->group(function () {
         $logginController->delete($request);
         return redirect()->route("logs.modo");
     })->middleware(["auth:modo"])->name("logs.modo.delete");
-});
-
-Route::get('/test', function (Request $request) {
-
-    if ($request->bearerToken() == "123456789") {
-        return "autentification reussie";
-    } else {
-        return "autentification echoué";
-    }
 });

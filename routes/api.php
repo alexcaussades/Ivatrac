@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\ApiGestionController;
-use App\Http\Controllers\whitelistController;
 use App\Models\whitelist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\logginController;
 use symfony\component\httpfoundation\cookie;
+use App\Http\Controllers\whitelistController;
+use App\Http\Controllers\ApiGestionController;
 use Illuminate\Support\Facades\Cookie as FacadesCookie;
 
 /*
@@ -54,35 +55,35 @@ Route::get('/whitelist/{id}', function (Request $request) {
         'id' => $request->id,
         'value' => $request->header('Client-Id')
     ]);
+    $loggin = new logginController();
     $verifyToken = new ApiGestionController();
     $verifyToken = $verifyToken->verifyToken($request);
     if ($verifyToken) {
         Http::withToken("Bearer " . $request->bearerToken());
-        if ($request->bearerToken() == "5njDhXoAPJLn9BekeKtJM7QzaR") {
+        if ($request->bearerToken() == $verifyToken) {
             $whitelist = whitelist::where('id', $request->id)->get();
-            if ($whitelist) {
+            $users = new ApiGestionController();
+            $users = $users->ckeck_users($request);
+            if ($whitelist == !null) {
+                $loggin->req_api("Get whitelist with id: " . $request->id, $users->users_id, $request->ip(), 0);
                 return whitelist::where('id', $request->id)->get();
             } else {
-                if ($whitelist == null) {
-                    return "No whitelist found with this id";
-                }
+                $loggin->warningLog("No id found with this whitelist: " . $request->id, $users->users_id, $request->ip(), 0);
+                return [
+                    "message" => "You are not authorized to access this page",
+                    "status" => "404",
+                    "error" => " id not found",
+                ];
             }
-        } else {
-            return [
-                "auth" => false,
-                "message" => "You are not authorized to access this page",
-                "error" => "401 Unauthorized",
-                "status" => "401",
-                "Token" => "Bearer is not valid"
-            ];
         }
-    }else {
+    } else {
+        $loggin->warningLog("Bearer is not valid for the request on id: " . $request->id, 0, $request->ip(), 0);
         return [
             "auth" => false,
             "message" => "You are not authorized to access this page",
             "error" => "401 Unauthorized",
             "status" => "401",
-            "Token" => "Bearer is required for this information to be follow website documentation"
+            "Token" => "Bearer is not valid"
         ];
     }
 });

@@ -24,7 +24,40 @@ class logginController extends Controller
         $log = new loggin();
         $log->type = "warning";
         $log->message = $message;
-        $log->user = $user->id;
+        $log->user = $user->id ?? 0;
+        $log->ip = $ip;
+        $log->users_admin_id = $users_admin_id ?? 0;
+        $log->save();
+    }
+
+    public function req_api($message, $user, $ip, $users_admin_id)
+    {
+        $log = new loggin();
+        $log->type = "req_via_api";
+        $log->message = $message;
+        $log->user = $user;
+        $log->ip = $ip;
+        $log->users_admin_id = $users_admin_id;
+        $log->save();
+    }
+
+    public function strore_api($message, $user, $ip, $users_admin_id)
+    {
+        $log = new loggin();
+        $log->type = "store_via_api";
+        $log->message = $message;
+        $log->user = $user;
+        $log->ip = $ip;
+        $log->users_admin_id = $users_admin_id;
+        $log->save();
+    }
+
+    public function delect_api($message, $user, $ip, $users_admin_id)
+    {
+        $log = new loggin();
+        $log->type = "delect_via_api";
+        $log->message = $message;
+        $log->user = $user;
         $log->ip = $ip;
         $log->users_admin_id = $users_admin_id;
         $log->save();
@@ -35,7 +68,7 @@ class logginController extends Controller
         $log = new loggin();
         $log->type = "error";
         $log->message = $message;
-        $log->user = $user->id;
+        $log->user = $user;
         $log->ip = $ip;
         $log->users_admin_id = $users_admin_id;
         $log->save();
@@ -87,7 +120,7 @@ class logginController extends Controller
 
     public function getLoggins()
     {
-        return loggin::all();
+        return loggin::all()->sortByDesc("id");
     }
     
 
