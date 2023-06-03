@@ -19,4 +19,12 @@ class AutAdminController extends Controller
             return Auth::guard('admin')->attempt(['email' => $request->email]);
         }
     }
+
+    public function get_admin($id)
+    {
+        $admin = Admin::where('id', $id)->first();
+        if ($admin) {
+            return $admin;
+        }
+    }
 }

@@ -2,42 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\loggin;
 use App\Models\ApiUsers;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\logginController;
+use PHPUnit\TextUI\XmlConfiguration\Logging\Logging;
 
 class ApiGestionController extends Controller
 {
-    
-    public function Create_client_id(){
+
+    public function Create_client_id()
+    {
         $sclient_id = Str::random(15);
         return $sclient_id;
     }
 
-    public function Create_client_secret(){
+    public function Create_client_secret()
+    {
         $token = Str::random(26);
         return $token;
     }
 
-    public function lvl_users(){
+    public function lvl_users()
+    {
         $lvl = auth()->user()->role;
-        if($lvl == 1 || $lvl == 2 || $lvl == 3){
+        if ($lvl == 1 || $lvl == 2 || $lvl == 3) {
             $lvl_users = "1";
         }
-        if($lvl == 4 || $lvl == 5 || $lvl == 6){
+        if ($lvl == 4 || $lvl == 5 || $lvl == 6) {
             $lvl_users = "2";
         }
-        if($lvl == 7 || $lvl == 8){
+        if ($lvl == 7 || $lvl == 8) {
             $lvl_users = "3";
         }
-        if($lvl == 9 || $lvl == 10){
+        if ($lvl == 9 || $lvl == 10) {
             $lvl_users = "4";
         }
         return $lvl_users;
     }
 
-    public function return_information(){
+    public function return_information()
+    {
         $information = array(
             "client_id" => $this->Create_client_id(),
             "token" => $this->Create_client_secret(),
@@ -46,12 +54,13 @@ class ApiGestionController extends Controller
         return $information;
     }
 
-    public function check_Informations($id){
-        
+    public function check_Informations($id)
+    {
+
         $check = ApiUsers::where('users_id', $id)->first();
-        if($check != null){
+        if ($check != null) {
             return $check;
-        }else{
+        } else {
             $information = array(
                 "role" => 0,
             );
@@ -59,7 +68,8 @@ class ApiGestionController extends Controller
         }
     }
 
-    public function creat_keys_api(){
+    public function creat_keys_api()
+    {
         $information = $this->return_information();
         $api = new ApiUsers();
         $api->client_id = $information['client_id'];
@@ -71,23 +81,48 @@ class ApiGestionController extends Controller
         return $information;
     }
 
-    public function get_keys_api(){
+    public function get_keys_api()
+    {
         $information = $this->check_Informations(auth()->user()->id);
-        if($information['visible'] == true){
-           
+        if ($information['visible'] == true) {
         }
         return $information;
     }
 
-    public function delete_keys_api(){
+    public function delete_keys_api()
+    {
         $api = ApiUsers::where('users_id', auth()->user()->id)->first();
         $api->delete();
-            
     }
 
-    Public function update_visible(){
+    public function update_visible()
+    {
         $api = ApiUsers::where('users_id', auth()->user()->id)->first();
         $api->visible = false;
         $api->save();
+    }
+
+    public function verifyToken(Request $request)
+    {
+        $api = ApiUsers::where('token', $request->bearerToken())->first();
+        
+        if ($api != null) {
+            $loogin = new logginController();
+            $loogin->req_api("Connexion API via le token", $api->users_id, $request->ip(), $api->users_id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function ckeck_users(Request $request)
+    {
+        $api = ApiUsers::where('token', $request->bearerToken())->first();
+        
+        if ($api != null) {
+            return $api;
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 }

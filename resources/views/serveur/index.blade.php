@@ -58,6 +58,9 @@
         <form action="#" method="get">
             <button type="submit" class="ms-1 btn btn-dark btn-sm" title="Une demande de supression de votre c'est ici !" disabled>Demande de supression</button>
         </form>
+        <form action="{{ Route("serveur.api") }}">
+            <button type="submit" class="ms-1 btn btn-info btn-sm position-relative" title="Accès l'API">API <span class="badge rounded-pill text-bg-danger">New</span></button>
+        </form>
         @auth('admin')
         <form action="#" method="get">
             <button type="submit" class="ms-1 btn btn-success btn-sm" title="Accès au panel administrateur">Panel Admin</button>
@@ -66,7 +69,7 @@
             <button type="submit" class="ms-1 btn btn-warning btn-sm" title="Accès au panel modérateur">Panel Modo</button>
         </form>
         <form action="#">
-            <button type="submit" class="ms-1 btn btn-info btn-sm" title="Personnes en attente !">Whitelist <span class="badge text-bg-secondary">{{ $whitelistAttente }}</span></button>
+            <button type="submit" class="ms-1 btn btn-info btn-sm" title="Personnes en attente !">Whitelist <span class="badge rounded-pill text-bg-danger">{{ $whitelistAttente }}</span></button>
         </form>
         @endauth
     </div>
