@@ -36,7 +36,6 @@ Route::get('/test', function (Request $request) {
             "cookie" => FacadesCookie::get('Client-Id'),
             "bearer" => FacadesCookie::get('Bearer'),
             "auth" => FacadesCookie::get('Auth')
-
         ];
     }
 
