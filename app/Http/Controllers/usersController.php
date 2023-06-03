@@ -112,6 +112,39 @@ class usersController extends Controller
         ]);
     }
 
+    public function autentification_via_cookie(){
+        $request = new Request();
+        
+        if( Cookie::get('email-Users') && Cookie::get('remember_token')){
+            /** autentification via les cookies email-Users et remember_token  */
+            /** 
+             * @todo retravailler sur la session génératice voir avec la validation de requete. 
+             * @final faire un démarage de session  
+             * */           
+                $request->session()->regenerate();
+                $user = users::where("email", Cookie::get('email-Users'))->first();
+                //** Check if user is admin */
+                $admin = new Admin();
+                $check = $admin::where('email', Cookie::get('email-Users'))->first();
+                if ($check) {
+                    Auth::guard('admin')->attempt(['email' => Cookie::get('email-Users')]);
+                }
+                $modo = new modo();
+                $check = $modo::where('email', Cookie::get('email-Users'))->first();
+                if ($check) {
+                    Auth::guard('modo')->attempt(['email' => Cookie::get('email-Users')]);
+                }
+    
+                $logginController = new logginController();
+                $logginController->infoLog("Automatique Session de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
+                return redirect()->intended('serveur');
+            
+        }
+        return to_route("auth.login")->withErrors([
+            'error' => 'Les informations de connexion sont incorrectes. Veuillé vérifier votre adresse email et votre mot de passe "Code erreur 1".'
+        ]);
+    }
+
     public function logout(Request $request)
     {
         $user = users::where("id", auth()->user()->id)->first();

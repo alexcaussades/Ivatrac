@@ -86,6 +86,11 @@ Route::prefix("auth/")->group(function () {
         if (Auth::user() != null) {
             return redirect()->route("serveur");
         }
+        if( Cookie::get('email-Users') != null && Cookie::get('remember_token') != null){
+            $logginController = new usersController();
+            $logginController->autentification_via_cookie(Cookie::get('email-Users'), Cookie::get('remember_token'));
+            return redirect()->route("serveur");
+        }
         return view("auth.login");
     })->name("auth.login");
 
