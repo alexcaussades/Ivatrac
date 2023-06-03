@@ -32,7 +32,7 @@
 </style>
 
 <div class="container">
-    <h1> Bienvenue </h1>
+    <h1> Bienvenue {{ auth()->user()->name }}</h1>
 
     @auth('admin')
     <div class="alert alert-info" role="alert">

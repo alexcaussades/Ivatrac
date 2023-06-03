@@ -50,7 +50,7 @@ Route::get('/logout', function (Request $request) {
 
 Route::get('/', function (Request $request) { 
     /** creation d'un cookie sur laravel */
-    dd(Cookie::get("name"));          
+    dd(Cookie::get('email-Users'), Cookie::get('remember_token'));          
     return response()->view('welcome')->cookie('name', 'value', 0.5);
 })->where('client', '[0-9]+');
 
