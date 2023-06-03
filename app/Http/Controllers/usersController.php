@@ -66,7 +66,9 @@ class usersController extends Controller
             $request->session()->regenerate();
             $user = users::where("id", auth()->user()->id)->first();
             Cookie::queue('email-Users', $user->email, time() + 60 * 60 * 24 * 30);
-            Cookie::queue('remember_token', $user->remember_token, time() + 60 * 60 * 24 * 30);
+            if ($request->remember == "on"){
+                Cookie::queue('remember_token', $user->remember_token, time() + 86400 * 30);
+            }
             //** Check if user is admin */
             $admin = new Admin();
             $check = $admin::where('email', $credentials['email'])->first();
@@ -95,7 +97,7 @@ class usersController extends Controller
                     Auth::guard('admin')->attempt(['email' => Cookie::get('email-Users')]);
                 }
                 $modo = new modo();
-                $check = $modo::where('email', $credentials['email'])->first();
+                $check = $modo::where('email', Cookie::get('email-Users'))->first();
                 if ($check) {
                     Auth::guard('modo')->attempt(['email' => Cookie::get('email-Users')]);
                 }
