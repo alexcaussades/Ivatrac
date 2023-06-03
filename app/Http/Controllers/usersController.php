@@ -17,6 +17,7 @@ use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\logginController;
 use App\Http\Requests\loginValidatorRequest;
+use Illuminate\Support\Facades\Cookie;
 
 class usersController extends Controller
 {
@@ -64,21 +65,45 @@ class usersController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $user = users::where("id", auth()->user()->id)->first();
+            Cookie::queue('email-Users', $user->email, time() + 60 * 60 * 24 * 30);
+            Cookie::queue('remember_token', $user->remember_token, time() + 60 * 60 * 24 * 30);
             //** Check if user is admin */
             $admin = new Admin();
             $check = $admin::where('email', $credentials['email'])->first();
-            if($check){
+            if ($check) {
                 Auth::guard('admin')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
             }
             $modo = new modo();
             $check = $modo::where('email', $credentials['email'])->first();
-            if($check){
+            if ($check) {
                 Auth::guard('modo')->attempt(['email' => $credentials['email'], 'password' => $credentials['password']]);
             }
 
             $logginController = new logginController();
             $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
             return redirect()->intended('serveur');
+        }
+
+        if( Cookie::get('email-Users') && Cookie::get('remember_token')){
+            if (Auth::attempt(Cookie::get('email-Users'), Cookie::get('remember_token'))) {
+                $request->session()->regenerate();
+                $user = users::where("email", Cookie::get('email-Users'))->first();
+                //** Check if user is admin */
+                $admin = new Admin();
+                $check = $admin::where('email', Cookie::get('email-Users'))->first();
+                if ($check) {
+                    Auth::guard('admin')->attempt(['email' => Cookie::get('email-Users')]);
+                }
+                $modo = new modo();
+                $check = $modo::where('email', $credentials['email'])->first();
+                if ($check) {
+                    Auth::guard('modo')->attempt(['email' => Cookie::get('email-Users')]);
+                }
+    
+                $logginController = new logginController();
+                $logginController->infoLog("Automatique Session de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
+                return redirect()->intended('serveur');
+            }
         }
         return to_route("auth.login")->withErrors([
             'error' => 'Les informations de connexion sont incorrectes. Veuillé vérifier votre adresse email et votre mot de passe.'
@@ -90,6 +115,7 @@ class usersController extends Controller
         $user = users::where("id", auth()->user()->id)->first();
         $logginController = new logginController();
         $logginController->infoLog("Logout de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
+        Cookie::queue(Cookie::forget('remember_token'));
         $request->session()->flush();
     }
 

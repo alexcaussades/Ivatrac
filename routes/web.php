@@ -3,26 +3,26 @@
 
 
 use App\Models\whitelist;
-use Illuminate\Support\Env;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use PhpParser\Node\Stmt\While_;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AtcController;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\logginController;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
-use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\DiscordNotfyController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -48,22 +48,10 @@ Route::get('/logout', function (Request $request) {
     return to_route("auth.logout");
 })->name("logout");
 
-Route::get('/', function (Request $request) {
-    $auth = "";
-    if ($request->input("client") == "123456789") {
-        $auth = "autentification reussie";
-    };
-    return [
-        'name' => 'John Doe',
-        'age' => 30,
-        'address' => '123 Main St',
-        'city' => 'New York',
-        'state' => 'NY',
-        'zip' => '10001',
-        'all' => $request->input("all", "je suis un parametre par defaut"),
-        'auth' => $auth
-
-    ];
+Route::get('/', function (Request $request) { 
+    /** creation d'un cookie sur laravel */
+    dd(Cookie::get("name"));          
+    return response()->view('welcome')->cookie('name', 'value', 0.5);
 })->where('client', '[0-9]+');
 
 Route::get('discord', function (DiscordNotfyController $discordNotfyController) {

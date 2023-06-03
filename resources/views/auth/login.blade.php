@@ -15,7 +15,11 @@
                 @csrf
                 <div class="form-group">
                     <label for="email">Email</label>
+                    @if( Cookie::get("email-Users") )
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Email" aria-describedby="helpId" value="{{ Cookie::get("email-Users") }}">
+                    @else
                     <input type="email" name="email" id="email" class="form-control" placeholder="Email" aria-describedby="helpId">
+                    @endif
                     <small id="helpId" class="text-muted">Help text</small>
                 </div>
                 <div class="form-group">
