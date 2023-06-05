@@ -85,28 +85,6 @@ class usersController extends Controller
             $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
             return redirect()->intended('serveur');
         }
-
-        if( Cookie::get('email-Users') && Cookie::get('remember_token')){
-            if (Auth::attempt(Cookie::get('email-Users'), Cookie::get('remember_token'))) {
-                $request->session()->regenerate();
-                $user = users::where("email", Cookie::get('email-Users'))->first();
-                //** Check if user is admin */
-                $admin = new Admin();
-                $check = $admin::where('email', Cookie::get('email-Users'))->first();
-                if ($check) {
-                    Auth::guard('admin')->attempt(['email' => Cookie::get('email-Users')]);
-                }
-                $modo = new modo();
-                $check = $modo::where('email', Cookie::get('email-Users'))->first();
-                if ($check) {
-                    Auth::guard('modo')->attempt(['email' => Cookie::get('email-Users')]);
-                }
-    
-                $logginController = new logginController();
-                $logginController->infoLog("Automatique Session de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
-                return redirect()->intended('serveur');
-            }
-        }
         return to_route("auth.login")->withErrors([
             'error' => 'Les informations de connexion sont incorrectes. Veuillé vérifier votre adresse email et votre mot de passe.'
         ]);
@@ -116,23 +94,27 @@ class usersController extends Controller
         $request = new Request();
         
         if( Cookie::get('email-Users') && Cookie::get('remember_token')){
-            /** autentification via les cookies email-Users et remember_token  */
-            /** 
-             * @todo retravailler sur la session génératice voir avec la validation de requete. 
-             * @final faire un démarage de session  
-             * */           
-                $request->session()->regenerate();
-                $user = users::where("email", Cookie::get('email-Users'))->first();
+           
+            if (Cookie::get('remember_token') == null) {
+                Auth::logout();
+                Cookie::queue(Cookie::forget('remember_token'));
+                $request->session()->flush();
+                return to_route("auth.login")->withErrors([
+                    'error' => 'Les informations de connexion sont incorrectes. Veuillé vérifier votre adresse email et votre mot de passe.'
+                ]);
+            }          
+                $user = users::where("email", Cookie::get('email-Users'))->where("remember_token", Cookie::get('remember_token'))->first();
+                Auth::loginUsingId($user->id);
                 //** Check if user is admin */
                 $admin = new Admin();
-                $check = $admin::where('email', Cookie::get('email-Users'))->first();
+                $check = $admin::where('email', $user->email)->first();
                 if ($check) {
-                    Auth::guard('admin')->attempt(['email' => Cookie::get('email-Users')]);
+                    Auth::guard('admin')->login($user);
                 }
                 $modo = new modo();
-                $check = $modo::where('email', Cookie::get('email-Users'))->first();
+                $check = $modo::where('email', $user->email)->first();
                 if ($check) {
-                    Auth::guard('modo')->attempt(['email' => Cookie::get('email-Users')]);
+                    Auth::guard('modo')->login($user);
                 }
     
                 $logginController = new logginController();
@@ -141,7 +123,7 @@ class usersController extends Controller
             
         }
         return to_route("auth.login")->withErrors([
-            'error' => 'Les informations de connexion sont incorrectes. Veuillé vérifier votre adresse email et votre mot de passe "Code erreur 1".'
+            'error' => 'Les informations de connexion sont incorrectes. "Code erreur 1".'
         ]);
     }
 
@@ -150,6 +132,7 @@ class usersController extends Controller
         $user = users::where("id", auth()->user()->id)->first();
         $logginController = new logginController();
         $logginController->infoLog("Logout de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
+        Auth::logout();
         Cookie::queue(Cookie::forget('remember_token'));
         $request->session()->flush();
     }

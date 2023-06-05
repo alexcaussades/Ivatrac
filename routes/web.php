@@ -41,6 +41,8 @@ Route::get('/welcome', function (usersController $usersController, Request $requ
 })->name("welcome");
 
 Route::get('/login', function (Request $request) {
+    $authuser = new usersController();
+    $authuser->autentification_via_cookie();
     return to_route("auth.login");
 })->name("login");
 
@@ -50,7 +52,9 @@ Route::get('/logout', function (Request $request) {
 
 Route::get('/', function (Request $request) { 
     /** creation d'un cookie sur laravel */
-    dd(Cookie::get('email-Users'), Cookie::get('remember_token'));          
+    
+    $authuser = new usersController();
+    $authuser->autentification_via_cookie($request);       
     return response()->view('welcome')->cookie('name', 'value', 0.5);
 })->where('client', '[0-9]+');
 
@@ -86,11 +90,8 @@ Route::prefix("auth/")->group(function () {
         if (Auth::user() != null) {
             return redirect()->route("serveur");
         }
-        if( Cookie::get('email-Users') != null && Cookie::get('remember_token') != null){
-            $logginController = new usersController();
-            $logginController->autentification_via_cookie(Cookie::get('email-Users'), Cookie::get('remember_token'));
-            return redirect()->route("serveur");
-        }
+        $authuser = new usersController();
+        $authuser->autentification_via_cookie();   
         return view("auth.login");
     })->name("auth.login");
 
