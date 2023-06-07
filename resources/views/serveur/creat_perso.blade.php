@@ -42,3 +42,5 @@
     <button type="submit" class="d-flex justify-content-end mt-2 btn btn-primary">Envoyer ma demande</button>
   </form>
 </div>
+
+@endsection

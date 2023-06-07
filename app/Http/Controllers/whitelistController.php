@@ -59,6 +59,12 @@ class whitelistController extends Controller
         return $whitelist;
     }
 
+    public function viewAll()
+    {
+        $whitelist = whitelist::all();
+        return $whitelist;
+    }
+
     public function count_whitelist_attente()
     {
         $users = users::where('whiteList', 2)->count();

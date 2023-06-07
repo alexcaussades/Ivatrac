@@ -68,8 +68,8 @@
         <form action="#" method="get">
             <button type="submit" class="ms-1 btn btn-warning btn-sm" title="Accès au panel modérateur">Panel Modo</button>
         </form>
-        <form action="#">
-            <button type="submit" class="ms-1 btn btn-info btn-sm" title="Personnes en attente !">Whitelist <span class="badge rounded-pill text-bg-danger">{{ $whitelistAttente }}</span></button>
+        <form action="{{ Route("whitelist-admin") }}">
+            <button type="submit" class="ms-1 btn btn-info btn-sm" title="Personnes en attente !">Whitelist <span class="badge rounded-pill text-bg-danger">{{ $whitelistAttente }}</span> <span class="badge rounded-pill text-bg-danger">New</span></button>
         </form>
         @endauth
     </div>
@@ -131,4 +131,3 @@
 
 
     </div>
-    @endsection

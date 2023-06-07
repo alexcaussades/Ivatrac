@@ -80,6 +80,51 @@ Route::get("/whitelist/{slug}", function (Request $request, whitelistController 
     return view("whitelist-name", ["slug" => $whitelistController]);
 })->name("whitelist.slug");
 
+Route::prefix("gestion-white/")->group(function () {
+    Route::get("/", function (Request $request, whitelistController $whitelistController) { 
+        $whitelistController = $whitelistController->viewAll();     
+        return view("serveur.whitelist.whitelistview", ["whitelist" => $whitelistController]);
+    })->name("whitelist-admin")->middleware("auth");
+
+    Route::get("/edit/{slug}", function (Request $request, whitelistController $whitelistController) {
+        $request->merge([
+            "slug" => $request->slug
+        ]);
+
+        $whitelistController = $whitelistController->view($request);
+        $users = new usersController();
+        $users = $users->get_info_user($whitelistController->id_users);
+        if ($whitelistController == null) {
+            return redirect()->route("whitelist");
+        }
+        return view("serveur.whitelist.whitelistupdate", ["slug" => $whitelistController, "users" => $users]);
+    })->name("whitelist-admin.edit")->middleware("auth");
+
+    Route::post("/edit/{slug}", function (Request $request, whitelistController $whitelistController) {
+        $request->merge([
+            "slug" => $request->slug
+        ]);
+
+        $whitelistController = $whitelistController->edit($request);
+        if ($whitelistController == null) {
+            return redirect()->route("whitelist");
+        }
+        return redirect()->route("whitelist-admin", ["slug" => $whitelistController]);
+    })->name("whitelist-admin.edit")->middleware("auth");
+
+    Route::get("/delete/{slug}", function (Request $request, whitelistController $whitelistController) {
+        $request->merge([
+            "slug" => $request->slug
+        ]);
+
+        $whitelistController = $whitelistController->delete($request);
+        if ($whitelistController == null) {
+            return redirect()->route("whitelist");
+        }
+        return redirect()->route("whitelist");
+    })->name("whitelist-admin.delete")->middleware("admin");
+});
+
 Route::prefix("auth/")->group(function () {
     Route::get("add", [CreatAuhUniqueUsersController::class, "creatAuthUniqueUses"]);
     Route::get("verif/{id}", function (Request $request, CreatAuhUniqueUsersController $creatAuhUniqueUsersController) {
@@ -379,85 +424,6 @@ Route::prefix("install/")->group(function () {
         $users_websiteController = \App\Models\users::all();
         return $users_websiteController;
     });
-});
-
-Route::prefix("serveur/")->group(function () {
-    Route::get("/", function (usersController $usersController, whitelistController $whitelistController, Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $users = $usersController->get_info_user(auth()->user()->id);
-            $role = $usersController->get_role_user(auth()->user()->role);
-            $whitelist = $whitelistController->linkUser(auth()->user()->id);
-            $whitelistAttente = $whitelistController->count_whitelist_attente();
-            
-            return view("serveur/index", ["users" => $users, "role" => $role, "whitelist" => $whitelist, "whitelistAttente" => $whitelistAttente]);
-        }
-    })->name("serveur");
-
-    Route::post("/", function (usersController $usersController, whitelistController $whitelistController, Request $request) {
-        $whitelistController->create($request);
-        $users = $usersController->get_info_user(auth()->user()->id);
-        $role = $usersController->get_role_user(auth()->user()->role);
-        $whitelist = $whitelistController->linkUser(auth()->user()->id);
-        return view("serveur.index", ["users" => $users, "role" => $role, "whitelist" => $whitelist]);
-    })->name("serveur.index");
-
-    Route::get("api", function (Request $request) {
-        $api = new ApiGestionController();
-        $information = $api->check_Informations(Auth::user()->id);
-        return view("serveur.api", ["information" => $information]);
-    })->name("serveur.api");
-    
-    Route::post("api", function (Request $request) {
-        $api = new ApiGestionController();
-        $information = $api->creat_keys_api();
-        /** Faire une function de masquage */
-        
-        return view("serveur.api", ["information" => $information]);
-    })->name("serveur.api.post");
-
-    Route::post("api/create", function (Request $request) {
-        $api = new ApiGestionController();
-        $api->creat_keys_api();
-        return to_route("serveur.api");
-    })->name("serveur.api.create");
-
-    Route::post("api/delete", function (Request $request) {
-        $api = new ApiGestionController();
-        $api->delete_keys_api($request);
-        return to_route("serveur.api");
-    })->name("serveur.api.delete");
-});
-
-Route::prefix("logs")->group(function () {
-    Route::get("/", function (logginController $logginController) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $logs = $logginController->getLoggins();
-            return view("auth.logs", ["logs" => $logs]);
-        }
-    })->middleware(["auth:admin"])->name("logs");
-
-    Route::get("modo", function (logginController $logginController) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $logs = $logginController->getLoggins();
-            return view("auth.logs", ["logs" => $logs]);
-        }
-    })->middleware(["auth:modo"])->name("logs.modo");
-
-    Route::delete("{id}", function (logginController $logginController, Request $request) {
-        $logginController->delete($request);
-        return redirect()->route("logs");
-    })->middleware(["auth:admin"])->name("logs.delete");
-
-    Route::delete("modo/{id}", function (logginController $logginController, Request $request) {
-        $logginController->delete($request);
-        return redirect()->route("logs.modo");
-    })->middleware(["auth:modo"])->name("logs.modo.delete");
 });
 
 Route::get('/test', function (Request $request) {

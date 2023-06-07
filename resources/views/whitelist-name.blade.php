@@ -73,4 +73,4 @@
             @endauth
         </div>
 
-        @endsection
+@endsection
