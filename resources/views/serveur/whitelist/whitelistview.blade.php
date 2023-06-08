@@ -32,7 +32,7 @@
                                 <td>
                                     <div class="d-flex flex-row">
                                     <div class="p-2">
-                                    <form action="{{ Route('whitelist-admin.edit', $whitelist->slug)}}" method="get">
+                                    <form action="{{ Route('whitelist-admin.check', $whitelist->slug)}}" method="get">
                                         @csrf
                                         <button class="btn btn-primary">View</button>
                                     </form>

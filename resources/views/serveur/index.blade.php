@@ -90,6 +90,8 @@
                         </li>
                         @elseif (auth()->user()->whiteList == 3)
                         <li><strong> Whitelist :</strong> <status-good>Accepté</status-good> </li>
+                        @elseif (auth()->user()->whiteList == 4)
+                        <li><strong> Whitelist :</strong> <span class="badge text-bg-danger">Refuser</span> </li>
                         @else
                         <li><strong> Whitelist :</strong> <a href="#"><button type="submit" class="btn btn-success btn-sm">Je fais ma demande</button></a></li>
                         @endif

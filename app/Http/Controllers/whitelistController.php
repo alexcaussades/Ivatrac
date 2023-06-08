@@ -70,4 +70,17 @@ class whitelistController extends Controller
         $users = users::where('whiteList', 2)->count();
         return $users;
     }
+
+    public function count_whitelist_accepte()
+    {
+        $users = users::where('whiteList', 3)->count();
+        return $users;
+    }
+
+    public function update_users_whitelist($id, $number)
+    {
+
+        $users = users::where('id', $id )->update(['whiteList' => $number]);
+        return $users;
+    }
 }

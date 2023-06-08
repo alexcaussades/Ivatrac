@@ -86,6 +86,32 @@ Route::prefix("gestion-white/")->group(function () {
         return view("serveur.whitelist.whitelistview", ["whitelist" => $whitelistController]);
     })->name("whitelist-admin")->middleware("auth");
 
+    Route::get("/check/{slug}", function (Request $request, whitelistController $whitelistController) {
+        $request->merge([
+            "slug" => $request->slug
+        ]);
+
+        $whitelistController = $whitelistController->view($request);
+        $users = new usersController();
+        $users = $users->get_info_user($whitelistController->id_users);
+        if ($whitelistController == null) {
+            return redirect()->route("whitelist");
+        }
+        return view("serveur.whitelist.whitelistcheck", ["slug" => $whitelistController, "users" => $users]);
+    })->name("whitelist-admin.check")->middleware("auth");
+
+    Route::post("/check/{slug}", function (Request $request, whitelistController $whitelistController) {
+        $request->merge([
+            "slug" => $request->slug
+        ]);
+
+        $whitelistController = $whitelistController->check($request);
+        if ($whitelistController == null) {
+            return redirect()->route("whitelist");
+        }
+        return redirect()->route("whitelist-admin", ["slug" => $whitelistController]);
+    })->name("whitelist-admin.check")->middleware("auth");
+
     Route::get("/edit/{slug}", function (Request $request, whitelistController $whitelistController) {
         $request->merge([
             "slug" => $request->slug
@@ -123,6 +149,32 @@ Route::prefix("gestion-white/")->group(function () {
         }
         return redirect()->route("whitelist");
     })->name("whitelist-admin.delete")->middleware("admin");
+
+    Route::post("/add-serveur/{id}", function (Request $request, whitelistController $whitelistController, usersController $usersController) {
+        $request->merge([
+            "id" => $request->id
+        ]);
+        
+        if ($whitelistController == null) {
+            return redirect()->route("serveur");
+        }
+        $usercontroller = new whitelistController();
+        $usercontroller->update_users_whitelist($request->id, "3");
+        return redirect()->route("whitelist-admin");
+    })->name("whitelist-admin-add-serveur")->middleware("auth");
+
+    Route::post("/refus-serveur/{id}", function (Request $request, whitelistController $whitelistController, usersController $usersController) {
+        $request->merge([
+            "id" => $request->id
+        ]);
+        
+        if ($whitelistController == null) {
+            return redirect()->route("serveur");
+        }
+        $usercontroller = new whitelistController();
+        $usercontroller->update_users_whitelist($request->id, "4");
+        return redirect()->route("whitelist-admin");
+    })->name("whitelist-admin-refus-serveur")->middleware("auth");
 });
 
 Route::prefix("auth/")->group(function () {
