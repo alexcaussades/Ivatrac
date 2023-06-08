@@ -84,6 +84,9 @@
                     </div>
                 </div>
                 <div>
+                    <?php
+                    // TODO: Note Admin en BDD et affichage sur la page de l'utilisateur.    
+                    ?>
                     <form action="#" method="post">
                         @csrf
                         <label for=""><strong> Note Admin ! </strong></label>

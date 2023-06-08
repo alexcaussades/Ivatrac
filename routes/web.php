@@ -126,6 +126,7 @@ Route::prefix("gestion-white/")->group(function () {
         return view("serveur.whitelist.whitelistupdate", ["slug" => $whitelistController, "users" => $users]);
     })->name("whitelist-admin.edit")->middleware("auth");
 
+    // TODO: faire la route pour l'update de la whitelist sur une page externe @alexcaussades #9
     Route::post("/edit/{slug}", function (Request $request, whitelistController $whitelistController) {
         $request->merge([
             "slug" => $request->slug
