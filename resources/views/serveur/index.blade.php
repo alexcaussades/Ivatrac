@@ -131,5 +131,10 @@
         </div>
         @endif
 
+        @if (auth()->user()->whiteList == 3)
+
+        <div class="container">
+            <h4 class="mt-2"> Votre Connexion Serveur ! </h4>
+        @endif
 
     </div>

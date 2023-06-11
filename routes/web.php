@@ -173,7 +173,7 @@ Route::prefix("gestion-white/")->group(function () {
             return redirect()->route("serveur");
         }
         $usercontroller = new whitelistController();
-        $usercontroller->update_users_whitelist($request->id, "4");
+        $usercontroller->update_users_whitelist($request->id, "2");
         return redirect()->route("whitelist-admin");
     })->name("whitelist-admin-refus-serveur")->middleware("auth");
 });
