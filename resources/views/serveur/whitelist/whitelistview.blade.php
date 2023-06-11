@@ -55,7 +55,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <a href="#" class="btn btn-success">Ajouter un joueur</a>
+                    <button type="submit" class="btn btn-primary" href="#" title="Ajout d'un membre manuellement" disabled>Ajout d'un menbre</button>
                 </div>
             </div>
         </div>
