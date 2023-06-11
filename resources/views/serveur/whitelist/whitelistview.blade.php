@@ -55,7 +55,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <button type="submit" class="btn btn-primary" disabled><a href="#" title="Ajout d'un membre manuellement">Ajout d'un menbre</a></button>
+                    <button type="submit" class="btn btn-primary" href="#" title="Ajout d'un membre manuellement" disabled>Ajout d'un menbre</button>
                 </div>
             </div>
         </div>
