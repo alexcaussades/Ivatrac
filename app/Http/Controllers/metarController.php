@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Http;
+
 
 class metarController extends Controller
 {
@@ -17,11 +19,16 @@ class metarController extends Controller
     public function sercretMetarGitHub()
     {
         /** secret github chifrée sur la repo L10 */
-        $secret = env("Token_secret_github");
+        $secret = env("METAR_API_KEY");
+        $formatage = "Barer: x_LveP6GNrgdVJ9BxlmIUAJMOlfCMzTxNcnJC8zLgW0";
 
-        $bb = Http::post("https://api.github.com/repos/alexcaussades/L10", [
-            "Token_secret_github" => $secret
+        $bb = Http::withHeaders([
+            'Authorization' => $formatage,
+            'Accept' => 'application/json',
+        ])->get('https://avwx.rest/api/metar/lfpg/', [
+            'token' => $secret,
         ]);
-        dd($bb);
+        
+        return $bb;
     }
 }

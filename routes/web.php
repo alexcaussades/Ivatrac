@@ -20,9 +20,7 @@ use App\Http\Controllers\ApiGestionController;
 use App\Http\Controllers\DiscordNotfyController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
-
-
-
+use App\Http\Controllers\metarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -487,4 +485,10 @@ Route::get('/test', function (Request $request) {
         return "autentification echoué";
     }
     
+});
+
+Route::get("metar", function (Request $request) {
+    $metar = new metarController();
+    $metar = $metar->sercretMetarGitHub();
+    return $metar;
 });
