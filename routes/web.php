@@ -487,8 +487,20 @@ Route::get('/test', function (Request $request) {
     
 });
 
-Route::get("metar", function (Request $request) {
+Route::get("metar/{icao}", function (Request $request) {
+    $request->merge([
+        "icao" => $request->icao
+    ]);
     $metar = new metarController();
-    $metar = $metar->sercretMetarGitHub();
+    $metar = $metar->metar($request->icao);
+    return $metar;
+});
+
+Route::get("taf/{icao}", function (Request $request) {
+    $request->merge([
+        "icao" => $request->icao
+    ]);
+    $metar = new metarController();
+    $metar = $metar->taf($request->icao);
     return $metar;
 });
