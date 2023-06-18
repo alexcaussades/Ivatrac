@@ -1,0 +1,80 @@
+@extends("base")
+
+@section("title", "Metar and TAF IVAO")
+
+@include("navbar")
+
+@section('content')
+
+    <div class="container" style="margin-top: 20px;">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Metar : {{$metar["station"]}}</h1>
+            </div>
+            <div>
+                @if ($metar["flight_rules"] == "VFR")
+                    <button class="btn btn-success btn-sm">VFR</button>
+                @endif
+                @if ($metar["flight_rules"] == "LIFR")
+                    <button class="btn btn-dark btn-sm">LIFR</button>
+                @endif
+                @if ($metar["flight_rules"] == "IFR")
+                    <button class="btn btn-danger btn-sm">IFR</button>
+                @endif
+                @if ($metar["flight_rules"] == "MVFR")
+                    <button class="btn btn-primary btn-sm">MVFR</button>
+                @endif
+            </div>
+            <div class="card mt-2">
+                <div class="card-body">
+                    <h4 class="card-title">{{$metar["metar"]}}</h4>
+                    <p class="card-text">
+                        <p>Time: {{$metar["meta_day"]["time"]}}</p>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Wind : {{$metar["wind"]["wind"]}}</li>
+                                <li>Visibility : {{$metar["visibility"]}}</li>
+                                <li>Clouds : {{$metar["clouds"]}}</li>
+                                <li>Temperature : {{$metar["temperature"]}} °C</li>
+                                <li>Dew Point : {{$metar["dewpoint"]}} °C</li>
+                                <li>QNH : {{$metar["QNH"]}}</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>direction : {{$metar["wind"]["direction"]}} °</li>
+                                <li>wind_variable : {{$metar["wind"]["wind_variable"]}} °</li>
+                                <li>Speed : {{$metar["wind"]["speed_KT"]}} Kt</li>
+                                <li>Speed : {{$metar["wind"]["speed_KM"]}} KM/h</li>
+                            </ul>
+                        </div>
+                    </div>
+                    </p>
+                </div>
+            </div>
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ $taf["taf"] }}</h4>
+                        <p class="card-text">
+                            <ul> Rules :   @if ($metar["flight_rules"] == "VFR")
+                                <button class="btn btn-success btn-sm">VFR</button>
+                            @endif
+                            @if ($metar["flight_rules"] == "LIFR")
+                                <button class="btn btn-dark btn-sm">LIFR</button>
+                            @endif
+                            @if ($metar["flight_rules"] == "IFR")
+                                <button class="btn btn-danger btn-sm">IFR</button>
+                            @endif
+                            @if ($metar["flight_rules"] == "MVFR")
+                                <button class="btn btn-primary btn-sm">MVFR</button>
+                            @endif</ul>
+                        </p>
+                    </div>
+                </div>
+            <hr class="mt-2">
+            
+        </div>
+    </div>
+
+@endsection

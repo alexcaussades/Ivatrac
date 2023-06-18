@@ -487,20 +487,21 @@ Route::get('/test', function (Request $request) {
     
 });
 
-Route::get("metar/{icao}", function (Request $request) {
-    $request->merge([
-        "icao" => $request->icao
-    ]);
-    $metar = new metarController();
-    $metar = $metar->metar($request->icao);
-    return $metar;
-});
 
-Route::get("taf/{icao}", function (Request $request) {
-    $request->merge([
-        "icao" => $request->icao
-    ]);
-    $metar = new metarController();
-    $metar = $metar->taf($request->icao);
-    return $metar;
+Route::prefix("metar")->group(function () {
+    Route::get("/", function (Request $request) {
+        return view("metar.index");
+    });
+
+    Route::get("/{icao}", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $metarController = new metarController();
+        $metar = $metarController->metar($request->icao);
+        $taf = $metarController->taf($request->icao);
+        //$ATC = $metarController->getATC($request->icao);
+        return view("metar.icao", ["metar" => $metar, "taf" => $taf]);
+        
+    });
 });
