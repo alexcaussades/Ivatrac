@@ -11,7 +11,7 @@
             <div class="col-md-12">
                 <h1>Metar : {{$metar["station"]}}</h1>
             </div>
-            <div>
+            <div class="d-flex">
                 @if ($metar["flight_rules"] == "VFR")
                     <button class="btn btn-success btn-sm">VFR</button>
                 @endif
@@ -25,6 +25,15 @@
                     <button class="btn btn-primary btn-sm">MVFR</button>
                 @endif
             </div>
+            <div class="mt-2">
+            <form action="#" method="post">
+                    @csrf
+                    <div class="form-group">
+                        <input type="hidden" name="icao"  value=" {{$metar["station"]}} ">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm" disabled>IVAO {{$metar["station"]}}</button>
+            </form>
+        </div>
             <div class="card mt-2">
                 <div class="card-body">
                     <h4 class="card-title">{{$metar["metar"]}}</h4>
@@ -52,9 +61,10 @@
                     </div>
                     </p>
                 </div>
-            </div>
+            </div>                
+            <div class="mt-2"><h1>TAF:</h1></div>
                 <div class="card mt-2">
-                    <div class="card-body">
+                    <div class="card-body mt-2">
                         <h4 class="card-title">{{ $taf["taf"] }}</h4>
                         <p class="card-text">
                             <ul> @if ($metar["flight_rules"] == "VFR")
