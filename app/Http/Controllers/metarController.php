@@ -88,7 +88,7 @@ class metarController extends Controller
         ]) 
         ->get('https://avwx.rest/api/metar/'.$icao);
         
-        $time = $response->json("time")["dt"];
+        $time = $response->json("time")["dt"] ?? null;
         $i = new UtilsDateTime($time);
 
         $speed = $response->json("wind_speed")["value"] * 1.852;

@@ -43,8 +43,8 @@
                         </div>
                         <div class="col-md-6">
                             <ul>
-                                <li>direction : {{$metar["wind"]["direction"]}} °</li>
-                                <li>wind_variable : {{$metar["wind"]["wind_variable"]}} °</li>
+                                <li>Direction : {{$metar["wind"]["direction"]}} °</li>
+                                <li>Wind variable : {{$metar["wind"]["wind_variable"]}} °</li>
                                 <li>Speed : {{$metar["wind"]["speed_KT"]}} Kt</li>
                                 <li>Speed : {{$metar["wind"]["speed_KM"]}} KM/h</li>
                             </ul>
@@ -57,7 +57,7 @@
                     <div class="card-body">
                         <h4 class="card-title">{{ $taf["taf"] }}</h4>
                         <p class="card-text">
-                            <ul> Rules :   @if ($metar["flight_rules"] == "VFR")
+                            <ul> @if ($metar["flight_rules"] == "VFR")
                                 <button class="btn btn-success btn-sm">VFR</button>
                             @endif
                             @if ($metar["flight_rules"] == "LIFR")
