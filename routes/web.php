@@ -493,7 +493,7 @@ Route::prefix("metar")->group(function () {
         return view("metar.index");
     });
 
-    Route::get("/{icao}", function (Request $request) {
+    Route::get("/search", function (Request $request) {
         $request->merge([
             "icao" => $request->icao
         ]);
@@ -503,5 +503,5 @@ Route::prefix("metar")->group(function () {
         //$ATC = $metarController->getATC($request->icao);
         return view("metar.icao", ["metar" => $metar, "taf" => $taf]);
         
-    });
+    })->name("metars.icao");
 });
