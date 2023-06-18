@@ -17,6 +17,11 @@ class metarController extends Controller
         return view('metar');
     }
 
+    public function getApiIvao(){
+        $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
+        return $api->json();
+    }
+
     public function metar($icao)
     {
         /** secret github chifrée sur la repo L10 */
