@@ -25,7 +25,6 @@ class metarController extends Controller
                 return $value;
             }
         }
-        
     }
 
     public function getApiATC_TWR($icao){
@@ -36,8 +35,7 @@ class metarController extends Controller
             if($value["callsign"] == $icao."_TWR"){
                 return $value;
             }
-        }
-        
+        } 
     }
 
     public function getApiATC_GND($icao){
@@ -47,9 +45,9 @@ class metarController extends Controller
             if($value["callsign"] == $icao."_GND"){
                 return $value;
             }
-        }
-        
+        }  
     }
+
     public function getApiATC_FSS($icao){
         $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
         foreach ($api->json()["clients"]["atcs"] as $key => $value) {
@@ -57,8 +55,7 @@ class metarController extends Controller
             if($value["callsign"] == $icao."_FSS"){
                 return $value;
             }
-        }
-        
+        }  
     }
 
     public function getATC($icao){

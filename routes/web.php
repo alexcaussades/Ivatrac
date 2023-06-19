@@ -491,7 +491,7 @@ Route::get('/test', function (Request $request) {
 Route::prefix("metar")->group(function () {
     Route::get("/", function (Request $request) {
         return view("metar.index");
-    });
+    })->name("metars.index");
 
     Route::get("/search", function (Request $request) {
         $request->merge([
@@ -500,8 +500,30 @@ Route::prefix("metar")->group(function () {
         $metarController = new metarController();
         $metar = $metarController->metar($request->icao);
         $taf = $metarController->taf($request->icao);
-        //$ATC = $metarController->getATC($request->icao);
-        return view("metar.icao", ["metar" => $metar, "taf" => $taf]);
+        $ATC = $metarController->getATC($request->icao);
+        return view("metar.icao", ["metar" => $metar, "taf" => $taf , "ATC" => $ATC]);
         
     })->name("metars.icao");
+
+    Route::get("/{icao}", function ()
+    {
+        return to_route("metars.index");
+    });
+});
+
+Route::prefix("ivao")->group(function (){
+
+    Route::get("/", function (Request $request) {
+        return view("ivao.index");
+    })->name("ivao.index");
+
+    Route::post("/info", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $ivaoController = new metarController();
+        $ivao = $ivaoController->getATC($request->icao);
+        return $ivao;
+    })->name("ivao.info");
+
 });
