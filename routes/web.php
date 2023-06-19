@@ -497,10 +497,14 @@ Route::prefix("metar")->group(function () {
         $request->merge([
             "icao" => $request->icao
         ]);
+        $request->validate([
+            "icao" => "required|size:4"
+        ]);
+        $icao = strtoupper($request->icao);
         $metarController = new metarController();
-        $metar = $metarController->metar($request->icao);
-        $taf = $metarController->taf($request->icao);
-        $ATC = $metarController->getATC($request->icao);
+        $metar = $metarController->metar($icao);
+        $taf = $metarController->taf($icao);
+        $ATC = $metarController->getATC($icao);
         return view("metar.icao", ["metar" => $metar, "taf" => $taf , "ATC" => $ATC]);
         
     })->name("metars.icao");

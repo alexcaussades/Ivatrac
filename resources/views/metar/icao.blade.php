@@ -63,19 +63,7 @@
             <div class="card-body mt-2">
                 <h4 class="card-title">{{ $taf["taf"] }}</h4>
                 <p class="card-text">
-                <ul> @if ($metar["flight_rules"] == "VFR")
-                    <button class="btn btn-success btn-sm">VFR</button>
-                    @endif
-                    @if ($metar["flight_rules"] == "LIFR")
-                    <button class="btn btn-dark btn-sm">LIFR</button>
-                    @endif
-                    @if ($metar["flight_rules"] == "IFR")
-                    <button class="btn btn-danger btn-sm">IFR</button>
-                    @endif
-                    @if ($metar["flight_rules"] == "MVFR")
-                    <button class="btn btn-primary btn-sm">MVFR</button>
-                    @endif
-                </ul>
+                
                 </p>
             </div>
         </div>
