@@ -21,6 +21,7 @@ use App\Http\Controllers\DiscordNotfyController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
 use App\Http\Controllers\metarController;
+use App\Http\Controllers\PilotIvaoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -529,5 +530,17 @@ Route::prefix("ivao")->group(function (){
         $ivao = $ivaoController->getATC($request->icao);
         return $ivao;
     })->name("ivao.info");
+
+    Route::get("/pilot", function ()
+    {
+        $pilots = new PilotIvaoController();
+        $departure = $pilots->getApideparturePilot("LFBL");
+        $arrivals = $pilots->getApiArrivalPilot("LFBZ");
+        $r = [
+            "departure" => $departure,
+            "arrivals" => $arrivals
+        ];
+        return $r;
+    });
 
 });
