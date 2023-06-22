@@ -49,11 +49,11 @@ Route::get('/logout', function (Request $request) {
     return to_route("auth.logout");
 })->name("logout");
 
-Route::get('/', function (Request $request) { 
+Route::get('/', function (Request $request) {
     /** creation d'un cookie sur laravel */
-    
+
     $authuser = new usersController();
-    $authuser->autentification_via_cookie($request);       
+    $authuser->autentification_via_cookie($request);
     return response()->view('welcome')->cookie('name', 'value', 0.5);
 })->where('client', '[0-9]+');
 
@@ -80,8 +80,8 @@ Route::get("/whitelist/{slug}", function (Request $request, whitelistController 
 })->name("whitelist.slug");
 
 Route::prefix("gestion-white/")->group(function () {
-    Route::get("/", function (Request $request, whitelistController $whitelistController) { 
-        $whitelistController = $whitelistController->viewAll();     
+    Route::get("/", function (Request $request, whitelistController $whitelistController) {
+        $whitelistController = $whitelistController->viewAll();
         return view("serveur.whitelist.whitelistview", ["whitelist" => $whitelistController]);
     })->name("whitelist-admin")->middleware("auth");
 
@@ -154,7 +154,7 @@ Route::prefix("gestion-white/")->group(function () {
         $request->merge([
             "id" => $request->id
         ]);
-        
+
         if ($whitelistController == null) {
             return redirect()->route("serveur");
         }
@@ -167,7 +167,7 @@ Route::prefix("gestion-white/")->group(function () {
         $request->merge([
             "id" => $request->id
         ]);
-        
+
         if ($whitelistController == null) {
             return redirect()->route("serveur");
         }
@@ -188,7 +188,7 @@ Route::prefix("auth/")->group(function () {
             return redirect()->route("serveur");
         }
         $authuser = new usersController();
-        $authuser->autentification_via_cookie();   
+        $authuser->autentification_via_cookie();
         return view("auth.login");
     })->name("auth.login");
 
@@ -388,7 +388,7 @@ Route::prefix("logs")->group(function () {
         $users = $users->get_info_user($logs->user);
         $admin = new AutAdminController();
         $admin = $admin->get_admin($logs->users_admin_id);
-        
+
         return [
             "logs" => [
                 "id" => $logs->id ?? Null,
@@ -413,7 +413,7 @@ Route::prefix("logs")->group(function () {
                 "E-mail" => $admin->email ?? Null
             ]
 
-            ];
+        ];
     })->middleware(["auth:admin"])->name("logs.modo.id");
 
     Route::delete("{id}", function (logginController $logginController, Request $request) {
@@ -479,13 +479,12 @@ Route::prefix("install/")->group(function () {
 });
 
 Route::get('/test', function (Request $request) {
-    
-    if($request->bearerToken()=="123456789"){
+
+    if ($request->bearerToken() == "123456789") {
         return "autentification reussie";
-    }else{
+    } else {
         return "autentification echoué";
     }
-    
 });
 
 
@@ -506,21 +505,19 @@ Route::prefix("metar")->group(function () {
         $metar = $metarController->metar($icao);
         $taf = $metarController->taf($icao);
         $ATC = $metarController->getATC($icao);
-        return view("metar.icao", ["metar" => $metar, "taf" => $taf , "ATC" => $ATC]);
-        
+        return view("metar.icao", ["metar" => $metar, "taf" => $taf, "ATC" => $ATC]);
     })->name("metars.icao");
 
-    Route::get("/{icao}", function ()
-    {
+    Route::get("/{icao}", function () {
         return to_route("metars.index");
     });
 });
 
-Route::prefix("ivao")->group(function (){
+Route::prefix("ivao")->group(function () {
 
     Route::get("/", function (Request $request) {
-        return view("ivao.index");
-    })->name("ivao.index");
+        return to_route("metars.index");
+    });
 
     Route::post("/info", function (Request $request) {
         $request->merge([
@@ -531,16 +528,22 @@ Route::prefix("ivao")->group(function (){
         return $ivao;
     })->name("ivao.info");
 
-    Route::get("/pilot", function ()
-    {
+    Route::get("/pilot", function ($icao = "LFBL") {
         $pilots = new PilotIvaoController();
-        $departure = $pilots->getApideparturePilot("LFBL");
-        $arrivals = $pilots->getApiArrivalPilot("LFBZ");
+        $departure = $pilots->getApideparturePilot($icao);
+        $arrivals = $pilots->getApiArrivalPilot($icao);
+        $coutDeparture = count($departure);
+        $coutArrivals = count($arrivals);
         $r = [
-            "departure" => $departure,
-            "arrivals" => $arrivals
+            "departure" => [
+                "count" => $coutDeparture,
+                "data" => $departure
+            ],
+            "arrivals" => [
+                "count" => $coutArrivals,
+                "data" => $arrivals
+            ]
         ];
         return $r;
     });
-
 });

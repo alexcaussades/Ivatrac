@@ -1,8 +1,8 @@
-@extends("base")
+@extends("metar-base")
 
-@section("title", "Metar and TAF IVAO")
+@section("title", "Metar and TAF and IVAO")
 
-@include("navbar")
+@include("navbar-metar")
 
 @section('content')
 
@@ -26,7 +26,7 @@
             @endif
         </div>
         <div class="mt-2">
-            
+
         </div>
         <div class="card mt-2">
             <div class="card-body">
@@ -63,7 +63,7 @@
             <div class="card-body mt-2">
                 <h4 class="card-title">{{ $taf["taf"] }}</h4>
                 <p class="card-text">
-                
+
                 </p>
             </div>
         </div>

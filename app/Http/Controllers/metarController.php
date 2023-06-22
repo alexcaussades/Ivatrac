@@ -17,48 +17,53 @@ class metarController extends Controller
         return view('metar');
     }
 
-  
-    public function getApiATC_APP($icao){
+
+    public function getApiATC_APP($icao)
+    {
         $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
         foreach ($api->json()["clients"]["atcs"] as $key => $value) {
-            if($value["callsign"] == $icao."_APP"){
+            if ($value["callsign"] == $icao . "_APP") {
                 return $value;
             }
         }
     }
 
-    public function getApiATC_TWR($icao){
+    public function getApiATC_TWR($icao)
+    {
         $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
 
         foreach ($api->json()["clients"]["atcs"] as $key => $value) {
-            
-            if($value["callsign"] == $icao."_TWR"){
+
+            if ($value["callsign"] == $icao . "_TWR") {
                 return $value;
             }
-        } 
+        }
     }
 
-    public function getApiATC_GND($icao){
+    public function getApiATC_GND($icao)
+    {
         $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
         foreach ($api->json()["clients"]["atcs"] as $key => $value) {
-            
-            if($value["callsign"] == $icao."_GND"){
+
+            if ($value["callsign"] == $icao . "_GND") {
                 return $value;
             }
-        }  
+        }
     }
 
-    public function getApiATC_FSS($icao){
+    public function getApiATC_FSS($icao)
+    {
         $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
         foreach ($api->json()["clients"]["atcs"] as $key => $value) {
-            
-            if($value["callsign"] == $icao."_FSS"){
+
+            if ($value["callsign"] == $icao . "_FSS") {
                 return $value;
             }
-        }  
+        }
     }
 
-    public function getATC($icao){
+    public function getATC($icao)
+    {
         $APP = $this->getApiATC_APP($icao);
         $TWR = $this->getApiATC_TWR($icao);
         $GND = $this->getApiATC_GND($icao);
@@ -76,21 +81,19 @@ class metarController extends Controller
 
     public function metar($icao)
     {
-        /** secret github chifrée sur la repo L10 */
         $secret = env("METAR_API_KEY");
+        $response = Http::withHeaders([
+            'Accept' => '*/*',
+            'Authorization' => 'Bearer ' . $secret,
+        ])
+            ->get('https://avwx.rest/api/metar/' . $icao);
 
-        $response = Http::withHeaders([ 
-            'Accept'=> '*/*',  
-            'Authorization'=> 'Bearer '.$secret, 
-        ]) 
-        ->get('https://avwx.rest/api/metar/'.$icao);
-        
         $time = $response->json("time")["dt"] ?? null;
         $i = new UtilsDateTime($time);
-
+        dd($response->json());
         $speed = $response->json("wind_speed")["value"] * 1.852;
         $speed = round($speed, 0);
-    
+
         $r = [
             'metar' => $response->json("raw"),
             'station' => $response->json("station"),
@@ -110,7 +113,8 @@ class metarController extends Controller
             "meta_day" => [
                 "time" => $i->format("H:i T"),
                 "date" => $i->format("d/m/Y"),
-                "day" => $i->format("l"),],
+                "day" => $i->format("l"),
+            ],
             "remarks" => $response->json("remarks") ?? null,
         ];
 
@@ -122,20 +126,20 @@ class metarController extends Controller
         /** secret github chifrée sur la repo L10 */
         $secret = env("METAR_API_KEY");
 
-        $response = Http::withHeaders([ 
-            'Accept'=> '*/*',  
-            'Authorization'=> 'Bearer '.$secret, 
-        ]) 
-        ->get('https://avwx.rest/api/taf/'.$icao); 
-        
+        $response = Http::withHeaders([
+            'Accept' => '*/*',
+            'Authorization' => 'Bearer ' . $secret,
+        ])
+            ->get('https://avwx.rest/api/taf/' . $icao);
+
         $r = [
             'taf' => $response->json("raw"),
             'station' => $response->json("station"),
             'time' => $response->json("time")["repr"],
             'forecast' => $response->json("forecast")[0]["flight_rules"],
         ];
-       
-        
+
+
         return $r;
     }
 }

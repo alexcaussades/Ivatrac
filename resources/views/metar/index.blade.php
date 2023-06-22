@@ -1,4 +1,4 @@
-@extends("base")
+@extends("metar-base")
 
 @section("title", "Metar and TAF IVAO")
 

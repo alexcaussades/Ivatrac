@@ -21,7 +21,6 @@ class PilotIvaoController extends Controller
             }
             return $pilotDeparture;
         }
-        
     }
 
     public function getApiArrivalPilot($icao)
@@ -38,6 +37,5 @@ class PilotIvaoController extends Controller
             }
             return $PilotArrival;
         }
-        
     }
 }

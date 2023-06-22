@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <div class="navbar-brand" ><a class="nav-link active" aria-current="page" href={{ Route("auth.login") }}>HALL SERVEUR </a></div>
+    <div class="navbar-brand" ><a class="nav-link active" aria-current="page" href={{ Route("auth.login") }}>Metar Request </a></div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -15,7 +15,7 @@
           <a class="nav-link" href="{{ Route("serveur.api") }}">API</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ Route("whitelist") }}">Whitelist</a>
+          <a class="nav-link" href="{{ Route("whitelist") }}">whitelist</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{{ Route("metars.index") }}">Metar</a>
@@ -35,7 +35,10 @@
           <a class="nav-link disabled">Disabled</a>
         </li>
       </ul>
-      
+      <form class="d-flex" role="search" action="{{ route("metars.icao") }}" method="get">
+        <input class="form-control me-2" type="search" name="icao" placeholder="New Request ICAO " aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
     </div>
   </div>
 </nav>
