@@ -90,9 +90,9 @@ class metarController extends Controller
 
         $time = $response->json("time")["dt"] ?? null;
         $i = new UtilsDateTime($time);
-        dd($response->json());
         $speed = $response->json("wind_speed")["value"] * 1.852;
         $speed = round($speed, 0);
+
 
         $r = [
             'metar' => $response->json("raw"),
