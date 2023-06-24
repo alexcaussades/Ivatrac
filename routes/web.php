@@ -6,22 +6,26 @@ use App\Models\whitelist;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cookie;
+use App\Http\Controllers\AtcController;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\metarController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\logginController;
+use Illuminate\Database\DBAL\TimestampType;
 use App\Http\Controllers\AutAdminController;
+use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
+use App\Http\Controllers\ApiPilotIvaoController;
 use App\Http\Controllers\DiscordNotfyController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
-use App\Http\Controllers\metarController;
-use App\Http\Controllers\PilotIvaoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -478,14 +482,6 @@ Route::prefix("install/")->group(function () {
     });
 });
 
-Route::get('/test', function (Request $request) {
-
-    if ($request->bearerToken() == "123456789") {
-        return "autentification reussie";
-    } else {
-        return "autentification echoué";
-    }
-});
 
 
 Route::prefix("metar")->group(function () {
@@ -505,7 +501,9 @@ Route::prefix("metar")->group(function () {
         $metar = $metarController->metar($icao);
         $taf = $metarController->taf($icao);
         $ATC = $metarController->getATC($icao);
-        return view("metar.icao", ["metar" => $metar, "taf" => $taf, "ATC" => $ATC]);
+        $pilots = new PilotIvaoController();
+        $pilot = $pilots->getAirplaneToPilots($icao);
+        return view("metar.icao", ["metar" => $metar, "taf" => $taf, "ATC" => $ATC, "pilot" => $pilot]);
     })->name("metars.icao");
 
     Route::get("/{icao}", function () {
@@ -519,31 +517,50 @@ Route::prefix("ivao")->group(function () {
         return to_route("metars.index");
     });
 
-    Route::post("/info", function (Request $request) {
+    Route::get("/info", function (Request $request) {
         $request->merge([
             "icao" => $request->icao
         ]);
+        $request->validate([
+            "icao" => "required|size:4"
+        ]);
+        $icao = strtoupper($request->icao);
         $ivaoController = new metarController();
-        $ivao = $ivaoController->getATC($request->icao);
-        return $ivao;
+        $atcivao = new AtcController();
+        $pilots = new PilotIvaoController();
+        $ivao = $ivaoController->getATC($icao);
+        $atc = $atcivao->resolve($ivao);
+        $Pilot = $pilots->getAirplaneToPilots($icao);
+        return [
+            "ATC" => $atc,
+            "Pilot" => $Pilot,
+            "ivao" => $ivao,
+        ];
     })->name("ivao.info");
 
-    Route::get("/pilot", function ($icao = "LFBL") {
+    Route::get("/plateforme", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $request->validate([
+            "icao" => "required|size:4"
+        ]);
+        $icao = strtoupper($request->icao);
+        $ivaoController = new metarController();
+        $atcivao = new AtcController();
         $pilots = new PilotIvaoController();
-        $departure = $pilots->getApideparturePilot($icao);
-        $arrivals = $pilots->getApiArrivalPilot($icao);
-        $coutDeparture = count($departure);
-        $coutArrivals = count($arrivals);
-        $r = [
-            "departure" => [
-                "count" => $coutDeparture,
-                "data" => $departure
-            ],
-            "arrivals" => [
-                "count" => $coutArrivals,
-                "data" => $arrivals
-            ]
-        ];
-        return $r;
+        $ivao = $ivaoController->getATC($icao);
+        $atc = $atcivao->resolve($ivao);
+        $Pilot = $pilots->getAirplaneToPilots($icao);
+        return view("plateforme.plat", ["ATC" => $atc, "Pilot" => $Pilot, "ivao" => $ivao]);
+    })->name("ivao.plateforme");
+
+    Route::get("/pilot", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $pilots = new PilotIvaoController();
+        $response = $pilots->getAirplaneToPilots($request->icao);
+        return $response;
     });
 });

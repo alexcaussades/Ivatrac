@@ -38,4 +38,24 @@ class PilotIvaoController extends Controller
             return $PilotArrival;
         }
     }
+
+    public function getAirplaneToPilots($icao)
+    {
+        $departure = $this->getApideparturePilot($icao);
+        $arrivals = $this->getApiArrivalPilot($icao);
+        $coutDeparture = count($departure);
+        $coutArrivals = count($arrivals);
+        $r = [
+            "icao" => $icao,
+            "departure" => [
+                "count" => $coutDeparture,
+                "data" => $departure
+            ],
+            "arrivals" => [
+                "count" => $coutArrivals,
+                "data" => $arrivals
+            ]
+        ];
+        return $r;
+    }
 }
