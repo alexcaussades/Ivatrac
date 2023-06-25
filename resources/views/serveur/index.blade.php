@@ -68,9 +68,6 @@
         <form action="#" method="get">
             <button type="submit" class="ms-1 btn btn-warning btn-sm" title="Accès au panel modérateur">Panel Modo</button>
         </form>
-        <form action="{{ Route("whitelist-admin") }}">
-            <button type="submit" class="ms-1 btn btn-info btn-sm" title="Personnes en attente !">Whitelist <span class="badge rounded-pill text-bg-danger">{{ $whitelistAttente }}</span> <span class="badge rounded-pill text-bg-danger">New</span></button>
-        </form>
         @endauth
     </div>
 </div>
@@ -84,17 +81,6 @@
                     <p class="card-text">
                     <ul>
                         <li> <strong>Email :</strong> {{ auth()->user()->email }} </li>
-                        @if (auth()->user()->whiteList == 2)
-                        <li><strong> Whitelist :</strong>
-                            <status title="La verrification est en cour par les douaniers...">En attente de validation</status>
-                        </li>
-                        @elseif (auth()->user()->whiteList == 3)
-                        <li><strong> Whitelist :</strong> <status-good>Accepté</status-good> </li>
-                        @elseif (auth()->user()->whiteList == 4)
-                        <li><strong> Whitelist :</strong> <span class="badge text-bg-danger">Refuser</span> </li>
-                        @else
-                        <li><strong> Whitelist :</strong> <a href="#"><button type="submit" class="btn btn-success btn-sm">Je fais ma demande</button></a></li>
-                        @endif
                         <li><strong> Discord :</strong> <button class="btn btn-primary btn-sm"><strong>{{ auth()->user()->discord_users }}</strong></button> </li>
                     </ul>
                     </p>
@@ -116,25 +102,7 @@
             </div>
         </div>
         <hr class="mt-2">
-        @if (auth()->user()->whiteList == 1)
-        <div class="container">
-            <h4 class="mt-2"> Crée votre Personnage </h4>
-
-            @include("serveur.creat_perso")
-        </div>
-        @endif
-
-        @if (auth()->user()->whiteList == 2)
-        <div class="container">
-            <h4 class="mt-2"> Votre Personnage </h4>
-            @include("serveur.perso")
-        </div>
-        @endif
-
-        @if (auth()->user()->whiteList == 3)
-
-        <div class="container">
-            <h4 class="mt-2"> Votre Connexion Serveur ! </h4>
-        @endif
+    
+      
 
     </div>

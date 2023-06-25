@@ -2,28 +2,22 @@
 
 
 
-use App\Models\whitelist;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\AtcController;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\metarController;
-use App\Http\Controllers\RolesController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\logginController;
-use Illuminate\Database\DBAL\TimestampType;
 use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
-use App\Http\Controllers\ApiPilotIvaoController;
-use App\Http\Controllers\DiscordNotfyController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
 
@@ -58,114 +52,6 @@ Route::get('/', function (Request $request) {
     return response()->view('welcome');
 })->where('client', '[0-9]+');
 
-Route::get('discord', function (DiscordNotfyController $discordNotfyController) {
-    $discordNotfyController->newAddWhiteList("Ludovic Ramirez", "Legolas#5525", "Ludovic@gmail.com");
-    return redirect()->route("welcome");
-});
-
-Route::get("/whitelist", function (Request $request) {
-    $accounts = whitelist::all();
-    return view("whitelist", ["accounts" => $accounts]);
-})->name("whitelist");
-
-
-Route::prefix("gestion-white/")->group(function () {
-    Route::get("/", function (Request $request, whitelistController $whitelistController) {
-        $whitelistController = $whitelistController->viewAll();
-        return view("serveur.whitelist.whitelistview", ["whitelist" => $whitelistController]);
-    })->name("whitelist-admin")->middleware("auth");
-
-    Route::get("/check/{slug}", function (Request $request, whitelistController $whitelistController) {
-        $request->merge([
-            "slug" => $request->slug
-        ]);
-
-        $whitelistController = $whitelistController->view($request);
-        $users = new usersController();
-        $users = $users->get_info_user($whitelistController->id_users);
-        if ($whitelistController == null) {
-            return redirect()->route("whitelist");
-        }
-        return view("serveur.whitelist.whitelistcheck", ["slug" => $whitelistController, "users" => $users]);
-    })->name("whitelist-admin.check1")->middleware("auth");
-
-    Route::post("/check/{slug}", function (Request $request, whitelistController $whitelistController) {
-        $request->merge([
-            "slug" => $request->slug
-        ]);
-
-        $whitelistController = $whitelistController->check($request);
-        if ($whitelistController == null) {
-            return redirect()->route("whitelist");
-        }
-        return redirect()->route("whitelist-admin", ["slug" => $whitelistController]);
-    })->name("whitelist-admin.check")->middleware("auth");
-
-    Route::get("/edit/{slug}", function (Request $request, whitelistController $whitelistController) {
-        $request->merge([
-            "slug" => $request->slug
-        ]);
-
-        $whitelistController = $whitelistController->view($request);
-        $users = new usersController();
-        $users = $users->get_info_user($whitelistController->id_users);
-        if ($whitelistController == null) {
-            return redirect()->route("whitelist");
-        }
-        return view("serveur.whitelist.whitelistupdate", ["slug" => $whitelistController, "users" => $users]);
-    })->name("whitelist-admin.edit1")->middleware("auth");
-
-    // TODO: faire la route pour l'update de la whitelist sur une page externe @alexcaussades #9
-    Route::post("/edit/{slug}", function (Request $request, whitelistController $whitelistController) {
-        $request->merge([
-            "slug" => $request->slug
-        ]);
-
-        $whitelistController = $whitelistController->edit($request);
-        if ($whitelistController == null) {
-            return redirect()->route("whitelist");
-        }
-        return redirect()->route("whitelist-admin", ["slug" => $whitelistController]);
-    })->name("whitelist-admin.edit")->middleware("auth");
-
-    Route::get("/delete/{slug}", function (Request $request, whitelistController $whitelistController) {
-        $request->merge([
-            "slug" => $request->slug
-        ]);
-
-        $whitelistController = $whitelistController->delete($request);
-        if ($whitelistController == null) {
-            return redirect()->route("whitelist");
-        }
-        return redirect()->route("whitelist");
-    })->name("whitelist-admin.delete")->middleware("admin");
-
-    Route::post("/add-serveur/{id}", function (Request $request, whitelistController $whitelistController, usersController $usersController) {
-        $request->merge([
-            "id" => $request->id
-        ]);
-
-        if ($whitelistController == null) {
-            return redirect()->route("serveur");
-        }
-        $usercontroller = new whitelistController();
-        $usercontroller->update_users_whitelist($request->id, "3");
-        return redirect()->route("whitelist-admin");
-    })->name("whitelist-admin-add-serveur")->middleware("auth");
-
-    Route::post("/refus-serveur/{id}", function (Request $request, whitelistController $whitelistController, usersController $usersController) {
-        $request->merge([
-            "id" => $request->id
-        ]);
-
-        if ($whitelistController == null) {
-            return redirect()->route("serveur");
-        }
-        $usercontroller = new whitelistController();
-        $usercontroller->update_users_whitelist($request->id, "2");
-        return redirect()->route("whitelist-admin");
-    })->name("whitelist-admin-refus-serveur")->middleware("auth");
-});
 
 Route::prefix("auth/")->group(function () {
     Route::get("add", [CreatAuhUniqueUsersController::class, "creatAuthUniqueUses"]);
@@ -230,25 +116,24 @@ Route::prefix("auth/")->group(function () {
 });
 
 Route::prefix("serveur/")->group(function () {
-    Route::get("/", function (usersController $usersController, whitelistController $whitelistController, Request $request) {
+    Route::get("/", function (usersController $usersController, Request $request) {
         if (!Auth::user()) {
             return redirect()->route("auth.login");
         } else {
             $users = $usersController->get_info_user(auth()->user()->id);
             $role = $usersController->get_role_user(auth()->user()->role);
-            $whitelist = $whitelistController->linkUser(auth()->user()->id);
-            $whitelistAttente = $whitelistController->count_whitelist_attente();
+            
 
-            return view("serveur/index", ["users" => $users, "role" => $role, "whitelist" => $whitelist, "whitelistAttente" => $whitelistAttente]);
+            return view("serveur/index", ["users" => $users, "role" => $role]);
         }
     })->name("serveur");
 
-    Route::post("/", function (usersController $usersController, whitelistController $whitelistController, Request $request) {
-        $whitelistController->create($request);
+    Route::post("/", function (usersController $usersController, Request $request) {
+        
         $users = $usersController->get_info_user(auth()->user()->id);
         $role = $usersController->get_role_user(auth()->user()->role);
-        $whitelist = $whitelistController->linkUser(auth()->user()->id);
-        return view("serveur.index", ["users" => $users, "role" => $role, "whitelist" => $whitelist]);
+        
+        return view("serveur.index", ["users" => $users, "role" => $role]);
     })->name("serveur.index");
 
     Route::get("api", function (Request $request) {
@@ -364,57 +249,6 @@ Route::prefix("logs")->group(function () {
         $logginController->delete($request);
         return redirect()->route("logs.modo");
     })->middleware(["auth:modo"])->name("logs.modo.delete");
-});
-
-Route::prefix("install/")->group(function () {
-    Route::get("roles", function (RolesController $rolesController) {
-        $rolesController->create("register", "en attente de validation de sont compte");
-        $rolesController->create("user", "utilisateur sans whitelist");
-        $rolesController->create("whitelist", "utilisateur avec whitelist");
-        $rolesController->create("moderator_groupe_whitelist", "moderateur de sont groupe de whitelist");
-        $rolesController->create("administrateur_groupe_whitelist", "administrateur de sont groupe de la whitelist");
-        $rolesController->create("moderator_whitelist", "moderateur de la whitelist");
-        $rolesController->create("administrateur_whitelist", "administrateur de la whitelist");
-        $rolesController->create("staff", "Staff de la whitelist");
-        $rolesController->create("administrateur", "administrateur du site");
-        $rolesController->create("super_administrateur", "super administrateur du site");
-        $roles_get = \App\Models\Roles::all();
-        return  $roles_get;
-    });
-
-    Route::get("roles/{id}", function (RolesController $rolesController, Request $request) {
-        $roles_get = \App\Models\Roles::find($request->id);
-        return  $roles_get;
-    });
-
-    Route::get("/", function () {
-        return [
-            "roles" => "install/roles",
-            "users" => "install/users",
-            "whitelist" => "install/whitelist",
-            "discord" => "install/discord",
-            "atc" => "install/atc",
-            "auth" => "install/auth",
-        ];
-    });
-
-    Route::get("admin", function (usersController $users_websiteController, Request $request) {
-        $request->merge([
-            "name" => "Alexandre Caussades",
-            "email" => "alexcaussades@gmail.com",
-            "password" => Env("MY_PASS_APP"),
-            "role" => "10",
-            "whitelist" => "1",
-            "discordusers" => "Legolas#5525",
-            "condition" => "1",
-            "age" => "1",
-            "discord" => "1",
-            "name_rp" => "Darius Lambert",
-        ]);
-        $users_websiteController->install_superadmin($request);
-        $users_websiteController = \App\Models\users::all();
-        return $users_websiteController;
-    });
 });
 
 Route::prefix("metar")->group(function () {

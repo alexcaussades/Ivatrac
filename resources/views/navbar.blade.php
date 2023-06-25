@@ -15,9 +15,6 @@
           <a class="nav-link" href="{{ Route("serveur.api") }}">API</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ Route("whitelist") }}">Whitelist</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="{{ Route("metars.index") }}">Metar</a>
         </li>
         <li class="nav-item dropdown">
@@ -25,7 +22,6 @@
             Autres 
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{ Route("whitelist-admin") }}">WhiteList Gestion</a></li>
             <li><a class="dropdown-item" href="#">Another action</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{{ Route("logout") }}">Logout</a></li>
