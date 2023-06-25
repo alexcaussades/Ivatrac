@@ -68,8 +68,8 @@
         <form action="#" method="get">
             <button type="submit" class="ms-1 btn btn-warning btn-sm" title="Accès au panel modérateur">Panel Modo</button>
         </form>
-        <form action="#">
-            <button type="submit" class="ms-1 btn btn-info btn-sm" title="Personnes en attente !">Whitelist <span class="badge rounded-pill text-bg-danger">{{ $whitelistAttente }}</span></button>
+        <form action="{{ Route("whitelist-admin") }}">
+            <button type="submit" class="ms-1 btn btn-info btn-sm" title="Personnes en attente !">Whitelist <span class="badge rounded-pill text-bg-danger">{{ $whitelistAttente }}</span> <span class="badge rounded-pill text-bg-danger">New</span></button>
         </form>
         @endauth
     </div>
@@ -90,6 +90,8 @@
                         </li>
                         @elseif (auth()->user()->whiteList == 3)
                         <li><strong> Whitelist :</strong> <status-good>Accepté</status-good> </li>
+                        @elseif (auth()->user()->whiteList == 4)
+                        <li><strong> Whitelist :</strong> <span class="badge text-bg-danger">Refuser</span> </li>
                         @else
                         <li><strong> Whitelist :</strong> <a href="#"><button type="submit" class="btn btn-success btn-sm">Je fais ma demande</button></a></li>
                         @endif
@@ -129,6 +131,10 @@
         </div>
         @endif
 
+        @if (auth()->user()->whiteList == 3)
+
+        <div class="container">
+            <h4 class="mt-2"> Votre Connexion Serveur ! </h4>
+        @endif
 
     </div>
-    @endsection

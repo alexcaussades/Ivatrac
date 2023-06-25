@@ -8,6 +8,7 @@
     <title> @yield("title") | Site de test</title>
     <!-- CSS only -->
     <link rel="stylesheet" href="{{ asset("asset/css/bootstrap.min.css") }} " type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 </head>
   @yield('navbar')
 <body>

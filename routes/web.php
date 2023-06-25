@@ -6,23 +6,26 @@ use App\Models\whitelist;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cookie;
+use App\Http\Controllers\AtcController;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\metarController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\logginController;
+use Illuminate\Database\DBAL\TimestampType;
 use App\Http\Controllers\AutAdminController;
+use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
+use App\Http\Controllers\ApiPilotIvaoController;
 use App\Http\Controllers\DiscordNotfyController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
-
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +44,8 @@ Route::get('/welcome', function (usersController $usersController, Request $requ
 })->name("welcome");
 
 Route::get('/login', function (Request $request) {
+    $authuser = new usersController();
+    $authuser->autentification_via_cookie();
     return to_route("auth.login");
 })->name("login");
 
@@ -48,10 +53,9 @@ Route::get('/logout', function (Request $request) {
     return to_route("auth.logout");
 })->name("logout");
 
-Route::get('/', function (Request $request) { 
-    /** creation d'un cookie sur laravel */
-    dd(Cookie::get('email-Users'), Cookie::get('remember_token'));          
-    return response()->view('welcome')->cookie('name', 'value', 0.5);
+Route::get('/', function (Request $request) {
+    /** creation d'un cookie sur laravel */        
+    return response()->view('welcome');
 })->where('client', '[0-9]+');
 
 Route::get('discord', function (DiscordNotfyController $discordNotfyController) {
@@ -76,6 +80,104 @@ Route::get("/whitelist/{slug}", function (Request $request, whitelistController 
     return view("whitelist-name", ["slug" => $whitelistController]);
 })->name("whitelist.slug");
 
+Route::prefix("gestion-white/")->group(function () {
+    Route::get("/", function (Request $request, whitelistController $whitelistController) {
+        $whitelistController = $whitelistController->viewAll();
+        return view("serveur.whitelist.whitelistview", ["whitelist" => $whitelistController]);
+    })->name("whitelist-admin")->middleware("auth");
+
+    Route::get("/check/{slug}", function (Request $request, whitelistController $whitelistController) {
+        $request->merge([
+            "slug" => $request->slug
+        ]);
+
+        $whitelistController = $whitelistController->view($request);
+        $users = new usersController();
+        $users = $users->get_info_user($whitelistController->id_users);
+        if ($whitelistController == null) {
+            return redirect()->route("whitelist");
+        }
+        return view("serveur.whitelist.whitelistcheck", ["slug" => $whitelistController, "users" => $users]);
+    })->name("whitelist-admin.check")->middleware("auth");
+
+    Route::post("/check/{slug}", function (Request $request, whitelistController $whitelistController) {
+        $request->merge([
+            "slug" => $request->slug
+        ]);
+
+        $whitelistController = $whitelistController->check($request);
+        if ($whitelistController == null) {
+            return redirect()->route("whitelist");
+        }
+        return redirect()->route("whitelist-admin", ["slug" => $whitelistController]);
+    })->name("whitelist-admin.check")->middleware("auth");
+
+    Route::get("/edit/{slug}", function (Request $request, whitelistController $whitelistController) {
+        $request->merge([
+            "slug" => $request->slug
+        ]);
+
+        $whitelistController = $whitelistController->view($request);
+        $users = new usersController();
+        $users = $users->get_info_user($whitelistController->id_users);
+        if ($whitelistController == null) {
+            return redirect()->route("whitelist");
+        }
+        return view("serveur.whitelist.whitelistupdate", ["slug" => $whitelistController, "users" => $users]);
+    })->name("whitelist-admin.edit")->middleware("auth");
+
+    // TODO: faire la route pour l'update de la whitelist sur une page externe @alexcaussades #9
+    Route::post("/edit/{slug}", function (Request $request, whitelistController $whitelistController) {
+        $request->merge([
+            "slug" => $request->slug
+        ]);
+
+        $whitelistController = $whitelistController->edit($request);
+        if ($whitelistController == null) {
+            return redirect()->route("whitelist");
+        }
+        return redirect()->route("whitelist-admin", ["slug" => $whitelistController]);
+    })->name("whitelist-admin.edit")->middleware("auth");
+
+    Route::get("/delete/{slug}", function (Request $request, whitelistController $whitelistController) {
+        $request->merge([
+            "slug" => $request->slug
+        ]);
+
+        $whitelistController = $whitelistController->delete($request);
+        if ($whitelistController == null) {
+            return redirect()->route("whitelist");
+        }
+        return redirect()->route("whitelist");
+    })->name("whitelist-admin.delete")->middleware("admin");
+
+    Route::post("/add-serveur/{id}", function (Request $request, whitelistController $whitelistController, usersController $usersController) {
+        $request->merge([
+            "id" => $request->id
+        ]);
+
+        if ($whitelistController == null) {
+            return redirect()->route("serveur");
+        }
+        $usercontroller = new whitelistController();
+        $usercontroller->update_users_whitelist($request->id, "3");
+        return redirect()->route("whitelist-admin");
+    })->name("whitelist-admin-add-serveur")->middleware("auth");
+
+    Route::post("/refus-serveur/{id}", function (Request $request, whitelistController $whitelistController, usersController $usersController) {
+        $request->merge([
+            "id" => $request->id
+        ]);
+
+        if ($whitelistController == null) {
+            return redirect()->route("serveur");
+        }
+        $usercontroller = new whitelistController();
+        $usercontroller->update_users_whitelist($request->id, "2");
+        return redirect()->route("whitelist-admin");
+    })->name("whitelist-admin-refus-serveur")->middleware("auth");
+});
+
 Route::prefix("auth/")->group(function () {
     Route::get("add", [CreatAuhUniqueUsersController::class, "creatAuthUniqueUses"]);
     Route::get("verif/{id}", function (Request $request, CreatAuhUniqueUsersController $creatAuhUniqueUsersController) {
@@ -86,6 +188,8 @@ Route::prefix("auth/")->group(function () {
         if (Auth::user() != null) {
             return redirect()->route("serveur");
         }
+        $authuser = new usersController();
+        $authuser->autentification_via_cookie();
         return view("auth.login");
     })->name("auth.login");
 
@@ -285,7 +389,7 @@ Route::prefix("logs")->group(function () {
         $users = $users->get_info_user($logs->user);
         $admin = new AutAdminController();
         $admin = $admin->get_admin($logs->users_admin_id);
-        
+
         return [
             "logs" => [
                 "id" => $logs->id ?? Null,
@@ -310,7 +414,7 @@ Route::prefix("logs")->group(function () {
                 "E-mail" => $admin->email ?? Null
             ]
 
-            ];
+        ];
     })->middleware(["auth:admin"])->name("logs.modo.id");
 
     Route::delete("{id}", function (logginController $logginController, Request $request) {
@@ -375,91 +479,85 @@ Route::prefix("install/")->group(function () {
     });
 });
 
-Route::prefix("serveur/")->group(function () {
-    Route::get("/", function (usersController $usersController, whitelistController $whitelistController, Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $users = $usersController->get_info_user(auth()->user()->id);
-            $role = $usersController->get_role_user(auth()->user()->role);
-            $whitelist = $whitelistController->linkUser(auth()->user()->id);
-            $whitelistAttente = $whitelistController->count_whitelist_attente();
-            
-            return view("serveur/index", ["users" => $users, "role" => $role, "whitelist" => $whitelist, "whitelistAttente" => $whitelistAttente]);
-        }
-    })->name("serveur");
 
-    Route::post("/", function (usersController $usersController, whitelistController $whitelistController, Request $request) {
-        $whitelistController->create($request);
-        $users = $usersController->get_info_user(auth()->user()->id);
-        $role = $usersController->get_role_user(auth()->user()->role);
-        $whitelist = $whitelistController->linkUser(auth()->user()->id);
-        return view("serveur.index", ["users" => $users, "role" => $role, "whitelist" => $whitelist]);
-    })->name("serveur.index");
 
-    Route::get("api", function (Request $request) {
-        $api = new ApiGestionController();
-        $information = $api->check_Informations(Auth::user()->id);
-        return view("serveur.api", ["information" => $information]);
-    })->name("serveur.api");
-    
-    Route::post("api", function (Request $request) {
-        $api = new ApiGestionController();
-        $information = $api->creat_keys_api();
-        /** Faire une function de masquage */
-        
-        return view("serveur.api", ["information" => $information]);
-    })->name("serveur.api.post");
+Route::prefix("metar")->group(function () {
+    Route::get("/", function (Request $request) {
+        return view("metar.index");
+    })->name("metars.index");
 
-    Route::post("api/create", function (Request $request) {
-        $api = new ApiGestionController();
-        $api->creat_keys_api();
-        return to_route("serveur.api");
-    })->name("serveur.api.create");
+    Route::get("/search", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $request->validate([
+            "icao" => "required|size:4"
+        ]);
+        $icao = strtoupper($request->icao);
+        $metarController = new metarController();
+        $metar = $metarController->metar($icao);
+        $taf = $metarController->taf($icao);
+        $ATC = $metarController->getATC($icao);
+        $pilots = new PilotIvaoController();
+        $pilot = $pilots->getAirplaneToPilots($icao);
+        return view("metar.icao", ["metar" => $metar, "taf" => $taf, "ATC" => $ATC, "pilot" => $pilot]);
+    })->name("metars.icao");
 
-    Route::post("api/delete", function (Request $request) {
-        $api = new ApiGestionController();
-        $api->delete_keys_api($request);
-        return to_route("serveur.api");
-    })->name("serveur.api.delete");
+    Route::get("/{icao}", function () {
+        return to_route("metars.index");
+    });
 });
 
-Route::prefix("logs")->group(function () {
-    Route::get("/", function (logginController $logginController) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $logs = $logginController->getLoggins();
-            return view("auth.logs", ["logs" => $logs]);
-        }
-    })->middleware(["auth:admin"])->name("logs");
+Route::prefix("ivao")->group(function () {
 
-    Route::get("modo", function (logginController $logginController) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $logs = $logginController->getLoggins();
-            return view("auth.logs", ["logs" => $logs]);
-        }
-    })->middleware(["auth:modo"])->name("logs.modo");
+    Route::get("/", function (Request $request) {
+        return to_route("metars.index");
+    });
 
-    Route::delete("{id}", function (logginController $logginController, Request $request) {
-        $logginController->delete($request);
-        return redirect()->route("logs");
-    })->middleware(["auth:admin"])->name("logs.delete");
+    Route::get("/info", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $request->validate([
+            "icao" => "required|size:4"
+        ]);
+        $icao = strtoupper($request->icao);
+        $ivaoController = new metarController();
+        $atcivao = new AtcController();
+        $pilots = new PilotIvaoController();
+        $ivao = $ivaoController->getATC($icao);
+        $atc = $atcivao->resolve($ivao);
+        $Pilot = $pilots->getAirplaneToPilots($icao);
+        return [
+            "ATC" => $atc,
+            "Pilot" => $Pilot,
+            "ivao" => $ivao,
+        ];
+    })->name("ivao.info");
 
-    Route::delete("modo/{id}", function (logginController $logginController, Request $request) {
-        $logginController->delete($request);
-        return redirect()->route("logs.modo");
-    })->middleware(["auth:modo"])->name("logs.modo.delete");
-});
+    Route::get("/plateforme", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $request->validate([
+            "icao" => "required|size:4"
+        ]);
+        $icao = strtoupper($request->icao);
+        $ivaoController = new metarController();
+        $atcivao = new AtcController();
+        $pilots = new PilotIvaoController();
+        $ivao = $ivaoController->getATC($icao);
+        $atc = $atcivao->resolve($ivao);
+        $Pilot = $pilots->getAirplaneToPilots($icao);
+        return view("plateforme.plat", ["ATC" => $atc, "Pilot" => $Pilot, "ivao" => $ivao]);
+    })->name("ivao.plateforme");
 
-Route::get('/test', function (Request $request) {
-    
-    if($request->bearerToken()=="123456789"){
-        return "autentification reussie";
-    }else{
-        return "autentification echoué";
-    }
-    
+    Route::get("/pilot", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $pilots = new PilotIvaoController();
+        $response = $pilots->getAirplaneToPilots($request->icao);
+        return $response;
+    });
 });
