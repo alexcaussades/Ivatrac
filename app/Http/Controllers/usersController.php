@@ -112,7 +112,7 @@ class usersController extends Controller
                     Auth::guard('admin')->login($user);
                 }
                 $modo = new modo();
-                $check = $modo::where('email', $user->email)->first();
+                $check = $modo::where('email', Cookie::get('email-Users'))->first();
                 if ($check) {
                     Auth::guard('modo')->login($user);
                 }

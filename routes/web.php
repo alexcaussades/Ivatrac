@@ -54,11 +54,8 @@ Route::get('/logout', function (Request $request) {
 })->name("logout");
 
 Route::get('/', function (Request $request) {
-    /** creation d'un cookie sur laravel */
-
-    $authuser = new usersController();
-    $authuser->autentification_via_cookie($request);
-    return response()->view('welcome')->cookie('name', 'value', 0.5);
+    /** creation d'un cookie sur laravel */        
+    return response()->view('welcome');
 })->where('client', '[0-9]+');
 
 Route::get('discord', function (DiscordNotfyController $discordNotfyController) {
