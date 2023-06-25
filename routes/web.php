@@ -68,17 +68,6 @@ Route::get("/whitelist", function (Request $request) {
     return view("whitelist", ["accounts" => $accounts]);
 })->name("whitelist");
 
-Route::get("/whitelist/{slug}", function (Request $request, whitelistController $whitelistController) {
-    $request->merge([
-        "slug" => $request->slug
-    ]);
-
-    $whitelistController = $whitelistController->view($request);
-    if ($whitelistController == null) {
-        return redirect()->route("whitelist");
-    }
-    return view("whitelist-name", ["slug" => $whitelistController]);
-})->name("whitelist.slug");
 
 Route::prefix("gestion-white/")->group(function () {
     Route::get("/", function (Request $request, whitelistController $whitelistController) {
@@ -98,7 +87,7 @@ Route::prefix("gestion-white/")->group(function () {
             return redirect()->route("whitelist");
         }
         return view("serveur.whitelist.whitelistcheck", ["slug" => $whitelistController, "users" => $users]);
-    })->name("whitelist-admin.check")->middleware("auth");
+    })->name("whitelist-admin.check1")->middleware("auth");
 
     Route::post("/check/{slug}", function (Request $request, whitelistController $whitelistController) {
         $request->merge([
@@ -124,7 +113,7 @@ Route::prefix("gestion-white/")->group(function () {
             return redirect()->route("whitelist");
         }
         return view("serveur.whitelist.whitelistupdate", ["slug" => $whitelistController, "users" => $users]);
-    })->name("whitelist-admin.edit")->middleware("auth");
+    })->name("whitelist-admin.edit1")->middleware("auth");
 
     // TODO: faire la route pour l'update de la whitelist sur une page externe @alexcaussades #9
     Route::post("/edit/{slug}", function (Request $request, whitelistController $whitelistController) {
@@ -238,57 +227,6 @@ Route::prefix("auth/")->group(function () {
         $usersController->logout($request);
         return redirect()->route("auth.login");
     })->name("auth.logout");
-});
-
-Route::prefix("install/")->group(function () {
-    Route::get("roles", function (RolesController $rolesController) {
-        $rolesController->create("register", "en attente de validation de sont compte");
-        $rolesController->create("user", "utilisateur sans whitelist");
-        $rolesController->create("whitelist", "utilisateur avec whitelist");
-        $rolesController->create("moderator_groupe_whitelist", "moderateur de sont groupe de whitelist");
-        $rolesController->create("administrateur_groupe_whitelist", "administrateur de sont groupe de la whitelist");
-        $rolesController->create("moderator_whitelist", "moderateur de la whitelist");
-        $rolesController->create("administrateur_whitelist", "administrateur de la whitelist");
-        $rolesController->create("staff", "Staff de la whitelist");
-        $rolesController->create("administrateur", "administrateur du site");
-        $rolesController->create("super_administrateur", "super administrateur du site");
-        $roles_get = \App\Models\Roles::all();
-        return  $roles_get;
-    });
-
-    Route::get("roles/{id}", function (RolesController $rolesController, Request $request) {
-        $roles_get = \App\Models\Roles::find($request->id);
-        return  $roles_get;
-    });
-
-    Route::get("/", function () {
-        return [
-            "roles" => "install/roles",
-            "users" => "install/users",
-            "whitelist" => "install/whitelist",
-            "discord" => "install/discord",
-            "atc" => "install/atc",
-            "auth" => "install/auth",
-        ];
-    });
-
-    Route::get("admin", function (usersController $users_websiteController, Request $request) {
-        $request->merge([
-            "name" => "Alexandre Caussades",
-            "email" => "alexcaussades@gmail.com",
-            "password" => Env("MY_PASS_APP"),
-            "role" => "10",
-            "whitelist" => "1",
-            "discordusers" => "Legolas#5525",
-            "condition" => "1",
-            "age" => "1",
-            "discord" => "1",
-            "name_rp" => "Darius Lambert",
-        ]);
-        $users_websiteController->install_superadmin($request);
-        $users_websiteController = \App\Models\users::all();
-        return $users_websiteController;
-    });
 });
 
 Route::prefix("serveur/")->group(function () {
@@ -478,8 +416,6 @@ Route::prefix("install/")->group(function () {
         return $users_websiteController;
     });
 });
-
-
 
 Route::prefix("metar")->group(function () {
     Route::get("/", function (Request $request) {
