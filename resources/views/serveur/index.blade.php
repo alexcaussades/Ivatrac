@@ -109,7 +109,7 @@
                     <p class="card-text">
                     <ul>
                         <li> <strong>Role :</strong> {{ $role->name }} </li>
-                        <li> <strong> URL: </strong> <a href="{{ route('whitelist.slug', $whitelist->slug) }}" target="_bank" title="Liens de votre personnage a destination du monde"><button type="submit" class="btn btn-success btn-sm">Lien Public</button></a></li>
+                        <li> <strong> URL: </strong> <a href="#" target="_bank" title="Liens de votre personnage a destination du monde"><button type="submit" class="btn btn-success btn-sm">Lien Public</button></a></li>
                     </ul>
                     </p>
                 </div>
