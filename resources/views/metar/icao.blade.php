@@ -26,7 +26,6 @@
             @endif
         </div>
         <div class="mt-2">
-
         </div>
         <div class="card mt-2">
             <div class="card-body">
@@ -66,6 +65,12 @@
             </div>
         </div>
         <hr class="mt-2">
+        <h3>CHART</h3>
+        <div class="d-flex justify-content-center">
+            <a href="{{ $chartIFR }}" target="_blank"> <button type="submit" class="btn btn-dark">IFR</button></a>
+            <a href="{{ $chartVFR }}" target="_blank"> <button type="submit" class="btn btn-dark ms-2">VFR</button></a>
+        </div>
+        <hr class="mt-2">
         <h3>IVAO</h3>
         <div class="row">
             <div class="col-md-4">
@@ -96,7 +101,7 @@
                         <h4>Departure</h4>
                     </div>
                     <div class="card-body text-center">
-                        <h1><strong>{{$pilot["departure"]["count"]}}</strong></h1>
+                    <a href="{{ Route("ivao.plateforme", ["icao" => $metar["station"], false] ) }}"> <button type="submit" class="btn btn-primary align-content-center justify-center no-link"><h1><strong>{{$pilot["departure"]["count"]}}</strong></h1></button></a>
                     </div>
                 </div>
             </div>
@@ -106,13 +111,10 @@
                         <h4>Arrival</h4>
                     </div>
                     <div class="card-body text-center">
-                        <h1><strong>{{$pilot["arrivals"]["count"]}}</strong></h1>
+                    <a href="{{ Route("ivao.plateforme", ["icao" => $metar["station"], false] ) }}"> <button type="submit" class="btn btn-primary align-content-center justify-center no-link"><h1><strong>{{$pilot["arrivals"]["count"]}}</strong></h1></button></a>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="d-flex justify-content-center">
-           <a href="{{ Route("ivao.plateforme", ["icao" => $metar["station"], false] ) }}"> <button type="submit" class="btn btn-primary align-content-center justify-center"> <i class="bi bi-arrow-right-square-fill"></i> More information</button></a>
         </div>
     </div>
 </div>

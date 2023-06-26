@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AtcController;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\ChartController;
 use App\Http\Controllers\metarController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
@@ -268,9 +269,12 @@ Route::prefix("metar")->group(function () {
         $metar = $metarController->metar($icao);
         $taf = $metarController->taf($icao);
         $ATC = $metarController->getATC($icao);
+        $chart = new ChartController();
+        $chartIFR = $chart->chartIFR($icao);
+        $chartVFR = $chart->chartVFR($icao);
         $pilots = new PilotIvaoController();
         $pilot = $pilots->getAirplaneToPilots($icao);
-        return view("metar.icao", ["metar" => $metar, "taf" => $taf, "ATC" => $ATC, "pilot" => $pilot]);
+        return view("metar.icao", ["metar" => $metar, "taf" => $taf, "ATC" => $ATC, "pilot" => $pilot, "chartIFR" => $chartIFR, "chartVFR" => $chartVFR]);
     })->name("metars.icao");
 
     Route::get("/{icao}", function () {
