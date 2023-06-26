@@ -1,0 +1,11 @@
+.no-link{
+    text-decoration: none;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.no-link:hover{
+    text-decoration: none;
+    background-color: transparent;
+    border-color: transparent;
+}
