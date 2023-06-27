@@ -22,6 +22,7 @@ use App\Http\Controllers\ApiGestionController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\MailRegisterController;
 use App\Mail\MailTest;
 use Illuminate\Support\Facades\Mail;
 
@@ -86,6 +87,8 @@ Route::prefix("auth/")->group(function () {
                 $usersController = new usersController();
                 $usersController->create($request);
                 $lastId = DB::getPdo()->lastInsertId();
+                $mail = new MailRegisterController();
+                $mail = $mail->MailRegister($lastId);
                 $usersController->loggin_form_register($lastId);
                 return redirect()->route("auth.login");
             } else {
@@ -332,5 +335,8 @@ Route::get("/mail", function (mailController $mailTest, usersController $usersCo
     $mailTest->basic_email(auth()->user()->email);
 
     return "Email sent successfully";
-    
+});
+
+Route::get('/test', function () {
+    return view('emails.registerUsers.info-admin');
 });
