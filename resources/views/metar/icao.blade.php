@@ -105,9 +105,7 @@
                         <h4>Departure</h4>
                     </div>
                     <div class="card-body text-center">
-                        <a href="{{ Route("ivao.plateforme", ["icao" => $metar["station"], false] ) }}"> <button type="submit" class="btn btn-primary align-content-center justify-center no-link">
-                                <h1><strong>{{$pilot["departure"]["count"]}}</strong></h1>
-                            </button></a>
+                    <a href="{{ Route("ivao.plateforme", ["icao" => $metar["station"], false] ) }}"> <button type="submit" class="btn btn-primary align-content-center justify-center no-link"><h1><strong>{{$pilot["departure"]["count"]}}</strong></h1></button></a>
                     </div>
                 </div>
             </div>
@@ -117,9 +115,7 @@
                         <h4>Arrival</h4>
                     </div>
                     <div class="card-body text-center">
-                        <a href="{{ Route("ivao.plateforme", ["icao" => $metar["station"], false] ) }}"> <button type="submit" class="btn btn-primary align-content-center justify-center no-link">
-                                <h1><strong>{{$pilot["arrivals"]["count"]}}</strong></h1>
-                            </button></a>
+                    <a href="{{ Route("ivao.plateforme", ["icao" => $metar["station"], false] ) }}"> <button type="submit" class="btn btn-primary align-content-center justify-center no-link"><h1><strong>{{$pilot["arrivals"]["count"]}}</strong></h1></button></a>
                     </div>
                 </div>
             </div>
