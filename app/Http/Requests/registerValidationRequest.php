@@ -23,7 +23,6 @@ class registerValidationRequest extends FormRequest
     {
         return [
             'name_rp' => 'required|string|max:255',
-            'discordusers' => 'required|string|regex:/^[a-zA-Z]+$/|regex:^[a-zA-Z]+[0-9]{4}$', // https://regex101.com/r/4Q5Z2T/1
             'email' => 'required|string|email|max:255|unique:users',
         ];
     }

@@ -46,7 +46,11 @@
                     <div class="col-md-6">
                         <ul>
                             <li>Direction : {{$metar["wind"]["direction"]}} °</li>
+                            @if ($metar["wind"]["wind_variable"] == "None")
+                            <li>Wind variable : {{$metar["wind"]["wind_variable"]}} </li>
+                            @else
                             <li>Wind variable : {{$metar["wind"]["wind_variable"]}} °</li>
+                            @endif
                             <li>Speed : {{$metar["wind"]["speed_KT"]}} Kt</li>
                             <li>Speed : {{$metar["wind"]["speed_KM"]}} KM/h</li>
                         </ul>
