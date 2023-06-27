@@ -49,12 +49,9 @@ class usersController extends Controller
         $user->email_verified_at = now();
         $user->remember_token = Str::random(10);
         $user->role = $request->role ? $request->role : 1;
-        $user->whitelist = $request->whiteList ? $request->whiteList : 0;
-        $user->discord_users = $request->discordusers ? $request->discordusers : 0;
         $user->condition = $request->condition ? $request->condition : 0;
         $user->age = $request->age ? $request->age : 0;
         $user->name_rp = $request->name_rp;
-        $user->discord = $request->discord;
         $user->save();
     }
 

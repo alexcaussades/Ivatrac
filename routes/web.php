@@ -21,6 +21,9 @@ use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
+use App\Http\Controllers\MailController;
+use App\Mail\MailTest;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +52,7 @@ Route::get('/logout', function (Request $request) {
 })->name("logout");
 
 Route::get('/', function (Request $request) {
-    /** creation d'un cookie sur laravel */        
+    /** creation d'un cookie sur laravel */
     return response()->view('welcome');
 })->where('client', '[0-9]+');
 
@@ -76,21 +79,9 @@ Route::prefix("auth/")->group(function () {
         return view("auth.register");
     })->name("auth.register");
 
-    Route::post("register", function (registerValidationRequest $request) {
-
+    Route::post("register", function (Request $request) {
         if ($request->password == $request->password_confirmation) {
             if ($request->condition == "1") {
-
-                $validator = Validator::make($request->all(), [
-                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                    'password' => ['required', 'string', 'min:8', 'confirmed'],
-                    'discordusers' => ['required', 'string', 'min:3', 'max:255', 'unique:users', 'regex:/^([a-zA-Z0-9]+)#([0-9]{4})$/'],
-                ]);
-                if ($validator->fails()) {
-                    return redirect()->route("auth.register")
-                        ->withErrors($validator)
-                        ->withInput();
-                }
 
                 $usersController = new usersController();
                 $usersController->create($request);
@@ -123,17 +114,17 @@ Route::prefix("serveur/")->group(function () {
         } else {
             $users = $usersController->get_info_user(auth()->user()->id);
             $role = $usersController->get_role_user(auth()->user()->role);
-            
+
 
             return view("serveur/index", ["users" => $users, "role" => $role]);
         }
     })->name("serveur");
 
     Route::post("/", function (usersController $usersController, Request $request) {
-        
+
         $users = $usersController->get_info_user(auth()->user()->id);
         $role = $usersController->get_role_user(auth()->user()->role);
-        
+
         return view("serveur.index", ["users" => $users, "role" => $role]);
     })->name("serveur.index");
 
@@ -334,4 +325,12 @@ Route::prefix("ivao")->group(function () {
         $response = $pilots->getAirplaneToPilots($request->icao);
         return $response;
     });
+});
+
+Route::get("/mail", function (mailController $mailTest, usersController $usersController, Request $request) {
+
+    $mailTest->basic_email(auth()->user()->email);
+
+    return "Email sent successfully";
+    
 });

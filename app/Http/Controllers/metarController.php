@@ -101,22 +101,23 @@ class metarController extends Controller
             'flight_rules' => $response->json("flight_rules"),
             "QNH" => $response->json("altimeter")["repr"],
             "wind" => [
-                "wind" => $response->json("wind")["repr"] ?? null,
+                "wind" => $response->json("wind")["repr"] ?? "None",
                 "direction" => $response->json("wind_direction")["repr"],
-                "wind_variable" => $response->json("wind_variable_direction")[0]["repr"] ?? null,
+                "wind_variable" => $response->json("wind_variable_direction")[0]["repr"] ?? "None",
                 "speed_KT" => $response->json("wind_speed")["repr"],
                 "speed_KM" => $speed,
             ],
             "temperature" => $response->json("temperature")["repr"],
             "dewpoint" => $response->json("dewpoint")["repr"],
-            "clouds" => $response->json("clouds")[0]["repr"] ?? null,
+            "clouds" => $response->json("clouds")[0]["repr"] ?? "None",
             "meta_day" => [
                 "time" => $i->format("H:i T"),
                 "date" => $i->format("d/m/Y"),
                 "day" => $i->format("l"),
             ],
-            "remarks" => $response->json("remarks") ?? null,
+            "remarks" => $response->json("remarks") ?? "None",
         ];
+
 
         return $r;
     }
