@@ -1,6 +1,6 @@
 @extends("base")
 
-@section("title", "register")
+@section("title", "Sing Up")
 
 @include("navbar")
 
@@ -9,7 +9,7 @@
 
 <div class="container">
 
-    <h1>Enregistrement</h1>
+    <h1>Sign Up</h1>
 
     @if ($errors->any())
       
@@ -26,14 +26,23 @@
     <form action="#" method="POST">
         @csrf
         <div class="form-group mt-2">
-            <label for="name">Name RP</label>
-            <input type="text" name="name_rp" id="name_rp" class="form-control" placeholder="name RP" aria-describedby="helpId" value="{{ old("name_rp") }}">
-            
+            <label for="name">First Name</label>
+            <input type="text" name="name_first" id="name_first" class="form-control" placeholder="Your First Name" aria-describedby="helpId" value="{{ old("name_rp") }}">
+        </div>
+
+        <div class="form-group mt-2">
+            <label for="name">Last Name</label>
+            <input type="text" name="name_last" id="name_last" class="form-control" placeholder="Your Last Name" aria-describedby="helpId" value="{{ old("name_rp") }}">
+        </div>
+
+        <div class="form-group mt-2">
+            <label for="name">VID</label>
+            <input type="text" name="vid" id="vid" class="form-control" placeholder="Your Vid (https://ivao.aero/)" aria-describedby="helpId" value="{{ old("name_rp") }}">
         </div>
         
         <div class="form-group mt-2">
             <label for="email">Email</label>
-            <input type="email" name="email" id="email" class="form-control" placeholder="Email" aria-describedby="helpId" value="{{ old("email") }}">
+            <input type="email" name="email" id="email" class="form-control" placeholder="Your Email" aria-describedby="helpId" value="{{ old("email") }}">
             
         </div>
         <div class="form-group mt-2">

@@ -43,7 +43,9 @@ class usersController extends Controller
     public function create(Request $request)
     {
         $user = new users();
-        $user->name = $request->name_rp;
+        $user->name_first = $request->name_first;
+        $user->name_last = $request->name_last;
+        $user->vid = $request->vid;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->email_verified_at = now();
@@ -51,7 +53,8 @@ class usersController extends Controller
         $user->role = $request->role ? $request->role : 1;
         $user->condition = $request->condition ? $request->condition : 0;
         $user->age = $request->age ? $request->age : 0;
-        $user->name_rp = $request->name_rp;
+        $user->name_rp = $request->name_first . " " . $request->name_last;
+        $user->name = $request->name_first . " " . $request->name_last;
         $user->save();
     }
 
