@@ -14,7 +14,7 @@
             <form action="{{ route("auth.login") }}" method="post">
                 @csrf
                 <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email"><span class="d-flex align-items-center"><span class="material-symbols-outlined">mail</span> Email</span></label>
                     @if( Cookie::get("email-Users") )
                     <input type="email" name="email" id="email" class="form-control" placeholder="Email" aria-describedby="helpId" value="{{ Cookie::get("email-Users") }}">
                     @else
@@ -23,15 +23,15 @@
                     <small id="helpId" class="text-muted">Help text</small>
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password"><span class="d-flex align-items-center"><span class="material-symbols-outlined">fingerprint</span> Password</span></label>
                     <input type="password" name="password" id="password" class="form-control" placeholder="Password" aria-describedby="helpId">
                     <small id="helpId" class="text-muted">Help text</small>
                 </div>
                 <div class="form-group">
                     <input type="checkbox" name="remember" id="remember">
-                    <label for="remember">Remember me</label>
+                    <label for="remember"> Remember me</label>
                 </div>
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary"><span class="d-flex align-items-center"><span class="material-symbols-outlined">arrow_forward_ios</span>Login</span></button>
             </form>
         </div>
 
@@ -39,7 +39,7 @@
 
             <!-- Button trigger modal -->
             <a href="{{ route('auth.register') }}"> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                    Register
+            <span class="d-flex align-items-center"><span class="material-symbols-outlined">arrow_forward_ios</span>Register</span>
                 </button></a>
 
         </div>

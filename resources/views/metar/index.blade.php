@@ -23,9 +23,9 @@
 
                     <form action="{{ route("metars.icao") }}" method="get">
                         <div class="form-group">
-                            <label for="">Your Search</label>
+                            <label for=""><span class="d-flex align-items-center"><span class="material-symbols-outlined">search</span> Your Search</span></label>
                             <input type="text" class="form-control" name="icao" placeholder="ICAO / LFBL">
-                            <button type="submit" class="btn btn-success btn-sm mt-2">Search</button>
+                            <button type="submit" class="btn btn-success mt-2"><span class="d-flex align-items-center"><span class="material-symbols-outlined">arrow_forward_ios</span>Search</span></button>
                         </div>
                 </div>
                 </form>
