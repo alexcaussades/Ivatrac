@@ -88,7 +88,8 @@ Route::prefix("auth/")->group(function () {
                 $usersController->create($request);
                 $lastId = DB::getPdo()->lastInsertId();
                 $mail = new MailRegisterController();
-                $mail = $mail->MailRegister($lastId);
+                $mail->MailRegister($lastId);
+                $mail->ConfirmRegister($lastId);
                 $usersController->loggin_form_register($lastId);
                 return redirect()->route("auth.login");
             } else {
@@ -338,5 +339,7 @@ Route::get("/mail", function (mailController $mailTest, usersController $usersCo
 });
 
 Route::get('/test', function () {
-    return view('emails.registerUsers.info-admin');
+    $usersController = new usersController();
+    $user = $usersController->get_info_user(1);
+    return view('emails.registerUsers.confirm-register', ["user" => $user]);
 });
