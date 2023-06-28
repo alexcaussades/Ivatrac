@@ -7,7 +7,7 @@
 @section('content')
 
 <div class="container">
-    <a href="{{ Route('ivao.plateforme', ["icao" => $Pilot["icao"]] )}}" class="btn btn-success">Refresh</a>
+    <a href="{{ Route('ivao.plateforme', ["icao" => $Pilot["icao"]] )}}" class="btn btn-success"><span class="d-flex align-items-center"><span class="material-symbols-outlined">sync</span> Refresh</span></a>
     <div class="row mt-2">
         @if ($ivao["APP"] != null)
         <div class="col">
@@ -101,7 +101,7 @@
     </div>
     <hr>
     <div class="col">
-        <h5>Departure ({{$Pilot["departure"]["count"]}})</h5>
+        <h5><span class="material-symbols-outlined">flight_takeoff</span> Departure ({{$Pilot["departure"]["count"]}})</h5>
         <table class="table table-striped table-inverse table-responsive">
             <thead class="thead-inverse">
                 <tr>
@@ -128,7 +128,7 @@
         </table>
     </div>
     <div class="col">
-        <h5>Arrival ({{$Pilot["arrivals"]["count"]}})</h5>
+        <h5><span class="material-symbols-outlined">flight_land</span> Arrival ({{$Pilot["arrivals"]["count"]}})</h5>
         <table class="table table-striped table-inverse table-responsive">
             <thead class="thead-inverse">
                 <tr>
