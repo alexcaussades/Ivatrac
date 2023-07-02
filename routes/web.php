@@ -365,15 +365,3 @@ Route::prefix("pirep")->group(function () {
     })->name("pirep.index");
 });
 
-Route::get("/mail", function (mailController $mailTest, usersController $usersController, Request $request) {
-
-    $mailTest->basic_email(auth()->user()->email);
-
-    return "Email sent successfully";
-});
-
-Route::get('/test', function () {
-    $usersController = new usersController();
-    $user = $usersController->get_info_user(1);
-    return view('emails.registerUsers.confirm-register', ["user" => $user]);
-});
