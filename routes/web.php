@@ -2,16 +2,22 @@
 
 
 
+use App\Mail\MailTest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Monolog\Formatter\JsonFormatter;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AtcController;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\metarController;
+use App\Http\Controllers\PirepController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\logginController;
@@ -19,14 +25,9 @@ use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
+use App\Http\Controllers\MailRegisterController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
-use App\Http\Controllers\MailController;
-use App\Http\Controllers\MailRegisterController;
-use App\Mail\MailTest;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
-use Monolog\Formatter\JsonFormatter;
 
 /*
 |--------------------------------------------------------------------------
@@ -342,26 +343,23 @@ Route::prefix("pirep")->group(function () {
         $request->validate([
             "fpl" => "required"
         ]);
-        $pirep = $request->file("fpl");
-        $pirepon = $pirep->store("pirep", "public");
-        $explose = file_get_contents(storage_path("app/public/" . $pirepon));
-        $explose = explode("\n", $explose);
-        /** suprimer des carateres */
-        $sup = ["\r", "\n"];
-        $explose = str_replace($sup, "", $explose);
-        $explose2 = str_replace("=", ":", $explose);
-        $pirep = [];
-        
-        foreach ($explose2 as $key => $value) {
-
-            for ($i = 0; $i < count($explose2); $i++) {
-                $explose2[$key] = explode(":", $value);
-                $explose2[$key][1] = $explose2[$key][1] ?? Null;
-                $pirep[$explose2[$key][0]] = $explose2[$key][1];
-            }
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            $pirep = new PirepController();
+            $pirep->store_fpl($request);
+            return $pirep->show_fpl();
         }
-        json_encode($pirep);
-        return $pirep;
     })->name("pirep.index");
-});
 
+    Route::get("/show", function (Request $request) {
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            $pirep = new PirepController();
+            $oo = $pirep->show_fpl_id(1);
+            $json = json_decode($oo->fpl);
+            return $json[0]->ROUTE;
+        }
+    })->name("pirep.show");
+});
