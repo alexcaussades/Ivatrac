@@ -25,6 +25,8 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\MailRegisterController;
 use App\Mail\MailTest;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Monolog\Formatter\JsonFormatter;
 
 /*
 |--------------------------------------------------------------------------
@@ -329,6 +331,38 @@ Route::prefix("ivao")->group(function () {
         $response = $pilots->getAirplaneToPilots($request->icao);
         return $response;
     });
+});
+
+Route::prefix("pirep")->group(function () {
+    Route::get("/", function (Request $request) {
+        return view("pirep.upload-fpl");
+    })->name("pirep.index");
+
+    Route::post("/", function (Request $request) {
+        $request->validate([
+            "fpl" => "required"
+        ]);
+        $pirep = $request->file("fpl");
+        $pirepon = $pirep->store("pirep", "public");
+        $explose = file_get_contents(storage_path("app/public/" . $pirepon));
+        $explose = explode("\n", $explose);
+        /** suprimer des carateres */
+        $sup = ["\r", "\n"];
+        $explose = str_replace($sup, "", $explose);
+        $explose2 = str_replace("=", ":", $explose);
+        $pirep = [];
+        
+        foreach ($explose2 as $key => $value) {
+
+            for ($i = 0; $i < count($explose2); $i++) {
+                $explose2[$key] = explode(":", $value);
+                $explose2[$key][1] = $explose2[$key][1] ?? Null;
+                $pirep[$explose2[$key][0]] = $explose2[$key][1];
+            }
+        }
+        json_encode($pirep);
+        return $pirep;
+    })->name("pirep.index");
 });
 
 Route::get("/mail", function (mailController $mailTest, usersController $usersController, Request $request) {
