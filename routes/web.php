@@ -342,10 +342,23 @@ Route::prefix("ivao")->group(function () {
 
 Route::prefix("pirep")->group(function () {
     Route::get("/", function (Request $request) {
-        return view("pirep.upload-fpl");
+        return view("pirep.index");
     })->name("pirep.index");
+    
+    Route::get("/create", function (Request $request) {
+        return view("pirep.create");
+    })->name("pirep.create");
 
-    Route::post("/", function (Request $request) {
+    Route::post("/create", function (Request $request) {
+        
+        dd($request->all());
+    })->name("pirep.create");
+
+    Route::get("/upload", function (Request $request) {
+        return view("pirep.upload-fpl");
+    })->name("pirep.upload");
+
+    Route::post("/upload", function (Request $request) {
         $request->validate([
             "fpl" => "required"
         ]);
@@ -356,7 +369,7 @@ Route::prefix("pirep")->group(function () {
             $pirep->store_fpl($request);
             return $pirep->show_fpl();
         }
-    })->name("pirep.index");
+    })->name("pirep.upload");
 
     Route::get("/show", function (Request $request) {
         if (!Auth::user()) {
