@@ -8,6 +8,7 @@ use App\Http\Controllers\logginController;
 use symfony\component\httpfoundation\cookie;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie as FacadesCookie;
 
 /*
@@ -24,6 +25,8 @@ use Illuminate\Support\Facades\Cookie as FacadesCookie;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
 
 Route::get('/test', function (Request $request) {
     Http::withToken("Bearer " . $request->bearerToken());
