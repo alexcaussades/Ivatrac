@@ -2,16 +2,22 @@
 
 
 
+use App\Mail\MailTest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Monolog\Formatter\JsonFormatter;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AtcController;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\metarController;
+use App\Http\Controllers\PirepController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\logginController;
@@ -19,12 +25,9 @@ use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
+use App\Http\Controllers\MailRegisterController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
-use App\Http\Controllers\MailController;
-use App\Http\Controllers\MailRegisterController;
-use App\Mail\MailTest;
-use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -331,15 +334,32 @@ Route::prefix("ivao")->group(function () {
     });
 });
 
-Route::get("/mail", function (mailController $mailTest, usersController $usersController, Request $request) {
+Route::prefix("pirep")->group(function () {
+    Route::get("/", function (Request $request) {
+        return view("pirep.upload-fpl");
+    })->name("pirep.index");
 
-    $mailTest->basic_email(auth()->user()->email);
+    Route::post("/", function (Request $request) {
+        $request->validate([
+            "fpl" => "required"
+        ]);
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            $pirep = new PirepController();
+            $pirep->store_fpl($request);
+            return $pirep->show_fpl();
+        }
+    })->name("pirep.index");
 
-    return "Email sent successfully";
-});
-
-Route::get('/test', function () {
-    $usersController = new usersController();
-    $user = $usersController->get_info_user(1);
-    return view('emails.registerUsers.confirm-register', ["user" => $user]);
+    Route::get("/show", function (Request $request) {
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            $pirep = new PirepController();
+            $oo = $pirep->show_fpl_id(1);
+            $json = json_decode($oo->fpl);
+            return $json[0]->ROUTE;
+        }
+    })->name("pirep.show");
 });
