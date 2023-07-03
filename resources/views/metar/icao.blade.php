@@ -28,6 +28,7 @@
         <div class="d-flex flex-row-reverse text-warning">
             <form action="#" method="post">
                 <input type="hidden" name="icao" value="{{$metar["station"]}}">
+                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                 <button type="submit" class="btn btn-info btn-sm ms-2 disabled"><span class="d-flex align-items-center"><span class="material-symbols-outlined fill">star</span>Add to favorites</span></button>
             </form>
             <form action="{{ Route('metars.icao') }}" method="get">
