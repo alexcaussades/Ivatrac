@@ -350,10 +350,10 @@ Route::prefix("pirep")->group(function () {
     })->name("pirep.create");
 
     Route::post("/create", function (Request $request) {
-        // $value = $request->all();
-        // $pirep = new PirepController();
-        // $pirep->create_for_website($value);
-        // return $pirep;        
+        $value = $request->all();
+        $pirep = new PirepController();
+        $pirep->create_for_website($value);
+        return redirect()->route("pirep.index");
     })->name("pirep.create");
 
     Route::get("/upload", function (Request $request) {
@@ -378,9 +378,16 @@ Route::prefix("pirep")->group(function () {
             return redirect()->route("auth.login");
         } else {
             $pirep = new PirepController();
-            $oo = $pirep->show_fpl_id(1);
+            $oo = $pirep->show_fpl_id(3);
             $json = json_decode($oo->fpl);
-            return $json[0]->ROUTE;
+
+            if (empty($json[0]->ROUTE)) {
+                $route = $json->route;
+            } else {
+                $route = $json[0]->ROUTE;
+            }
+            
+            dd($route);
         }
     })->name("pirep.show");
 });

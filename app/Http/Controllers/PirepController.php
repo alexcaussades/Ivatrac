@@ -58,8 +58,14 @@ class PirepController extends Controller
         return $pirep;
     }
 
-    public function create_for_website(string $value) {
-        $g = [$value];
-        return $g;
+    public function create_for_website($value) {
+        $pirep = new pirep();
+        $pirep->users_id = $value["users_id"];
+        $pirep->departure = $value["departureAerodrome"];
+        $pirep->arrival = $value["destinationAerodrome"];
+        $pirep->aircraft = $value["aircraftType"];
+        $pirep->fpl = json_encode($value);
+        $pirep->save();
+        
     }
 }
