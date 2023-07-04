@@ -350,8 +350,10 @@ Route::prefix("pirep")->group(function () {
     })->name("pirep.create");
 
     Route::post("/create", function (Request $request) {
-        
-        dd($request->all());
+        // $value = $request->all();
+        // $pirep = new PirepController();
+        // $pirep->create_for_website($value);
+        // return $pirep;        
     })->name("pirep.create");
 
     Route::get("/upload", function (Request $request) {

@@ -35,7 +35,6 @@ class PirepController extends Controller
     }
 
     Public function store_fpl($value){
-        //TODO: Resolve auth user  
         $value = $this->fpl_ivao($value);
         $users_id = Auth::user()->id;
         $value2 = [$value];
@@ -57,5 +56,10 @@ class PirepController extends Controller
     public function show_fpl_id($id){
         $pirep = pirep::find($id);
         return $pirep;
+    }
+
+    public function create_for_website(string $value) {
+        $g = [$value];
+        return $g;
     }
 }

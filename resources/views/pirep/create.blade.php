@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col">
                     <label for="number" class="text-primary d-flex justify-content-start">Identification :</label>
-                    <input type="text" class="form-control" name="Identification" id="Identification" placeholder="Identification">
+                    <input type="text" class="form-control" name="identification" id="Identification" placeholder="Identification">
                 </div>
                 <div class="col">
                     <label for="flightRules" class="text-primary d-flex justify-content-start">Flight Rules :</label>
@@ -57,7 +57,7 @@
                 </div>
                 <div class="col">
                     <label for="equipment" class="text-primary d-flex justify-content-start">Equipment :</label>
-                    <select class="form-select" name="equipment" multiple>
+                    <select class="form-select" name="equipment[]" multiple>
                         <option value="S">S - Standard (VHF, VOR, ILS)</option>
                         <option value="A">A - GBAS Ldg System</option>
                         <option value="B">B - LPV</option>
@@ -120,7 +120,7 @@
                                 <option value="K">K</option>
                             </select>
                         </span>
-                        <input type="text" class="form-control" name="speed-number" placeholder="Cruise Speed" aria-label="Cruise Speed" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control" name="speednumber" placeholder="Cruise Speed" aria-label="Cruise Speed" aria-describedby="basic-addon1">
                     </div>
                 </div>
                 <div class="col">
@@ -135,7 +135,7 @@
                                 <option value="VFR">VFR</option>
                             </select>
                         </span>
-                        <input type="text" class="form-control" name="Level-FL" aria-label="Cruise Speed" aria-describedby="basic-addon1">
+                        <input type="text" class="form-control" name="LevelFL" aria-label="Cruise Speed" aria-describedby="basic-addon1">
                     </div>
                 </div>
             </div>
