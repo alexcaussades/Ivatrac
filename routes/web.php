@@ -87,6 +87,23 @@ Route::prefix("auth/")->group(function () {
         if ($request->password == $request->password_confirmation) {
             if ($request->condition == "1") {
 
+                /** verification du mot de passe a longeur de caratere avec un return erreur si ce n'est pas bon  */
+                $validator = Validator::make($request->all(), [
+                    'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+                ]);
+                if ($validator->fails()) {
+                    return redirect()->route("auth.register")
+                        ->withErrors("Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre")
+                        ->withInput();
+                }
+                $validator = Validator::make($request->all(), [
+                    'email' => 'required|email|unique:users',
+                ]);
+                if ($validator->fails()) {
+                    return redirect()->route("auth.register")
+                        ->withErrors("L'email est déjà utilisé ! Veuillez en choisir un autre ou vous connecter avec celui-ci")
+                        ->withInput();
+                }
                 $usersController = new usersController();
                 $usersController->create($request);
                 $lastId = DB::getPdo()->lastInsertId();

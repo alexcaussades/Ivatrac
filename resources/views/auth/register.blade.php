@@ -16,7 +16,7 @@
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    {{ $error }}
                 @endforeach
             </ul>
         </div>
@@ -47,12 +47,12 @@
         </div>
         <div class="form-group mt-2">
             <label for="password">Password</label>
-            <input type="password" name="password" id="password" class="form-control" placeholder="Password" aria-describedby="helpId">
+            <input type="password" name="password" id="password" minlength="8" class="form-control" placeholder="Password" aria-describedby="helpId">
             
         </div>
         <div class="form-group mt-2">
             <label for="password_confirmation">Password confirmation</label>
-            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Password confirmation" aria-describedby="helpId">
+            <input type="password" name="password_confirmation" minlength="8" id="password_confirmation" class="form-control" placeholder="Password confirmation" aria-describedby="helpId">
             
         </div>
 
