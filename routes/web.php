@@ -289,18 +289,17 @@ Route::prefix("metar")->group(function () {
         $chartVFR = $chart->chartVFR($icao);
         $pilots = new PilotIvaoController();
         $pilot = $pilots->getAirplaneToPilots($icao);
-        
-        if($metar == NULL || $taf == NULL || $ATC == NULL || $pilot == NULL || $chartIFR == NULL || $chartVFR == NULL){
+
+        if ($metar == NULL || $taf == NULL || $ATC == NULL || $pilot == NULL || $chartIFR == NULL || $chartVFR == NULL) {
             return view("metar.reload", ["icao" => $icao]);
         }
-       
+
         return view("metar.icao", ["metar" => $metar, "taf" => $taf, "ATC" => $ATC, "pilot" => $pilot, "chartIFR" => $chartIFR, "chartVFR" => $chartVFR]);
     })->name("metars.icao");
 
     Route::get("/{icao}", function () {
         return to_route("metars.index");
     });
-
 });
 
 Route::prefix("ivao")->group(function () {
@@ -361,7 +360,7 @@ Route::prefix("pirep")->group(function () {
     Route::get("/", function (Request $request) {
         return view("pirep.index");
     })->name("pirep.index");
-    
+
     Route::get("/create", function (Request $request) {
         return view("pirep.create");
     })->name("pirep.create");
@@ -396,15 +395,13 @@ Route::prefix("pirep")->group(function () {
         } else {
             $pirep = new PirepController();
             $oo = $pirep->show_fpl_id(3);
-            $json = json_decode($oo->fpl);
 
-            if (empty($json[0]->ROUTE)) {
-                $route = $json->route;
-            } else {
-                $route = $json[0]->ROUTE;
+            $json = json_decode($oo->fpl);
+            if (isset($json->route)) {
+                $json->route = $json->route ?? $json[0]->ROUTE ;
             }
-            
-            dd($route);
+            //dd($json);
+            return view("pirep.show", ["json" => $json]);
         }
     })->name("pirep.show");
 });

@@ -68,4 +68,19 @@ class PirepController extends Controller
         $pirep->save();
         
     }
+
+    public function show_fpl_user($id){
+        $pirep = pirep::where("users_id", $id)->get();
+        return $pirep;
+    }
+
+    public function find_route($id){
+        $pirep = $this->show_fpl_id($id);
+        $pirep = json_decode($pirep->fpl, true);
+        if($pirep->route == null){
+            $pirep->route = $pirep[0]->ROUTE;
+        }
+        return $pirep;
+    }
+
 }
