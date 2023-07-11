@@ -389,19 +389,19 @@ Route::prefix("pirep")->group(function () {
         }
     })->name("pirep.upload");
 
-    Route::get("/show", function (Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $pirep = new PirepController();
-            $oo = $pirep->show_fpl_id(3);
+    // Route::get("/show", function (Request $request) {
+    //     if (!Auth::user()) {
+    //         return redirect()->route("auth.login");
+    //     } else {
+    //         $pirep = new PirepController();
+    //         $oo = $pirep->show_fpl_id(3);
 
-            $json = json_decode($oo->fpl);
-            if (isset($json->route)) {
-                $json->route = $json->route ?? $json[0]->ROUTE ;
-            }
-            //dd($json);
-            return view("pirep.show", ["json" => $json]);
-        }
-    })->name("pirep.show");
+    //         $json = json_decode($oo->fpl);
+    //         if (isset($json->route)) {
+    //             $json->route = $json->route ?? $json[0]->ROUTE ;
+    //         }
+    //         //dd($json);
+    //         return view("pirep.show", ["json" => $json]);
+    //     }
+    // })->name("pirep.show");
 });
