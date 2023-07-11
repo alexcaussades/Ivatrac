@@ -35,7 +35,6 @@ class PirepController extends Controller
     }
 
     Public function store_fpl($value){
-        //TODO: Resolve auth user  
         $value = $this->fpl_ivao($value);
         $users_id = Auth::user()->id;
         $value2 = [$value];
@@ -58,4 +57,30 @@ class PirepController extends Controller
         $pirep = pirep::find($id);
         return $pirep;
     }
+
+    public function create_for_website($value) {
+        $pirep = new pirep();
+        $pirep->users_id = $value["users_id"];
+        $pirep->departure = $value["departureAerodrome"];
+        $pirep->arrival = $value["destinationAerodrome"];
+        $pirep->aircraft = $value["aircraftType"];
+        $pirep->fpl = json_encode($value);
+        $pirep->save();
+        
+    }
+
+    public function show_fpl_user($id){
+        $pirep = pirep::where("users_id", $id)->get();
+        return $pirep;
+    }
+
+    public function find_route($id){
+        $pirep = $this->show_fpl_id($id);
+        $pirep = json_decode($pirep->fpl, true);
+        if($pirep->route == null){
+            $pirep->route = $pirep[0]->ROUTE;
+        }
+        return $pirep;
+    }
+
 }

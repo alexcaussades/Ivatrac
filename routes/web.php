@@ -87,6 +87,23 @@ Route::prefix("auth/")->group(function () {
         if ($request->password == $request->password_confirmation) {
             if ($request->condition == "1") {
 
+                /** verification du mot de passe a longeur de caratere avec un return erreur si ce n'est pas bon  */
+                $validator = Validator::make($request->all(), [
+                    'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+                ]);
+                if ($validator->fails()) {
+                    return redirect()->route("auth.register")
+                        ->withErrors("Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre")
+                        ->withInput();
+                }
+                $validator = Validator::make($request->all(), [
+                    'email' => 'required|email|unique:users',
+                ]);
+                if ($validator->fails()) {
+                    return redirect()->route("auth.register")
+                        ->withErrors("L'email est déjà utilisé ! Veuillez en choisir un autre ou vous connecter avec celui-ci")
+                        ->withInput();
+                }
                 $usersController = new usersController();
                 $usersController->create($request);
                 $lastId = DB::getPdo()->lastInsertId();
@@ -272,6 +289,11 @@ Route::prefix("metar")->group(function () {
         $chartVFR = $chart->chartVFR($icao);
         $pilots = new PilotIvaoController();
         $pilot = $pilots->getAirplaneToPilots($icao);
+
+        if ($metar == NULL || $taf == NULL || $ATC == NULL || $pilot == NULL || $chartIFR == NULL || $chartVFR == NULL) {
+            return view("metar.reload", ["icao" => $icao]);
+        }
+
         return view("metar.icao", ["metar" => $metar, "taf" => $taf, "ATC" => $ATC, "pilot" => $pilot, "chartIFR" => $chartIFR, "chartVFR" => $chartVFR]);
     })->name("metars.icao");
 
@@ -336,10 +358,25 @@ Route::prefix("ivao")->group(function () {
 
 Route::prefix("pirep")->group(function () {
     Route::get("/", function (Request $request) {
-        return view("pirep.upload-fpl");
+        return view("pirep.index");
     })->name("pirep.index");
 
-    Route::post("/", function (Request $request) {
+    Route::get("/create", function (Request $request) {
+        return view("pirep.create");
+    })->name("pirep.create");
+
+    Route::post("/create", function (Request $request) {
+        $value = $request->all();
+        $pirep = new PirepController();
+        $pirep->create_for_website($value);
+        return redirect()->route("pirep.index");
+    })->name("pirep.create");
+
+    Route::get("/upload", function (Request $request) {
+        return view("pirep.upload-fpl");
+    })->name("pirep.upload");
+
+    Route::post("/upload", function (Request $request) {
         $request->validate([
             "fpl" => "required"
         ]);
@@ -350,16 +387,20 @@ Route::prefix("pirep")->group(function () {
             $pirep->store_fpl($request);
             return $pirep->show_fpl();
         }
-    })->name("pirep.index");
+    })->name("pirep.upload");
 
-    Route::get("/show", function (Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $pirep = new PirepController();
-            $oo = $pirep->show_fpl_id(1);
-            $json = json_decode($oo->fpl);
-            return $json[0]->ROUTE;
-        }
-    })->name("pirep.show");
+    // Route::get("/show", function (Request $request) {
+    //     if (!Auth::user()) {
+    //         return redirect()->route("auth.login");
+    //     } else {
+    //         $pirep = new PirepController();
+    //         $oo = $pirep->show_fpl_id(3);
+
+    //         $json = json_decode($oo->fpl);
+    //         if (isset($json->route)) {
+    //             $json->route = $json->route ?? $json[0]->ROUTE ;
+    //         }
+    //         //dd($json);
+    //         return view("pirep.show", ["json" => $json]);
+    //     }
 });

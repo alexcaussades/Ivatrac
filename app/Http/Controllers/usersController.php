@@ -122,9 +122,6 @@ class usersController extends Controller
                 return redirect()->intended('serveur');
             
         }
-        return to_route("auth.login")->withErrors([
-            'error' => 'Les informations de connexion sont incorrectes. "Code erreur 1".'
-        ]);
     }
 
     public function logout(Request $request)
