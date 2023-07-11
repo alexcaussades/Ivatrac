@@ -403,5 +403,4 @@ Route::prefix("pirep")->group(function () {
     //         //dd($json);
     //         return view("pirep.show", ["json" => $json]);
     //     }
-    // })->name("pirep.show");
 });
