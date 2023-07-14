@@ -18,46 +18,47 @@
         <div class="row">
             <div class="col">
                 <label for="number" class="text-primary d-flex justify-content-start">Identification :</label>
-                {{$json->identification ?? $json[0]->ID}}
+                {{$json->identification ?? ''}}
             </div>
             <div class="col">
                 <label for="flightRules" class="text-primary d-flex justify-content-start">Flight Rules :</label>
-                {{$json->flightRules ?? $json[0]->RULES}}
+                {{$json->flightRules}}
             </div>
             <div class="col">
                 <label for="typeOfFlight" class="text-primary d-flex justify-content-start">Type of Flight :</label>
-                {{$json->typeOfFlight ?? $json[0]->FLIGHTTYPE}}
+                {{$json->typeOfFlight}}
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col">
                 <label for="aircraftType" class="text-primary d-flex justify-content-start">Aircraft Type :</label>
-                {{$json->aircraftType ?? $json[0]->ACTYPE}}
+                {{$json->aircraftType}}
             </div>
             <div class="col">
                 <label for="wakeTurbulence" class="text-primary d-flex justify-content-start">Wake Turbulence :</label>
-                {{$json->wakeTurbulence ?? $json[0]->WAKECAT}}
+                {{$json->wakeTurbulence}}
             </div>
             <div class="col">
                 <label for="equipment" class="text-primary d-flex justify-content-start">Equipment :</label>
-                @if($json->equipment ?? $json[0]->EQUIPMENT)
+                @if($oo->upload == 1)
+                    {{$json->equipment}}
+                @else
                     @foreach ($json->equipment as $item)
                         {{$item}}
                     @endforeach
                 @endif
-                               
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col">
                 <label for="departureAerodrome" class="text-primary d-flex justify-content-start">Departure Aerodrome :</label>
-                {{$json->departureAerodrome ?? $json[0]->DEPICAO}}
+                {{$json->departureAerodrome}}
             </div>
             <div class="col">
                 <label for="departureTime" class="text-primary d-flex justify-content-start">Departure Time :</label>
-                {{$json->departureTime ?? $json[0]->DEPTIME}}
+                {{$json->departureTime }}
             </div>
         </div>
         <hr>
@@ -65,15 +66,15 @@
             <div class="col">
                 <label for="departureTime" class="text-primary d-flex justify-content-start">Speed :</label>
                 <div class="input-group mb-3">
-                    {{$json->speed ?? $json[0]->SPEEDTYPE}}
-                    {{$json->speednumber ?? $json[0]->SPEED}}
+                    {{$json->speed }}
+                    {{$json->speednumber }}
                 </div>
             </div>
             <div class="col">
                 <label for="departureTime" class="text-primary d-flex justify-content-start">Level :</label>
                 <div class="input-group mb-3">
-                    {{$json->level ?? $json[0]->LEVELTYPE}}
-                    {{$json->LevelFL ?? $json[0]->LEVEL }}
+                    {{$json->LevelFL}}
+                    {{$json->level}}
                 </div>
             </div>
         </div>
@@ -81,48 +82,48 @@
         <div class="row">
             <div class="col">
                 <label for="Route" class="text-primary d-flex justify-content-start">Route :</label>
-                {{$json->route ?? $json[0]->ROUTE}}
+                {{$json->route}}
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col">
                 <label for="destinationAerodrome" class="text-primary d-flex justify-content-start">Destination Aerodrome :</label>
-                {{$json->destinationAerodrome ?? $json[0]->DESTICAO}}
+                {{$json->destinationAerodrome}}
             </div>
             <div class="col">
                 <label for="destinationTime" class="text-primary d-flex justify-content-start">Total EET :</label>
-                {{$json->eet ?? $json[0]->EET}}
+                {{$json->eet}}
             </div>
             <div class="col">
                 <label for="destinationTime" class="text-primary d-flex justify-content-start">Alternate Aerodrome :</label>
-                {{$json->Alternate ?? $json[0]->ALTICAO}}
+                {{$json->Alternate}}
             </div>
             <div class="col">
                 <label for="destinationTime" class="text-primary d-flex justify-content-start">2nd Alternate Aerodrome :</label>
-                {{$json->Alternate2 ?? $json[0]->ALTICAO2}}
+                {{$json->Alternate2}}
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col">
                 <label for="Route" class="text-primary d-flex justify-content-start">Other Information :</label>
-                {{$json->Other ?? $json[0]->OTHER}}
+                {{$json->Other}}
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col">
                 <label for="Route" class="text-primary d-flex justify-content-start">Endurance :</label>
-                {{$json->endurance ?? $json[0]->ENDURANCE}}
+                {{$json->endurance}}
             </div>
             <div class="col">
                 <label for="Route" class="text-primary d-flex justify-content-start">Persons on Board :</label>
-                {{$json->pob ?? $json[0]->POB }}
+                {{$json->pob}}
             </div>
             <div class="col">
                 <label for="Route" class="text-primary d-flex justify-content-start">Fuel on Board :</label>
-                {{$json->fuel ?? "Null"}} Kg
+                {{$json->fuel ?? ""}} Kg
             </div>
         </div>
         <hr>

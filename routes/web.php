@@ -405,11 +405,8 @@ Route::prefix("pirep")->group(function () {
             $oo = $pirep->show_fpl_id(3);
 
             $json = json_decode($oo->fpl);
-            if (isset($json->route)) {
-                $json->route = $json->route ?? $json[0]->ROUTE;
-            }
-            //dd($json);
-            return view("pirep.show", ["json" => $json]);
+            //dd($oo);
+            return view("pirep.show", ["json" => $json, "oo" => $oo]);
         }
     })->name("pirep.show");
 });
