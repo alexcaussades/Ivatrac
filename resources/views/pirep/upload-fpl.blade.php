@@ -28,6 +28,7 @@
                                 <div class="form-group">
                                     <label for=""><span class="d-flex align-items-center"><h3> Upload FPL</h3></span></label>
                                     <input type="file" class="form-control" name="fpl">
+                                    <input type="hidden" name="upload" value="1">
                                     <div><small class="text-muted">Using file ".fpl" </small></div>
                                     <button type="submit" class="btn btn-primary mt-2"><span class="d-flex align-items-center"><span class="material-symbols-outlined">arrow_forward_ios</span>Submit</span></button>
                                 </div>
