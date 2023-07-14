@@ -26,16 +26,23 @@
             @endif
         </div>
         <div class="d-flex flex-row-reverse text-warning">
+            @auth
             <form action="#" method="post">
                 <input type="hidden" name="icao" value="{{$metar["station"]}}">
                 <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                 <button type="submit" class="btn btn-info btn-sm ms-2 disabled"><span class="d-flex align-items-center"><span class="material-symbols-outlined fill">star</span>Add to favorites</span></button>
             </form>
+            @endauth
+            @guest
+            <form action="#" method="get">
+                <a href="{{ Route("auth.register") }}"><p class="btn btn-primary btn-sm ms-2"> Register </p></a>
+            </form>
+            @endguest
             <form action="{{ Route('metars.icao') }}" method="get">
                 <input type="hidden" name="icao" value="{{$metar["station"]}}">
                 <button type="submit" class="btn btn-success btn-sm"> <span class="d-flex align-items-center"><span class="material-symbols-outlined">sync</span> Refresh</span></button>
             </form>
-            
+
         </div>
         <div class="mt-2">
         </div>
