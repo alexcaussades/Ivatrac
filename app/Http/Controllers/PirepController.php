@@ -39,6 +39,7 @@ class PirepController extends Controller
     {
         $newStrore = [
             "id" => $value["ID"],
+            "identification" => $value["DEPICAO"]."-".$value["DESTICAO"],
             "departureAerodrome" => $value["DEPICAO"],
             "destinationAerodrome" => $value["DESTICAO"],
             "aircraftType" => $value["ACTYPE"],

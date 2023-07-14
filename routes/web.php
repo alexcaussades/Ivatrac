@@ -393,7 +393,7 @@ Route::prefix("pirep")->group(function () {
         } else {
             $pirep = new PirepController();
             $pirep->store_fpl($request);
-            return $pirep->show_fpl();
+            return redirect()->route("pirep.index");
         }
     })->name("pirep.upload");
 
@@ -402,7 +402,7 @@ Route::prefix("pirep")->group(function () {
             return redirect()->route("auth.login");
         } else {
             $pirep = new PirepController();
-            $oo = $pirep->show_fpl_id(3);
+            $oo = $pirep->show_fpl_id(4);
 
             $json = json_decode($oo->fpl);
             //dd($oo);
