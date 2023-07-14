@@ -42,7 +42,6 @@
                 <input type="hidden" name="icao" value="{{$metar["station"]}}">
                 <button type="submit" class="btn btn-success btn-sm"> <span class="d-flex align-items-center"><span class="material-symbols-outlined">sync</span> Refresh</span></button>
             </form>
-
         </div>
         <div class="mt-2">
         </div>
