@@ -35,7 +35,9 @@
             @endauth
             @guest
             <form action="#" method="get">
-                <a href="{{ Route("auth.register") }}"><p class="btn btn-primary btn-sm ms-2"> Register </p></a>
+                <a href="{{ Route("auth.login") }}">
+                    <p class="btn btn-primary btn-sm ms-2"> Login / Register</p>
+                </a>
             </form>
             @endguest
             <form action="{{ Route('metars.icao') }}" method="get">

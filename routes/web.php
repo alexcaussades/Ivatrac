@@ -362,7 +362,11 @@ Route::prefix("pirep")->group(function () {
     })->name("pirep.index");
 
     Route::get("/create", function (Request $request) {
-        return view("pirep.create");
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            return view("pirep.create");
+        }
     })->name("pirep.create");
 
     Route::post("/create", function (Request $request) {
@@ -373,7 +377,11 @@ Route::prefix("pirep")->group(function () {
     })->name("pirep.create");
 
     Route::get("/upload", function (Request $request) {
-        return view("pirep.upload-fpl");
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            return view("pirep.upload-fpl");
+        }
     })->name("pirep.upload");
 
     Route::post("/upload", function (Request $request) {
@@ -385,7 +393,7 @@ Route::prefix("pirep")->group(function () {
         } else {
             $pirep = new PirepController();
             $pirep->store_fpl($request);
-            return $pirep->show_fpl();
+            return redirect()->route("pirep.index");
         }
     })->name("pirep.upload");
 
@@ -394,14 +402,11 @@ Route::prefix("pirep")->group(function () {
             return redirect()->route("auth.login");
         } else {
             $pirep = new PirepController();
-            $oo = $pirep->show_fpl_id(3);
+            $oo = $pirep->show_fpl_id(4);
 
             $json = json_decode($oo->fpl);
-            if (isset($json->route)) {
-                $json->route = $json->route ?? $json[0]->ROUTE ;
-            }
-            //dd($json);
-            return view("pirep.show", ["json" => $json]);
+            //dd($oo);
+            return view("pirep.show", ["json" => $json, "oo" => $oo]);
         }
     })->name("pirep.show");
 });

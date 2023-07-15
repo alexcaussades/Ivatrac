@@ -5,12 +5,18 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> @yield("title")</title>
+  <title> @yield("title") | Alexcaussades - IVAO - INFO</title>
   <!-- CSS only -->
+  @if (ENV('APP_ENV') == 'local')
   <link rel="stylesheet" href="{{ asset("asset/css/bootstrap.min.css") }} " type="text/css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" >
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
   <link rel="stylesheet" href="{{ asset("asset/css/style.css") }} " type="text/css">
+  @else
+  <link rel="stylesheet" href="{{ asset("public/asset/css/bootstrap.min.css") }} " type="text/css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ asset("public/asset/css/style.css") }} " type="text/css">
+  @endif
+
 </head>
 @yield('navbar-metar')
 
@@ -20,8 +26,11 @@
   @yield('content')
 
   <!-- JavaScript Bundle with Popper -->
+  @if (ENV('APP_ENV') == 'local')
   <script src="{{ asset("asset/js/bootstrap.bundle.min.js") }}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  @else
+  <script src="{{ asset("public/asset/js/bootstrap.bundle.min.js") }}"></script>
+  @endif
 </body>
 
 </html>
