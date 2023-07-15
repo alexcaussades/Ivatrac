@@ -1,8 +1,6 @@
-
-
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <div class="navbar-brand" ><a class="nav-link active" aria-current="page" href={{ Route("auth.login") }}>Metar Request </a></div>
+    <div class="navbar-brand"><a class="nav-link active" aria-current="page" href={{ Route("auth.login") }}>Metar Request </a></div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -22,11 +20,13 @@
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Autres 
+            Autres
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
             <li><a class="dropdown-item" href="{{ Route("logout") }}">Logout</a></li>
           </ul>
         </li>
@@ -41,3 +41,6 @@
     </div>
   </div>
 </nav>
+
+<script src="{{ asset("public/asset/js/bootstrap.bundle.min.js") }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
