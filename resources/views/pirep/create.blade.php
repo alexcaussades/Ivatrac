@@ -120,7 +120,7 @@
                                 <option value="K">K</option>
                             </select>
                         </span>
-                        <input type="text" class="form-control" name="speednumber" placeholder="Cruise Speed" aria-label="Cruise Speed" aria-describedby="basic-addon1">
+                        <input type="number" class="form-control" name="speednumber" placeholder="Cruise Speed" aria-label="Cruise Speed" aria-describedby="basic-addon1">
                     </div>
                 </div>
                 <div class="col">
@@ -135,7 +135,7 @@
                                 <option value="VFR">VFR</option>
                             </select>
                         </span>
-                        <input type="text" class="form-control" name="LevelFL" aria-label="Cruise Speed" aria-describedby="basic-addon1">
+                        <input type="number" class="form-control" name="LevelFL" aria-label="Cruise Speed" aria-describedby="basic-addon1">
                     </div>
                 </div>
             </div>
@@ -180,11 +180,11 @@
                 </div>
                 <div class="col">
                     <label for="Route" class="text-primary d-flex justify-content-start">Persons on Board :</label>
-                    <input type="text" class="form-control" name="pob" id="destinationTime" placeholder="0000">
+                    <input type="number" class="form-control" name="pob" id="destinationTime" placeholder="0000">
                 </div>
                 <div class="col">
                     <label for="Route" class="text-primary d-flex justify-content-start">Fuel on Board :</label>
-                    <input type="text" class="form-control" name="fuel" id="destinationTime" placeholder="2640 KG">
+                    <input type="number" class="form-control" name="fuel" id="destinationTime" placeholder="2640 KG">
                 </div>
             </div>
             <hr>
