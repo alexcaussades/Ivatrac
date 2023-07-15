@@ -26,7 +26,11 @@
   @yield('content')
 
   <!-- JavaScript Bundle with Popper -->
+  @if (ENV('APP_ENV') == 'local')
   <script src="{{ asset("asset/js/bootstrap.bundle.min.js") }}"></script>
+  @else
+  <script src="{{ asset("public/asset/js/bootstrap.bundle.min.js") }}"></script>
+  @endif
 </body>
 
 </html>

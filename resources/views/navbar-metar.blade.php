@@ -10,30 +10,34 @@
           <a class="nav-link active" aria-current="page" href={{ Route("auth.login") }}>Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ Route("serveur.api") }}">API</a>
+          <a class="nav-link" href="{{ Route("metars.index") }}">Metar</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ Route("metars.index") }}">Metar</a>
+          <a class="nav-link" href="{{ Route("pirep.index") }}">Pirep</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://sdoaci.skydreamsoft.fr/" target="_blank">Sdoaci</a>
         </li>
+        @auth
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Autres
+            Account
           </a>
+
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="{{ Route("login") }}">My Account</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
             <li><a class="dropdown-item" href="{{ Route("logout") }}">Logout</a></li>
           </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link disabled">Disabled</a>
-        </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{ Route("serveur.api") }}">API</a>
+      </li>
+      @endauth
       </ul>
+
       <form class="d-flex" role="search" action="{{ route("metars.icao") }}" method="get">
         <input class="form-control me-2" type="search" name="icao" placeholder="New Request ICAO " aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
