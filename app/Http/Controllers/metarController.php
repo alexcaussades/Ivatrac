@@ -17,10 +17,15 @@ class metarController extends Controller
         return view('metar');
     }
 
+    public function whazzup(){
+        $api = new whazzupController();
+        $api = $api->donwload_whazzup();
+        return $api;
+    }
 
     public function getApiATC_APP($icao)
     {
-        $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
+        $api = $this->whazzup();
         foreach ($api->json()["clients"]["atcs"] as $key => $value) {
             if ($value["callsign"] == $icao . "_APP") {
                 return $value;
@@ -30,7 +35,7 @@ class metarController extends Controller
 
     public function getApiATC_TWR($icao)
     {
-        $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
+        $api = $this->whazzup();
 
         foreach ($api->json()["clients"]["atcs"] as $key => $value) {
 
@@ -42,7 +47,7 @@ class metarController extends Controller
 
     public function getApiATC_GND($icao)
     {
-        $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
+        $api = $this->whazzup();
         foreach ($api->json()["clients"]["atcs"] as $key => $value) {
 
             if ($value["callsign"] == $icao . "_GND") {
@@ -53,7 +58,7 @@ class metarController extends Controller
 
     public function getApiATC_FSS($icao)
     {
-        $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
+        $api = $this->whazzup();
         foreach ($api->json()["clients"]["atcs"] as $key => $value) {
 
             if ($value["callsign"] == $icao . "_FSS") {

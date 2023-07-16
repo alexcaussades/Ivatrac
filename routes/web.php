@@ -28,6 +28,7 @@ use App\Http\Controllers\ApiGestionController;
 use App\Http\Controllers\MailRegisterController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
+use App\Http\Controllers\whazzupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -410,3 +411,9 @@ Route::prefix("pirep")->group(function () {
         }
     })->name("pirep.show");
 });
+
+Route::get("test", function (Request $request) {
+    $whazzup = new whazzupController();
+    $whazzup = $whazzup->donwload_whazzup();
+    return $whazzup;
+})->name("test");

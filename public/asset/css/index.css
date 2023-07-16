@@ -1,0 +1,19 @@
+body{
+    background-color: rgba(255, 255, 255, 0.1);
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-position: center !important;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    
+}
+
+.tile{
+    font-family: 'Oswald', sans-serif;
+}
