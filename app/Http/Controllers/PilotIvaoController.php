@@ -7,9 +7,17 @@ use Illuminate\Support\Facades\Http;
 
 class PilotIvaoController extends Controller
 {
+
+    public function whazzup()
+    {
+        $api = new whazzupController();
+        $api = $api->donwload_whazzup();
+        return $api;
+    }
+
     public function getApideparturePilot($icao)
     {
-        $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
+        $api = $this->whazzup();
         $count = $api->json()["connections"]["pilot"];
         $pilot = $api->json()["clients"]["pilots"];
         $pilotDeparture = [];
@@ -25,7 +33,7 @@ class PilotIvaoController extends Controller
 
     public function getApiArrivalPilot($icao)
     {
-        $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
+        $api = $this->whazzup();
         $count = $api->json()["connections"]["pilot"];
         $pilot = $api->json()["clients"]["pilots"];
         $PilotArrival = [];
