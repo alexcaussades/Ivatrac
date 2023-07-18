@@ -43,7 +43,9 @@ use App\Http\Controllers\whazzupController;
 
 Route::get('/welcome', function (usersController $usersController, Request $request, Session $session) {
     $users = $usersController->get_info_user(session()->get("id"));
-    return view('welcome', ["users" => $users]);
+    $whazzup = new whazzupController();
+    $whazzup = $whazzup->connexion();
+    return view('welcome', ["users" => $users, "whazzup" => $whazzup]);
 })->name("welcome");
 
 Route::get('/login', function (Request $request) {
@@ -414,6 +416,6 @@ Route::prefix("pirep")->group(function () {
 
 Route::get("test", function (Request $request) {
     $whazzup = new whazzupController();
-    $whazzup = $whazzup->getwhazzup();
+    $whazzup = $whazzup->connexion();
     return $whazzup;
 })->name("test");

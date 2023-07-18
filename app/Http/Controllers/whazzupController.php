@@ -39,7 +39,6 @@ class whazzupController extends Controller
         return $r;
     }
 
-    //TODO: a revoir pour l'enregistrement en bdd
     public function store_Whazzup(){
        $datenow = date('Y-m-d H:i:s');
        $date = $this->getwhazzupbdd()->whazzup_date;
@@ -77,5 +76,11 @@ class whazzupController extends Controller
         $whazzupbdd = whazzupdd::all();
         $whazzupbdd = $whazzupbdd->last();
         return $whazzupbdd;
+    }
+
+    public function connexion()
+    {
+        $api = $this->getwhazzup();
+        return $api["connections"];
     }
 }
