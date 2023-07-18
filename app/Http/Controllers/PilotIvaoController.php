@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Spatie\FlareClient\Api;
 
 class PilotIvaoController extends Controller
 {
@@ -11,15 +12,15 @@ class PilotIvaoController extends Controller
     public function whazzup()
     {
         $api = new whazzupController();
-        $api = $api->donwload_whazzup();
+        $api = $api->getwhazzup();
         return $api;
     }
 
     public function getApideparturePilot($icao)
     {
         $api = $this->whazzup();
-        $count = $api->json()["connections"]["pilot"];
-        $pilot = $api->json()["clients"]["pilots"];
+        $count = $api["connections"]["pilot"];
+        $pilot = $api["clients"]["pilots"];
         $pilotDeparture = [];
         for ($i = 0; $i <= $count; $i++) {
             foreach ($pilot as $key => $value) {
@@ -34,8 +35,8 @@ class PilotIvaoController extends Controller
     public function getApiArrivalPilot($icao)
     {
         $api = $this->whazzup();
-        $count = $api->json()["connections"]["pilot"];
-        $pilot = $api->json()["clients"]["pilots"];
+        $count = $api["connections"]["pilot"];
+        $pilot = $api["clients"]["pilots"];
         $PilotArrival = [];
         for ($i = 0; $i <= $count; $i++) {
             foreach ($pilot as $key => $value) {

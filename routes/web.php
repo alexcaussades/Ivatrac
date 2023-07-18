@@ -414,6 +414,6 @@ Route::prefix("pirep")->group(function () {
 
 Route::get("test", function (Request $request) {
     $whazzup = new whazzupController();
-    $whazzup = $whazzup->donwload_whazzup();
+    $whazzup = $whazzup->getwhazzup();
     return $whazzup;
 })->name("test");

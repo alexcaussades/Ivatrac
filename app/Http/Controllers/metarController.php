@@ -19,14 +19,15 @@ class metarController extends Controller
 
     public function whazzup(){
         $api = new whazzupController();
-        $api = $api->donwload_whazzup();
+        $api = $api->getwhazzup();
         return $api;
     }
 
     public function getApiATC_APP($icao)
     {
         $api = $this->whazzup();
-        foreach ($api->json()["clients"]["atcs"] as $key => $value) {
+        //dd($api["clients"]["atcs"]);
+        foreach ($api["clients"]["atcs"] as $key => $value) {
             if ($value["callsign"] == $icao . "_APP") {
                 return $value;
             }
@@ -37,7 +38,7 @@ class metarController extends Controller
     {
         $api = $this->whazzup();
 
-        foreach ($api->json()["clients"]["atcs"] as $key => $value) {
+        foreach ($api["clients"]["atcs"] as $key => $value) {
 
             if ($value["callsign"] == $icao . "_TWR") {
                 return $value;
@@ -48,7 +49,7 @@ class metarController extends Controller
     public function getApiATC_GND($icao)
     {
         $api = $this->whazzup();
-        foreach ($api->json()["clients"]["atcs"] as $key => $value) {
+        foreach ($api["clients"]["atcs"] as $key => $value) {
 
             if ($value["callsign"] == $icao . "_GND") {
                 return $value;
@@ -59,7 +60,7 @@ class metarController extends Controller
     public function getApiATC_FSS($icao)
     {
         $api = $this->whazzup();
-        foreach ($api->json()["clients"]["atcs"] as $key => $value) {
+        foreach ($api["clients"]["atcs"] as $key => $value) {
 
             if ($value["callsign"] == $icao . "_FSS") {
                 return $value;
