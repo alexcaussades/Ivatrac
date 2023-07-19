@@ -45,7 +45,7 @@
     </div>
     <hr>
     <div class="row">
-        <div class="text-end d-flex align-items-center"><span class="material-symbols-outlined">database </span>{{$idlast["id"]}}</div>
+        <div class="d-flex align-items-center align-items-end "><span class="material-symbols-outlined">database </span> Version: {{$idlast["id"]}}  <span class="material-symbols-outlined ms-2">update</span> Next update at: {{$heurechange}} UTC</div>
         <div class="col-4 mt-2">
             <div class="card text-white bg-dark">
                 <div class="card-body">
