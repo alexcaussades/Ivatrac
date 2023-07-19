@@ -3,59 +3,69 @@
 namespace App\Http\Controllers;
 
 use App\Models\whazzupdd;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use PHPUnit\TestRunner\TestResult\Collector;
 
 class whazzupController extends Controller
 {
     public function getwhazzup()
     {
-        $api = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
-        return $api;
-        
+        $api = $this->store_Whazzup();
+        $whazzup = json_decode($api[0], true);
+        return $whazzup;
     }
 
-    public function donwload_whazzup(){
+    public function donwload_whazzup()
+    {
         $whazzup = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
         return $whazzup;
     }
-    
-    public function store_Whazzup(){
-       if($this->getwhazzupbdd() == null){
-            $whazzup = $this->donwload_whazzup();
-            $whazzup_date = $whazzup["updatedAt"];
-            $whazzup = json_encode($whazzup);
-            $whazzup_date = $this->add_date($whazzup_date);
-            $whazzupbdd = new whazzupdd();
-            $whazzupbdd->whazzup = $whazzup;
-            $whazzupbdd->whazzup_date = $whazzup_date;
-            $whazzupbdd->save();
-            return $whazzupbdd;
-       }
 
-       $datenow = date('Y-m-d H:i:s');
-       $date = $this->getwhazzupbdd()->whazzup_date;
+    public function store_file_whazzup()
+    {
+        $wha = $this->donwload_whazzup();
+        $date = json_decode($wha);
+        $name = Str::random(15);
+        $sto = Storage::put('public/whazzup/' . $name . '.json', $wha);
+        $sto = Storage::url('public/whazzup/' . $name . '.json', $wha);
+        //$review = Storage::get('public/whazzup/'.$name.'.json');
+        $r = [
+            "name" => $name,
+            "date" => $date->updatedAt,
+            "url" => $sto
+        ];
+        //$a = json_decode($r["review"]);
+        return $r;
+    }
+
+    public function store_Whazzup()
+    {
+        $datenow = date('Y-m-d H:i:s');
+        $date = $this->getwhazzupbdd()->whazzup_date;
         // si la date de la bdd est superieur a la date actuelle
-        if($date > $datenow){
+        if ($date > $datenow) {
             $whazzupbdd = $this->getwhazzupbdd();
-            $whazzup = $whazzupbdd->whazzup;
-            $whazzup = json_decode($whazzup);
+            $review = Storage::get('public/whazzup/' . $whazzupbdd['whazzup'] . '.json');
+            $whazzup = collect($review);
             return $whazzup;
-        }else{
-            $whazzup = $this->donwload_whazzup();
-            $whazzup_date = $whazzup["updatedAt"];
-            $whazzup = $whazzup;
+        } else {
+            $whazzup = $this->store_file_whazzup();
+            $whazzup_date = $whazzup["date"];
             $whazzup_date = $this->add_date($whazzup_date);
             $whazzupbdd = new whazzupdd();
-            $whazzupbdd->whazzup = $whazzup;
+            $whazzupbdd->whazzup = $whazzup["name"];
             $whazzupbdd->whazzup_date = $whazzup_date;
             $whazzupbdd->save();
-            return $whazzupbdd;
+            return $this->store_Whazzup();
         }
     }
 
-    public function add_date($value){
+    public function add_date($value)
+    {
         $dateIn = $value;
         $datenew = date('Y-m-d H:i:s', strtotime($dateIn));
         // ajout de 5 minutes a la nouvelle date
@@ -67,6 +77,19 @@ class whazzupController extends Controller
     }
 
     public function getwhazzupbdd()
+    {
+        $whazzupbdd = whazzupdd::all();
+        $whazzupbdd = $whazzupbdd->last();
+        return $whazzupbdd;
+    }
+
+    public function connexion()
+    {
+        $api = $this->getwhazzup();
+        return $api["connections"];
+    }
+
+    public function bddid()
     {
         $whazzupbdd = whazzupdd::all();
         $whazzupbdd = $whazzupbdd->last();
