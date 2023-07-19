@@ -45,6 +45,7 @@ Route::get('/welcome', function (usersController $usersController, Request $requ
     $users = $usersController->get_info_user(session()->get("id"));
     $whazzup = new whazzupController();
     $whazzup = $whazzup->connexion();
+    dd($whazzup);
     return view('welcome', ["users" => $users, "whazzup" => $whazzup]);
 })->name("welcome");
 
@@ -58,10 +59,15 @@ Route::get('/logout', function (Request $request) {
     return to_route("auth.logout");
 })->name("logout");
 
-Route::get('/', function (Request $request) {
+Route::get('/', function (Request $request , usersController $usersController) {
     /** creation d'un cookie sur laravel */
-    return response()->view('welcome');
-})->where('client', '[0-9]+');
+    $users = $usersController->autentification_via_cookie();
+    $whazzup = new whazzupController();
+    $whazzup = $whazzup->connexion();
+    $bddid = new whazzupController();
+    $idlast = $bddid->bddid();
+    return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast]);
+})->where('client', '[0-9]+')->name("home");
 
 
 Route::prefix("auth/")->group(function () {

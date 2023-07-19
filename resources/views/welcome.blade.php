@@ -4,7 +4,7 @@
 
 
 <div class="col-12">
-    
+
     <div class="card border-dark">
         <div class="card-header bg-dark border-dark text-white text-opacity-90">
             <h1 class="container title d-flex align-items-center">IVAO - Tracker <span class="material-symbols-outlined fs-1">connecting_airports</span></h1>
@@ -12,7 +12,6 @@
     </div>
 </div>
 </div>
-
 <div class="container">
     @auth
     <h4 class="mt-3"> Welcome {{ auth()->user()->name }} ({{auth()->user()->vid}}) </h4>
@@ -29,8 +28,8 @@
             <div class="card text-white bg-dark">
                 <div class="card-body bg-dark border-dark text-white text-opacity-75">
                     <h4 class="card-title text-center">Metar</h4>
-                   <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined">arrow_forward_ios</span> Search the metar at the plateform </p>
-                   <p class="card-footer text-center"><a href="{{ Route("metars.index")}}" class="btn btn-success">Search Metar</a></p>
+                    <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined">arrow_forward_ios</span> Search the metar at the plateform </p>
+                    <p class="card-footer text-center"><a href="{{ Route("metars.index")}}" class="btn btn-success">Search Metar</a></p>
                 </div>
             </div>
         </div>
@@ -44,5 +43,32 @@
             </div>
         </div>
     </div>
-
+    <hr>
+    <div class="row">
+        <div class="text-end d-flex align-items-center"><span class="material-symbols-outlined">database </span>{{$idlast["id"]}}</div>
+        <div class="col-4 mt-2">
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Total</h4>
+                    <p class="card-text text-center">{{ $whazzup["total"] }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 mt-2">
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <h4 class="card-title text-center">ATC</h4>
+                    <p class="card-text text-center">{{ $whazzup["atc"] }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 mt-2">
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <h4 class="card-title text-center">Pilot</h4>
+                    <p class="card-text text-center">{{ $whazzup["pilot"] }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
     @endsection
