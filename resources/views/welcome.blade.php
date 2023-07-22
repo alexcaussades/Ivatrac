@@ -17,7 +17,7 @@
     <h4 class="mt-3"> Welcome {{ auth()->user()->name }} ({{auth()->user()->vid}}) </h4>
     <div class="d-flex flex-row">
         <a href="{{ Route("serveur.index") }}" title="My account the website"><button type="submit" class="btn btn-primary btn-sm" >My account</button></a>
-        <a href="{{ Route("auth.logout") }}" title="Disconect the website"><button type="submit" class="btn btn-danger btn-sm" >Logout</button></a>
+        <a href="{{ Route("auth.logout") }}" title="Disconect the website"><button type="submit" class="btn btn-danger btn-sm ms-2" >Logout</button></a>
         <!-- futur condition pour afficher si des amis sont en ligne est le nombres de en ce moment même  -->
         <a href="http://"><button type="button" class="btn btn-secondary btn-sm ms-2" disabled> Online Friends</button></a>
         <a href="https://webeye.ivao.aero/" target="_blank"><button type="button" class="btn btn-info btn-sm ms-2"> Webeye</button></a>
