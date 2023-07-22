@@ -24,7 +24,7 @@
                     <hr>
                     {{$ATC["APP"][1]}}
                     <hr>
-                    {{$ATC["APP"][2]}} {{$ATC["APP"][3]}}
+                    {{$ATC["APP"][2]}} {{$ATC["APP"][3] ?? ""}}
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
                     <hr>
                     {{$ATC["TWR"][1]}}
                     <hr>
-                    {{$ATC["TWR"][2]}} {{$ATC["TWR"][3]}}
+                    {{$ATC["TWR"][2]}} {{$ATC["TWR"][3] ?? ""}}
                 </div>
             </div>
         </div>
@@ -64,7 +64,7 @@
                     <hr>
                     {{$ATC["GND"][1]}}
                     <hr>
-                    {{$ATC["GND"][2]}} {{$ATC["GND"][3]}}
+                    {{$ATC["GND"][2]}} {{$ATC["GND"][3] ?? ""}}
                 </div>
             </div>
         </div>
@@ -84,7 +84,7 @@
                     <hr>
                     {{$ATC["FSS"][1]}}
                     <hr>
-                    {{$ATC["FSS"][2]}} {{$ATC["FSS"][3]}}
+                    {{$ATC["FSS"][2]}} {{$ATC["FSS"][3] ?? ""}}
                 </div>
             </div>
         </div>
