@@ -66,7 +66,8 @@ Route::get('/', function (Request $request , usersController $usersController) {
     $whazzup = $whazzup->connexion();
     $bddid = new whazzupController();
     $idlast = $bddid->bddid();
-    return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast]);
+    $heurechange = $bddid->heurechange();
+    return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange]);
 })->where('client', '[0-9]+')->name("home");
 
 

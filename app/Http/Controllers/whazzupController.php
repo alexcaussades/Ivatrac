@@ -95,4 +95,14 @@ class whazzupController extends Controller
         $whazzupbdd = $whazzupbdd->last();
         return $whazzupbdd;
     }
+
+    public function Heurechange()
+    {
+        $whazzupbdd = whazzupdd::all();
+        $whazzupbdd = $whazzupbdd->last();
+        $whazzupbdd = $whazzupbdd->whazzup_date;
+        $whazzupbdd = Date::createFromFormat('Y-m-d H:i:s', $whazzupbdd);
+        $whazzupbdd = $whazzupbdd->format('H:i');
+        return $whazzupbdd;
+    }
 }

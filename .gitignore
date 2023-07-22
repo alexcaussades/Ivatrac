@@ -21,3 +21,4 @@ composer.lock
 composer.lock
 index.php
 .htaccess
+database/database.sqlite
