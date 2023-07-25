@@ -45,17 +45,6 @@
             <input type="email" name="email" id="email" class="form-control" placeholder="Your Email" aria-describedby="helpId" value="{{ old("email") }}">
             
         </div>
-        <div class="form-group mt-2">
-            <label for="password">Password</label>
-            <input type="password" name="password" id="password" minlength="8" class="form-control" placeholder="Password" aria-describedby="helpId">
-            
-        </div>
-        <div class="form-group mt-2">
-            <label for="password_confirmation">Password confirmation</label>
-            <input type="password" name="password_confirmation" minlength="8" id="password_confirmation" class="form-control" placeholder="Password confirmation" aria-describedby="helpId">
-            
-        </div>
-
         <div class="form-check mt-2">
           <label class="form-check-label">
             <input type="checkbox" class="form-check-input" name="age" id="" value="1">

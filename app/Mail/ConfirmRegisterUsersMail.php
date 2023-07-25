@@ -14,12 +14,14 @@ class ConfirmRegisterUsersMail extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
+    public $pass;
     /**
      * Create a new message instance.
      */
-    public function __construct( $user )
+    public function __construct( $user, $password)
     {
         $this->user = $user;
+        $this->pass = $password;
     }
 
     /**
@@ -41,6 +43,7 @@ class ConfirmRegisterUsersMail extends Mailable
             view: 'emails.registerUsers.confirm-register',
             with: [
                 'user' => $this->user,
+                'password' => $this->pass,
             ]
         );
     }

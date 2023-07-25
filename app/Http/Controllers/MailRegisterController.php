@@ -15,10 +15,10 @@ class MailRegisterController extends Controller
         Mail::to("alexandre.caussades@hotmail.com")->send(new InformationRegisterUsers($user));
     }
 
-    Public function ConfirmRegister($lastId)
+    public function ConfirmRegister($lastId, $password)
     {
         $users = new usersController();
         $user = $users->get_info_user($lastId);
-        Mail::to($user->email)->send(new ConfirmRegisterUsersMail($user));
+        Mail::to($user->email)->send(new ConfirmRegisterUsersMail($user, $password));
     }
 }
