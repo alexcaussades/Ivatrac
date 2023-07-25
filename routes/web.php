@@ -3,6 +3,7 @@
 
 
 use App\Mail\MailTest;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,7 @@ use App\Http\Controllers\PirepController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\logginController;
+use App\Http\Controllers\whazzupController;
 use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whitelistController;
@@ -28,7 +30,6 @@ use App\Http\Controllers\ApiGestionController;
 use App\Http\Controllers\MailRegisterController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
-use App\Http\Controllers\whazzupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,7 +60,7 @@ Route::get('/logout', function (Request $request) {
     return to_route("auth.logout");
 })->name("logout");
 
-Route::get('/', function (Request $request , usersController $usersController) {
+Route::get('/', function (Request $request, usersController $usersController) {
     /** creation d'un cookie sur laravel */
     $users = $usersController->autentification_via_cookie();
     $whazzup = new whazzupController();
@@ -97,15 +98,6 @@ Route::prefix("auth/")->group(function () {
         if ($request->password == $request->password_confirmation) {
             if ($request->condition == "1") {
 
-                /** verification du mot de passe a longeur de caratere avec un return erreur si ce n'est pas bon  */
-                $validator = Validator::make($request->all(), [
-                    'password' => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
-                ]);
-                if ($validator->fails()) {
-                    return redirect()->route("auth.register")
-                        ->withErrors("Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre")
-                        ->withInput();
-                }
                 $validator = Validator::make($request->all(), [
                     'email' => 'required|email|unique:users',
                 ]);
@@ -114,12 +106,16 @@ Route::prefix("auth/")->group(function () {
                         ->withErrors("L'email est déjà utilisé ! Veuillez en choisir un autre ou vous connecter avec celui-ci")
                         ->withInput();
                 }
+                $password = Str::password();
+                $request->merge([
+                    "password" => $password,
+                ]);
                 $usersController = new usersController();
                 $usersController->create($request);
                 $lastId = DB::getPdo()->lastInsertId();
                 $mail = new MailRegisterController();
                 $mail->MailRegister($lastId);
-                $mail->ConfirmRegister($lastId);
+                $mail->ConfirmRegister($lastId, $password);
                 $usersController->loggin_form_register($lastId);
                 return redirect()->route("auth.login");
             } else {
@@ -419,10 +415,25 @@ Route::prefix("pirep")->group(function () {
             return view("pirep.show", ["json" => $json, "oo" => $oo]);
         }
     })->name("pirep.show");
+
+    Route::get("/all", function (Request $request) {
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            $pirep = new PirepController();
+            $oo = $pirep->show_fpl_user(auth()->user()->id);
+            $json = json_decode($oo);
+            return view("fpl.index", ["json" => $json]);
+        }
+    })->name("pirep.all");
 });
 
 Route::get("test", function (Request $request) {
     $whazzup = new whazzupController();
     $whazzup = $whazzup->connexion();
-    return $whazzup;
+    $p = [
+        "whazzup" => $whazzup,
+        "pass" => Str::password(),
+    ];
+    return $p;
 })->name("test");
