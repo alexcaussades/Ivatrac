@@ -14,12 +14,14 @@ class InformationRegisterUsers extends Mailable
     use Queueable, SerializesModels;
 
     public $user;
+    public $pass;
     /**
      * Create a new message instance.
      */
-    public function __construct( $user)
+    public function __construct( $user, $password )
     {
         $this->user = $user;
+        $this->pass = $password;
     }
     
     /**
@@ -41,6 +43,7 @@ class InformationRegisterUsers extends Mailable
             view: 'emails.registerUsers.info-admin',
             with: [
                 'user' => $this->user,
+                "password" => $this->pass,
             ]
         );
     }

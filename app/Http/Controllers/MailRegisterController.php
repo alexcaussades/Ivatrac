@@ -11,8 +11,8 @@ class MailRegisterController extends Controller
     public function MailRegister($lastId)
     {
         $users = new usersController();
-        $user = $users->get_info_user($lastId);
-        Mail::to("alexandre.caussades@hotmail.com")->send(new InformationRegisterUsers($user));
+        $lastId = $users->get_info_user($lastId);
+        Mail::to("alexandre.caussades@hotmail.com")->send(new InformationRegisterUsers($lastId));
     }
 
     public function ConfirmRegister($lastId, $password)

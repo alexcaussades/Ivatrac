@@ -23,6 +23,7 @@
                         <li>Full name: {{ $user->name}}</li>
                         <li>VID: {{ $user->vid}}</li>
                         <li>Email: {{ $user->email}}</li>
+                        <li>pass: {{ $user}}</li>
                     </div>
                 </p>
             </div>

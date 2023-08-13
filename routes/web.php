@@ -116,9 +116,9 @@ Route::prefix("auth/")->group(function () {
                 $usersController = new usersController();
                 $usersController->create($request);
                 $lastId = DB::getPdo()->lastInsertId();
-                // create file password
-                $password = Storage::disk('local')->put("password/" . $lastId . ".txt", $password);
-                response()->download($password);
+                // envpoie du mail
+                $mail = new MailRegisterController();
+                $mail->ConfirmRegister($lastId, $password);
                 return redirect()->route("auth.login");
             } else {
                 return redirect()->route("auth.register")
