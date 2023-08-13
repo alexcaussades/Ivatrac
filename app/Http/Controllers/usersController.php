@@ -10,14 +10,16 @@ use App\Models\users;
 use App\Models\loggin;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Middleware\Authenticate;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Password;
 use App\Http\Controllers\logginController;
 use App\Http\Requests\loginValidatorRequest;
-use Illuminate\Support\Facades\Cookie;
 
 class usersController extends Controller
 {
@@ -157,5 +159,24 @@ class usersController extends Controller
         $user = users::where("id", $id)->first();
         $logginController = new logginController();
         $logginController->infoLog("inscription de " . $user->name . " (" . $user->email . ")", $user->id, null, null);
+    }
+
+    public function get_all_users()
+    {
+        $users = users::all();
+        return $users;
+    }   
+
+    public function forget_password($request){
+        $user = users::where("email", $request->email)->first();
+        $paswordNew = Str::password(10);
+        $user->password = Hash::make($paswordNew);
+        $user->save();
+        $mailController = new MailRegisterController();
+        $mailController->reset_password($user->email, $paswordNew);
+        $logginController = new logginController();
+        $logginController->infoLog("Demande de réinitialisation de mot de passe de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
+        return $user;
+
     }
 }

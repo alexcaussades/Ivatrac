@@ -92,6 +92,10 @@ Route::prefix("auth/")->group(function () {
 
     Route::post("login", [\App\Http\Controllers\usersController::class, "autentification"]);
 
+    Route::get("forget-password", function () {
+        return view("auth.forget");
+    })->name("auth.forget");
+
     Route::get("register", function () {
 
         return view("auth.register");
@@ -132,6 +136,14 @@ Route::prefix("auth/")->group(function () {
         }
         return view("auth.login");
     });
+
+    Route::post("forget-password", function (Request $request) {
+        
+        $usersController = new usersController();
+        $usersController->forget_password($request);
+        return redirect()->route("auth.login");
+    })->name("auth.forget-password");
+    
 
     Route::get("logout", function (usersController $usersController, Request $request) {
         $usersController->logout($request);
