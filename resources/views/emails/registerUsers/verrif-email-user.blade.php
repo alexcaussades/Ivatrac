@@ -5,25 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <title>New Register users</title>
+    <title>Verrification your Email</title>
 </head>
 
 <body>
     <div class="container">
         <div class="card text-white bg-success mt-2">
             <div class="card-body">
-                <h4 class="card-title d-flex text-center">New Register users</h4>
+                <h4 class="card-title d-flex text-center">verrify your account</h4>
             </div>
         </div>
         <div class="card mt-2">
             <div class="card-body">
-                <h4 class="card-title">Information on the users !</h4>
+                <h4 class="card-title">Your Email is {{$user->email}}</h4>
                 <p class="card-text">
                     <div class="row">
-                        <li><strong>Full name:</strong> {{ $user->name}}</li>
-                        <li><strong>VID:</strong> {{ $user->vid}}</li>
-                        <li><strong>Email:</strong> {{ $user->email}}</li>
-                        <li><strong>Account Id:</strong> {{ $user->id}}</li>
+                        <div class="col-6">
+                            <a href="{{env("APP_URL")}}/auth/verif-email/{{$user->remember_token}}" class="btn btn-success">Verrify your account</a>
+                        </div>
                     </div>
                 </p>
             </div>
@@ -32,3 +31,4 @@
 </body>
 
 </html>
+

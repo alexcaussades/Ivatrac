@@ -6,6 +6,7 @@ use App\Mail\ResetPasswordUsersMail;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ConfirmRegisterUsersMail;
 use App\Mail\InformationRegisterUsers;
+use App\Mail\verrifMailUsers;
 
 class MailRegisterController extends Controller
 {
@@ -26,5 +27,12 @@ class MailRegisterController extends Controller
     public function reset_password($email, $password)
     {
         Mail::to($email)->send(new ResetPasswordUsersMail($password));
+    }
+
+    public function verrify_email($lastId)
+    {
+        $users = new usersController();
+        $user = $users->get_info_user($lastId);
+        Mail::to($user->email)->send(new verrifMailUsers($user));
     }
 }

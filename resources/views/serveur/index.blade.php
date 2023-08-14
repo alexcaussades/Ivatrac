@@ -53,9 +53,6 @@
             <button type="submit" class="btn btn-danger btn-sm" title="Déconnection de votre compte du site intenet">Se déconnecter</button>
         </form>
         <form action="#" method="get">
-            <button type="submit" class="ms-1 btn btn-primary btn-sm" title="Modification de votre profil utilisateur" disabled>Modifier</button>
-        </form>
-        <form action="#" method="get">
             <button type="submit" class="ms-1 btn btn-dark btn-sm" title="Une demande de supression de votre c'est ici !" disabled>Demande de supression</button>
         </form>
         <form action="{{ Route("serveur.api") }}">
@@ -63,10 +60,10 @@
         </form>
         @auth('admin')
         <form action="#" method="get">
-            <button type="submit" class="ms-1 btn btn-success btn-sm" title="Accès au panel administrateur">Panel Admin</button>
+            <button type="submit" class="ms-1 btn btn-success btn-sm" title="Accès au panel administrateur" disabled>Panel Admin</button>
         </form>
         <form action="#" method="get">
-            <button type="submit" class="ms-1 btn btn-warning btn-sm" title="Accès au panel modérateur">Panel Modo</button>
+            <button type="submit" class="ms-1 btn btn-warning btn-sm" title="Accès au panel modérateur" disabled>Panel Modo</button>
         </form>
         @endauth
     </div>
@@ -81,7 +78,11 @@
                     <p class="card-text">
                     <ul>
                         <li> <strong>Email :</strong> {{ auth()->user()->email }} </li>
-                        <li><strong> Discord :</strong> <button class="btn btn-primary btn-sm"><strong>{{ auth()->user()->discord_users }}</strong></button> </li>
+                        @if (auth()->user()->email_verified_at == 0)
+                        <li> <span class="text-danger"> Your Adress E-mail is not verified</span></li>
+                        @else
+                        <li> <span class="text-success">Your Adress E-mail is verified</span></li>
+                        @endif
                     </ul>
                     </p>
                 </div>
@@ -95,14 +96,13 @@
                     <p class="card-text">
                     <ul>
                         <li> <strong>Role :</strong> {{ $role->name }} </li>
-                        <li> <strong> URL: </strong> <a href="#" target="_bank" title="Liens de votre personnage a destination du monde"><button type="submit" class="btn btn-success btn-sm">Lien Public</button></a></li>
                     </ul>
                     </p>
                 </div>
             </div>
         </div>
         <hr class="mt-2">
-    
-      
+
+
 
     </div>

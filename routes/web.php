@@ -120,20 +120,17 @@ Route::prefix("auth/")->group(function () {
                 $usersController = new usersController();
                 $usersController->create($request);
                 $lastId = DB::getPdo()->lastInsertId();
-                // envpoie du mail
                 $mail = new MailRegisterController();
                 $mail->ConfirmRegister($lastId, $password);
+                $mail->MailRegister($lastId);
+                $mail->verrify_email($lastId);
                 return redirect()->route("auth.login");
             } else {
                 return redirect()->route("auth.register")
                     ->withErrors("Vous devez accepter la CGU")
                     ->withInput();
             }
-        } else {
-            return redirect()->route("auth.register")
-                ->withErrors("Les mots de passe ne sont pas identique !")
-                ->withInput();
-        }
+        } 
         return view("auth.login");
     });
 
@@ -144,6 +141,10 @@ Route::prefix("auth/")->group(function () {
         return redirect()->route("auth.login");
     })->name("auth.forget-password");
     
+    Route::get('verif-email/{token}', function (Request $request, usersController $usersController) {
+        $usersController->verif_email($request);
+        return redirect()->route("auth.login");
+    })->name('auth.verif-email');
 
     Route::get("logout", function (usersController $usersController, Request $request) {
         $usersController->logout($request);

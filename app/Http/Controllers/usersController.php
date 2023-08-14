@@ -50,7 +50,7 @@ class usersController extends Controller
         $user->vid = $request->vid;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->email_verified_at = now();
+        $user->email_verified_at = false;
         $user->remember_token = Str::random(10);
         $user->role = $request->role ? $request->role : 1;
         $user->condition = $request->condition ? $request->condition : 0;
@@ -178,5 +178,19 @@ class usersController extends Controller
         $logginController->infoLog("Demande de réinitialisation de mot de passe de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
         return $user;
 
+    }
+
+    public function verif_email($request){
+        /** Check if email via le token remenber */
+        $user = users::where("remember_token", $request->token)->first();
+        if($user){
+            $user->email_verified_at = now();
+            $user->save();
+            $logginController = new logginController();
+            $logginController->infoLog("Vérification de l'email de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
+            return $user;
+        }else{
+            return false;
+        }
     }
 }
