@@ -9,27 +9,26 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class InformationRegisterUsers extends Mailable
+class verrifMailUsers extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $user;
-    public $pass;
     /**
      * Create a new message instance.
      */
-    public function __construct( $user )
+    public function __construct($user)
     {
         $this->user = $user;
     }
-    
+
     /**
      * Get the message envelope.
      */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Register Users',
+            subject: 'Verrify Mail Adress Users',
         );
     }
 
@@ -39,7 +38,7 @@ class InformationRegisterUsers extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.registerUsers.info-admin',
+            view: 'emails.registerUsers.verrif-email-user',
             with: [
                 'user' => $this->user,
             ]

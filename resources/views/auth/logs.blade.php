@@ -1,6 +1,6 @@
 @extends("base")
 
-@section("title", "Serveur - Dashboard ")
+@section("title", "LOGS - Dashboard ")
 
 @include("navbar")
 

@@ -1,6 +1,6 @@
 @extends("metar-base")
 
-@section("title", "Metar and TAF IVAO")
+@section("title", "Metar")
 
 
 @include("navbar")

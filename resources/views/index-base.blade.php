@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> @yield("title") IVAO - Tracker</title>
+  <title> @yield("title") IVATRAC</title>
   <meta name="description" content="Find on this site, all metar, platform information, your friends, your flight plans save, then redownload them">
-  <meta name="keywords" content="ivao, information, website, unofficial, pirep, fpl, metar, plateform, friend, metar, follows">
+  <meta name="keywords" content="ivao, information, website, unofficial, pirep, fpl, metar, plateform, friend, metar, follows, tracker">
     <meta name="author" content="Alexcaussades">
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
     <meta name="google" content="notranslate">
-    <meta property="og:title" content="Alexcaussades - IVAO - INFO">
+    <meta property="og:title" content="Alexcaussades - IVATRAC">
     <meta property="og:description" content="Find on this site, all metar, platform information, your friends, your flight plans save, then redownload them">
-    <meta property="og:site_name" content="Alexcaussades - IVAO - INFO">
+    <meta property="og:site_name" content="Alexcaussades - IVATRAC">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="fr_FR">
     <meta property="og:locale:alternate" content="en_US">
@@ -30,7 +30,7 @@
     <meta property="og:locale:alternate" content="fr_MC">
     <meta property="og:locale:alternate" content="en_MC">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Alexcaussades - IVAO - INFO">
+    <meta name="twitter:title" content="Alexcaussades - IVATRAC">
     <meta name="twitter:description" content="Find on this site, all metar, platform information, your friends, your flight plans save, then redownload them">
     <meta name="twitter:creator" content="alexcaussades">
     

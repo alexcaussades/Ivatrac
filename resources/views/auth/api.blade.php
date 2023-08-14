@@ -1,6 +1,6 @@
 @extends("base")
 
-@section("title", "Connect to the Intranet")
+@section("title", "API")
 
 @include("navbar")
 

@@ -6,6 +6,7 @@ use App\Mail\MailTest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Sleep;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,9 @@ use App\Http\Controllers\ApiGestionController;
 use App\Http\Controllers\MailRegisterController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
+use App\Http\Controllers\temsiController;
+use App\Http\Controllers\testingContolleur;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +93,10 @@ Route::prefix("auth/")->group(function () {
 
     Route::post("login", [\App\Http\Controllers\usersController::class, "autentification"]);
 
+    Route::get("forget-password", function () {
+        return view("auth.forget");
+    })->name("auth.forget");
+
     Route::get("register", function () {
 
         return view("auth.register");
@@ -103,7 +111,7 @@ Route::prefix("auth/")->group(function () {
                 ]);
                 if ($validator->fails()) {
                     return redirect()->route("auth.register")
-                        ->withErrors("L'email est déjà utilisé ! Veuillez en choisir un autre ou vous connecter avec celui-ci")
+                        ->withErrors("L'email est déjà utilisé ! ")
                         ->withInput();
                 }
                 $password = Str::password();
@@ -114,22 +122,30 @@ Route::prefix("auth/")->group(function () {
                 $usersController->create($request);
                 $lastId = DB::getPdo()->lastInsertId();
                 $mail = new MailRegisterController();
-                $mail->MailRegister($lastId);
                 $mail->ConfirmRegister($lastId, $password);
-                $usersController->loggin_form_register($lastId);
+                $mail->MailRegister($lastId);
+                $mail->verrify_email($lastId);
                 return redirect()->route("auth.login");
             } else {
                 return redirect()->route("auth.register")
                     ->withErrors("Vous devez accepter la CGU")
                     ->withInput();
             }
-        } else {
-            return redirect()->route("auth.register")
-                ->withErrors("Les mots de passe ne sont pas identique !")
-                ->withInput();
-        }
+        } 
         return view("auth.login");
     });
+
+    Route::post("forget-password", function (Request $request) {
+        
+        $usersController = new usersController();
+        $usersController->forget_password($request);
+        return redirect()->route("auth.login");
+    })->name("auth.forget-password");
+    
+    Route::get('verif-email/{token}', function (Request $request, usersController $usersController) {
+        $usersController->verif_email($request);
+        return redirect()->route("auth.login");
+    })->name('auth.verif-email');
 
     Route::get("logout", function (usersController $usersController, Request $request) {
         $usersController->logout($request);
@@ -426,6 +442,31 @@ Route::prefix("pirep")->group(function () {
             return view("fpl.index", ["json" => $json]);
         }
     })->name("pirep.all");
+});
+
+
+Route::prefix("donwloader")->group(function () {
+    Route::get("secure_auth", function (Request $request) {
+        $request->merge([
+            "id" => $request->id
+        ]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->route("auth.register")
+                ->withErrors("Erreur for authentification is not valid")
+                ->withInput();
+        }
+    })->name("download.auth");
+});
+
+
+Route::get("test", function (Request $request, temsiController $temsi) {
+    $temsis = $temsi->all_chart();
+
+    return $temsis;
+    
 });
 
 Route::get("test", function (Request $request) {
