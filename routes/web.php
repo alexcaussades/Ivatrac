@@ -34,6 +34,7 @@ use App\Http\Controllers\CreatAuhUniqueUsersController;
 use App\Http\Controllers\temsiController;
 use App\Http\Controllers\testingContolleur;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -443,6 +444,7 @@ Route::prefix("pirep")->group(function () {
     })->name("pirep.all");
 });
 
+
 Route::prefix("donwloader")->group(function () {
     Route::get("secure_auth", function (Request $request) {
         $request->merge([
@@ -466,3 +468,13 @@ Route::get("test", function (Request $request, temsiController $temsi) {
     return $temsis;
     
 });
+
+Route::get("test", function (Request $request) {
+    $whazzup = new whazzupController();
+    $whazzup = $whazzup->connexion();
+    $p = [
+        "whazzup" => $whazzup,
+        "pass" => Str::password(),
+    ];
+    return $p;
+})->name("test");

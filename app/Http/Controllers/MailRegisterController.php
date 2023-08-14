@@ -34,5 +34,6 @@ class MailRegisterController extends Controller
         $users = new usersController();
         $user = $users->get_info_user($lastId);
         Mail::to($user->email)->send(new verrifMailUsers($user));
+
     }
 }
