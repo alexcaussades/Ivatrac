@@ -220,6 +220,24 @@ Route::prefix("serveur/")->group(function () {
         /** verification des buttons d'action serveur */
         return url("https://github.com/alexcaussades/L10/wiki/API");
     })->name("serveur.api.documentation");
+
+    Route::get("security", function (Request $request) {
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            return view("serveur.security.index");
+        }
+    })->name("serveur.secrity");
+
+    Route::get("security/add", function (Request $request) {
+        if (!Auth::user()) {
+            return redirect()->route("auth.login");
+        } else {
+            $users = new usersController();
+            $all = $users->get_all_users();
+            return view("serveur.security.administrator-moderator", ["users" => $all]);
+        }
+    })->name("serveur.secrity.add");
 });
 
 Route::prefix("logs")->group(function () {
