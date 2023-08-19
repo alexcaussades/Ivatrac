@@ -20,9 +20,11 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\metarController;
 use App\Http\Controllers\PirepController;
+use App\Http\Controllers\temsiController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\logginController;
+use App\Http\Controllers\testingContolleur;
 use App\Http\Controllers\whazzupController;
 use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\PilotIvaoController;
@@ -31,9 +33,7 @@ use App\Http\Controllers\ApiGestionController;
 use App\Http\Controllers\MailRegisterController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
-use App\Http\Controllers\temsiController;
-use App\Http\Controllers\testingContolleur;
-
+use App\Http\Controllers\frendly_userController;
 
 /*
 |--------------------------------------------------------------------------
@@ -479,20 +479,8 @@ Route::prefix("donwloader")->group(function () {
     })->name("download.auth");
 });
 
-
-Route::get("test", function (Request $request, temsiController $temsi) {
-    $temsis = $temsi->all_chart();
-
-    return $temsis;
-    
-});
-
-Route::get("test", function (Request $request) {
-    $whazzup = new whazzupController();
-    $whazzup = $whazzup->connexion();
-    $p = [
-        "whazzup" => $whazzup,
-        "pass" => Str::password(),
-    ];
-    return $p;
-})->name("test");
+Route::get("friends", function (Request $request) {
+    $st = new frendly_userController(1);
+    return $st->verification_friend();
+   
+})->name("friends");
