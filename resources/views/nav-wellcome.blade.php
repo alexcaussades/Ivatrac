@@ -25,7 +25,7 @@
         @endguest
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Online Friends</a>
+          <a class="nav-link text-white" href="{{ Route("friends.verify")}}">Online Friends</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="https://webeye.ivao.aero/" target="_blank">Webeye</a>

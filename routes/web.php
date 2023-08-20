@@ -479,8 +479,116 @@ Route::prefix("donwloader")->group(function () {
     })->name("download.auth");
 });
 
-Route::get("friends", function (Request $request) {
-    $st = new frendly_userController(1);
-    return $st->verification_friend();
-   
-})->name("friends");
+Route::prefix("friends")->group(function (){
+    Route::get("/", function (Request $request) {
+        $st = new frendly_userController(Auth::user()->id);
+        $r = $st->getFrendlyUser();
+        return view("friends.index", ["friends" => $r]);
+    })->name("friends.all")->middleware(["auth:web"]);
+
+    Route::get("verify", function (Request $request) {
+        $st = new frendly_userController(Auth::user()->id);
+        $r = $st->get_friens_online();
+        return view("friends.verify", ["friends" => $r]);
+    })->name("friends.verify")->middleware(["auth:web"]);
+
+    Route::get("/add", function (Request $request) {
+        $request->merge([
+            "vid_friend" => $request->vid_friend,
+            "name_friend" => $request->name_friend
+        ]);
+        $validator = Validator::make($request->all(), [
+            'vid_friend' => 'required|numeric',
+            'name_friend' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->route("auth.register")
+                ->withErrors("Erreur for authentification is not valid")
+                ->withInput();
+        }
+        $st = new frendly_userController(Auth::user()->id, $request->vid_friend, $request->name_friend);
+        $st->addFrendlyUser();
+        return to_route("friends.all");
+    })->name("friends.add")->middleware(["auth:web"]);
+
+    Route::get("add-form", function (Request $request) {
+        return view("friends.add");
+    })->name("friends.add")->middleware(["auth:web"]);
+
+    Route::post("add-form", function (Request $request) {
+        $request->merge([
+            "vid_friend" => $request->vid_friend,
+            "name_friend" => $request->name_friend ?? null
+        ]);
+        $validator = Validator::make($request->all(), [
+            'vid_friend' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->route("auth.register")
+                ->withErrors("Erreur for authentification is not valid")
+                ->withInput();
+        }
+        $st = new frendly_userController(Auth::user()->id, $request->vid_friend, $request->name_friend);
+        $st->addFrendlyUser();
+        return to_route("friends.all")->with("success", "Amis ajouté dans la liste");
+    })->name("friends.add.post")->middleware(["auth:web"]);
+
+    Route::post("destroy/{id}", function (Request $request) {
+        $request->merge([
+            "id" => $request->id,
+        ]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route("auth.register")
+                ->withErrors("Erreur for authentification is not valid")
+                ->withInput();
+        }
+        $st = new frendly_userController(Auth::user()->id, $request->id);
+        $remenber = $st->get_friends_via_id($request->id);
+        $st->deleteFrendlyUser($request->id);
+        return to_route("friends.all")->with("success", "le VID ". $remenber["vid_friend"] ." à été supprimé dans la liste !");
+    })->name("friends.destroy")->middleware(["auth:web"]);
+
+    Route::get("edit", function (Request $request) {
+        $request->merge([
+            "id" => $request->id
+        ]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->route("friends.add")
+                ->withErrors("Erreur for authentification is not valid")
+                ->withInput();
+        }
+        $st = new frendly_userController(Auth::user()->id);
+        $r = $st->get_friends_via_id($request->id);
+        return view("friends.edit", ["friends" => $r]);
+    })->name("friends.edit")->middleware(["auth:web"]);
+
+    Route::post("edit", function (Request $request) {
+        $request->merge([
+            "id" => $request->id,
+            "vid_friend" => $request->vid_friend,
+            "name_friend" => $request->name_friend
+        ]);
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|numeric',
+            'vid_friend' => 'required|numeric',
+            'name_friend' => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->route("friends.add")
+                ->withErrors("Erreur for authentification is not valid")
+                ->withInput();
+        }
+        $st = new frendly_userController(Auth::user()->id, $request->vid_friend, $request->name_friend);
+        $st->updateFrendlyUser($request->id);
+        return to_route("friends.all")->with("success", "Vous avez mofifier le VID " . $request->vid_friend . " avec l'information suivante " . $request->name_friend . "");
+    })->name("friends.edit.post")->middleware(["auth:web"]);
+
+})->middleware(["auth:web"]);
+
