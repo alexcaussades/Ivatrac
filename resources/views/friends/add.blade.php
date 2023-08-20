@@ -9,18 +9,29 @@
 
 <div class="container">
 
-    <form action="{{ Route("friends.add.post") }}" method="POST">
-        @csrf
-        <div class="mb-3">
-            <label for="vid_friend" class="form-label">VID</label>
-            <input type="text" class="form-control" id="vid_friend" name="vid_friend">
+<div class="row">
+        <div class="col-12 mt-5">
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <p class="card-text">
+                        <span class="mt-2"> Add Friends ? </span>
+                    <form action="{{ Route("friends.add.post") }}" method="POST">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="vid_friend" class="form-label">VID <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="vid_friend" name="vid_friend">
+                        </div>
+                        <div class="mb-3">
+                            <label for="name_friend" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name_friend" name="name_friend">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="name_friend" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name_friend" name="name_friend">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
 </div>
 
 @endsection

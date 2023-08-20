@@ -103,6 +103,19 @@ class frendly_userController extends Controller
         return $count;
     }
 
+    public function count_verification_API(){
+        $r = $this->verification_friend();
+        $atc = count($r['atc']);
+        $pilot = count($r['pilot']);
+        $count = $atc + $pilot;
+        $count = [
+            "atc" => $atc,
+            "pilot" => $pilot,
+            "total" => $count
+        ];
+        return $count;
+    }
+
     public function get_friens_online(){
         $r = $this->verification_friend();
         $getpilots = new PilotIvaoController();

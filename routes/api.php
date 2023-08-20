@@ -8,6 +8,9 @@ use App\Http\Controllers\logginController;
 use symfony\component\httpfoundation\cookie;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
+use App\Http\Controllers\frendly_userController;
+use App\Http\Controllers\whazzupController;
+use App\Models\ApiUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie as FacadesCookie;
 
@@ -88,4 +91,34 @@ Route::get('/whitelist/{id}', function (Request $request) {
             "Token" => "Bearer is not valid"
         ];
     }
+});
+
+Route::get("/friends", function (Request $request) {
+    $verifyToken = new ApiGestionController();
+    $verifyToken = $verifyToken->verifyToken($request);
+    if ($verifyToken) {
+        Http::withToken("Bearer " . $request->bearerToken());
+        if ($request->bearerToken() == $verifyToken) {
+            $whazzup = new whazzupController();
+            $whazzup = $whazzup->getwhazzup();
+            $user_id = ApiUsers::where("token", $request->bearerToken())->first();
+            $friends = new frendly_userController($user_id->users_id);
+            $friends = $friends->count_verification_API();
+            return $friends;
+        } 
+    } else {
+        return [
+            "auth" => false,
+            "message" => "You are not authorized to access this page",
+            "error" => "401 Unauthorized",
+            "status" => "401",
+            "Token" => "Bearer is not valid"
+        ];
+    }
+});
+
+
+Route::get("/whazzup", function(Request $request){
+    $whazzup = new whazzupController();
+    $whazzup = $whazzup->getwhazzup();
 });
