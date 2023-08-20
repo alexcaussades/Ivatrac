@@ -47,8 +47,8 @@
           </ul>
         </li>
       </ul>
-      
+
     </div>
-    <button class="btn btn-success my-2 my-lg-0 rounded">AIRAC 2301</button>
+    <button class="btn btn-success my-2 my-lg-0 rounded">AIRAC 2208</button>
   </div>
 </nav>
