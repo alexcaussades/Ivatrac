@@ -32,12 +32,30 @@
             <li><a class="dropdown-item" href="{{ Route("logout") }}">Logout</a></li>
           </ul>
         </li>
+        @endauth
+        @auth
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Friends
+          </a>
+
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ Route("friends.verify") }}">Online Friend </a></li>
+            <li><a class="dropdown-item" href="{{ Route("friends.all") }}">Check Friend </a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{{ Route("friends.add") }}">Add Friend </a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ Route("serveur.api") }}">API</a>
+        </li>
+        @endauth
+      </ul>
       <li class="nav-item">
         <a class="nav-link" href="{{ Route("serveur.api") }}">API</a>
       </li>
-      @endauth
-      </ul>
-
     </div>
   </div>
 </nav>
