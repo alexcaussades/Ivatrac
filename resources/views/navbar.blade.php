@@ -53,9 +53,6 @@
         </li>
         @endauth
       </ul>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ Route("serveur.api") }}">API</a>
-      </li>
     </div>
   </div>
 </nav>
