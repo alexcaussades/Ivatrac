@@ -64,7 +64,12 @@
 
 </div>
 
+
+@if (ENV('APP_ENV') == 'local')
 <script src="{{ asset("asset/js/update_friend.js") }}"></script>
+@else
+<script src="{{ asset("public/asset/js/update_friend.js") }}"></script>
+@endif
 
 
 @endsection
