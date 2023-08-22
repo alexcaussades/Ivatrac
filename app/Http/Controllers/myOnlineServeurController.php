@@ -87,8 +87,18 @@ class myOnlineServeurController extends Controller
                 $pilots = $pilots->getAirplaneToPilots($callsign);
                 
             $fly = [
-            
+                "fly" => [
+                    "departure" => [
+                        "count" => $pilots["departure"]["count"],
+                        "data" => $pilots["departure"]["data"]
+                    ],
+                    "arrivals" => [
+                        "count" => $pilots["arrivals"]["count"],
+                        "data" => $pilots["arrivals"]["data"]
+                    ]
+                ]
             ];
+            
             return view("myoline.atc", ["atc" => $atc, "atis" => $atis, "plateform" => $plateform, "fly" => $fly]);
         }
         elseif ($q['pilot'] != null) {
