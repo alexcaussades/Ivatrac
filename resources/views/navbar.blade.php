@@ -1,3 +1,4 @@
+
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <div class="navbar-brand"><a class="nav-link active" aria-current="page" href={{ Route("auth.login") }}>IVATRAC</a></div>

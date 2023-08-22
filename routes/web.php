@@ -34,6 +34,7 @@ use App\Http\Controllers\MailRegisterController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
 use App\Http\Controllers\frendly_userController;
+use App\Http\Controllers\myOnlineServeurController;
 
 /*
 |--------------------------------------------------------------------------
@@ -131,17 +132,17 @@ Route::prefix("auth/")->group(function () {
                     ->withErrors("Vous devez accepter la CGU")
                     ->withInput();
             }
-        } 
+        }
         return view("auth.login");
     });
 
     Route::post("forget-password", function (Request $request) {
-        
+
         $usersController = new usersController();
         $usersController->forget_password($request);
         return redirect()->route("auth.login");
     })->name("auth.forget-password");
-    
+
     Route::get('verif-email/{token}', function (Request $request, usersController $usersController) {
         $usersController->verif_email($request);
         return redirect()->route("auth.login");
@@ -479,7 +480,7 @@ Route::prefix("donwloader")->group(function () {
     })->name("download.auth");
 });
 
-Route::prefix("friends")->group(function (){
+Route::prefix("friends")->group(function () {
     Route::get("/", function (Request $request) {
         $st = new frendly_userController(Auth::user()->id);
         $r = $st->getFrendlyUser();
@@ -549,7 +550,7 @@ Route::prefix("friends")->group(function (){
         $st = new frendly_userController(Auth::user()->id, $request->id);
         $remenber = $st->get_friends_via_id($request->id);
         $st->deleteFrendlyUser($request->id);
-        return to_route("friends.all")->with("success", "le VID ". $remenber["vid_friend"] ." à été supprimé dans la liste !");
+        return to_route("friends.all")->with("success", "le VID " . $remenber["vid_friend"] . " à été supprimé dans la liste !");
     })->name("friends.destroy")->middleware(["auth:web"]);
 
     Route::get("edit", function (Request $request) {
@@ -589,6 +590,13 @@ Route::prefix("friends")->group(function (){
         $st->updateFrendlyUser($request->id);
         return to_route("friends.all")->with("success", "Vous avez mofifier le VID " . $request->vid_friend . " avec l'information suivante " . $request->name_friend . "");
     })->name("friends.edit.post")->middleware(["auth:web"]);
-
 })->middleware(["auth:web"]);
+
+
+Route::get("online", function (Request $request) {
+    $online = new myOnlineServeurController("1", "445780");
+    $online = $online->getVerrifOnlineServeur();
+    return $online;
+})->name("online");
+
 

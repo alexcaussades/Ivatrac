@@ -17,7 +17,8 @@ class metarController extends Controller
         return view('metar');
     }
 
-    public function whazzup(){
+    public function whazzup()
+    {
         $api = new whazzupController();
         $api = $api->getwhazzup();
         return $api;
@@ -26,8 +27,13 @@ class metarController extends Controller
     public function getApiATC_APP($icao)
     {
         $api = $this->whazzup();
-        //dd($api["clients"]["atcs"]);
+        $regex = "/" . $icao . "_[A-Za-z0-9]+_APP/";
         foreach ($api["clients"]["atcs"] as $key => $value) {
+            if (preg_match_all($regex, $value["callsign"], $matches)) {
+                if ($value["callsign"] == $matches[0][0]) {
+                    return $value;
+                }
+            }
             if ($value["callsign"] == $icao . "_APP") {
                 return $value;
             }
@@ -37,9 +43,13 @@ class metarController extends Controller
     public function getApiATC_TWR($icao)
     {
         $api = $this->whazzup();
-
+        $regex = "/" . $icao . "_[A-Za-z0-9]+_TWR/";
         foreach ($api["clients"]["atcs"] as $key => $value) {
-
+            if (preg_match_all($regex, $value["callsign"], $matches)) {
+                if ($value["callsign"] == $matches[0][0]) {
+                    return $value;
+                }
+            }
             if ($value["callsign"] == $icao . "_TWR") {
                 return $value;
             }
@@ -49,8 +59,13 @@ class metarController extends Controller
     public function getApiATC_GND($icao)
     {
         $api = $this->whazzup();
+        $regex = "/" . $icao . "_[A-Za-z0-9]+_GND/";
         foreach ($api["clients"]["atcs"] as $key => $value) {
-
+            if (preg_match_all($regex, $value["callsign"], $matches)) {
+                if ($value["callsign"] == $matches[0][0]) {
+                    return $value;
+                }
+            }
             if ($value["callsign"] == $icao . "_GND") {
                 return $value;
             }
@@ -60,8 +75,13 @@ class metarController extends Controller
     public function getApiATC_FSS($icao)
     {
         $api = $this->whazzup();
+        $regex = "/" . $icao . "_[A-Za-z0-9]+_FSS/";
         foreach ($api["clients"]["atcs"] as $key => $value) {
-
+            if (preg_match_all($regex, $value["callsign"], $matches)) {
+                if ($value["callsign"] == $matches[0][0]) {
+                    return $value;
+                }
+            }
             if ($value["callsign"] == $icao . "_FSS") {
                 return $value;
             }
@@ -97,9 +117,9 @@ class metarController extends Controller
         $time = $response->json("time")["dt"] ?? null;
         $i = new UtilsDateTime($time);
         //dd($response);
-        if($response->json("wind_speed") == null){
+        if ($response->json("wind_speed") == null) {
             $speed = "None";
-        }else{
+        } else {
             $speed = $response->json("wind_speed")["value"] * 1.852;
             $speed = round($speed, 0);
         }

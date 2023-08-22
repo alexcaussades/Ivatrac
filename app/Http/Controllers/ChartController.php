@@ -28,7 +28,7 @@ class ChartController extends Controller
         $chart = "https://www.sia.aviation-civile.gouv.fr/dvd/eAIP_" . $this->DateAirac() . "/FRANCE/AIRAC-" . $this->config_Date() . "/html/eAIP/FR-AD-2." . $icao . "-fr-FR.html";
         $header = get_headers($chart);
         if ($header[0] == "HTTP/1.1 404 Not Found") {
-            $chart = "#";
+            $chart = null;
         }
         if ($header[0] == "HTTP/1.1 200 OK") {
             $chart = "https://www.sia.aviation-civile.gouv.fr/dvd/eAIP_" . $this->DateAirac() . "/FRANCE/AIRAC-" . $this->config_Date() . "/html/eAIP/FR-AD-2." . $icao . "-fr-FR.html";
@@ -43,7 +43,7 @@ class ChartController extends Controller
         $chart = "https://www.sia.aviation-civile.gouv.fr/dvd/eAIP_" . $this->DateAirac() . "/Atlas-VAC/PDF_AIPparSSection/VAC/AD/AD-2." . $icao . ".pdf";
         $header = get_headers($chart);
         if ($header[0] == "HTTP/1.1 404 Not Found") {
-            $chart = "#";
+            $chart = null;
         }
         if ($header[0] == "HTTP/1.1 200 OK") {
             $chart = "https://www.sia.aviation-civile.gouv.fr/dvd/eAIP_" . $this->DateAirac() . "/Atlas-VAC/PDF_AIPparSSection/VAC/AD/AD-2." . $icao . ".pdf";
