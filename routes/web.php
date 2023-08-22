@@ -594,9 +594,15 @@ Route::prefix("friends")->group(function () {
 
 
 Route::get("online", function (Request $request) {
-    $online = new myOnlineServeurController("1", "445780");
+    $online = new myOnlineServeurController("1", "119019");
     $online = $online->getVerrifOnlineServeur();
     return $online;
-})->name("online");
+})->name("online")->middleware(["auth:web"]);
 
+
+Route::get("test", function (Request $request) {
+    $online = new myOnlineServeurController("1", "445780");
+    $online = $online->check_online();
+    dd($online);
+})->name("test");
 

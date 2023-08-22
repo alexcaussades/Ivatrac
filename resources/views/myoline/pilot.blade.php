@@ -90,7 +90,7 @@
                 <div class="col">
                     <span class="text-info">Chart :</span><br>
                     <a href="{{$chart["departure"]["IFR"]}}" target="_blank"> <button type="submit" class="btn btn-info text-dark ms-5"><span class="d-flex align-items-center"><span class="material-symbols-outlined">assistant_navigation</span>&nbsp IFR</span></button></a>
-                    <a href="{{$chart["departure"]["IFR"]}}" target="_blank"> <button type="submit" class="btn btn-info text-dark ms-2"><span class="d-flex align-items-center"><span class="material-symbols-outlined">navigation</span> VFR</span></button></a>
+                    <a href="{{$chart["departure"]["VFR"]}}" target="_blank"> <button type="submit" class="btn btn-info text-dark ms-2"><span class="d-flex align-items-center"><span class="material-symbols-outlined">navigation</span> VFR</span></button></a>
                 </div>
                 <div class="col">
                     <span class="text-info">Chart :</span><br>

@@ -174,9 +174,13 @@ class myOnlineServeurController extends Controller
     {
         $q = $this->VerrifOnlineServeur();
 
-        if ($q['atc'] && $q["pilot"] != null) {
+        if($q["atc"] != null){
             return true;
-        } else {
+        }
+        elseif($q["pilot"] != null){
+            return true;
+        }
+        else{
             return false;
         }
     }
