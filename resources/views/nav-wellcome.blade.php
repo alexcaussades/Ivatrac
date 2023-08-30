@@ -46,6 +46,16 @@
             <li><a class="dropdown-item" href="{{ Route("pirep.create")}}" title="register on the platform only">Creat FPL</a></li>
           </ul>
         </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Projet
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="https://github.com/alexcaussades/L10">GitHub</a></li>
+            <li><a class="dropdown-item" href="https://discord.gg/CDntF5H">Discord</a></li>
+          </ul>
+        </li>
+        
       </ul>
     </div>
     <button class="btn btn-success my-2 my-lg-0 rounded">AIRAC 2208</button>

@@ -47,24 +47,23 @@ class AtcController extends Controller
 
     public function getRwy($icao)
     {
-        //retouver le mot ARR dans le string
-        $count = count($icao);
-        for ($i = 0; $i < $count; $i++) {
-            if (strpos($icao[$i], 'ARR') !== false) {
-                $rwy = $icao[$i];
-                $rwy = explode("/", $rwy);
-            }
-        }
-        return $rwy;
+        $r = $icao['atis']['lines'];
+        
+        $r = explode(",", $r);
+        $r = array_values($r); 
+        $r = str_replace('"', " ", $r);
+        $r = str_replace('[', " ", $r);
+        $r = str_replace(']', " ", $r);
+        return $r[4];
     }
 
     public function getRwyAPP($icao)
     {
         //retouver le mot ARR dans le string
-        if (empty($icao["APP"]["atis"]["lines"])) {
+        if (empty($icao)) {
             return null;
         } else {
-           $APP = $this->getRwy($icao["APP"]["atis"]["lines"]);
+            $APP = $this->getRwy($icao);
             return $APP;
         }
     }
@@ -72,21 +71,22 @@ class AtcController extends Controller
     public function getRwyTWR($icao)
     {
         //retouver le mot ARR dans le string
-        if (empty($icao["TWR"]["atis"]["lines"])) {
+        if (empty($icao)) {
             return null;
         } else {
-            $TWR = $this->getRwy($icao["TWR"]["atis"]["lines"]);
+            $TWR = $this->getRwy($icao);
             return $TWR;
+            
         }
     }
 
     public function getRwyGND($icao)
     {
         //retouver le mot ARR dans le string
-        if (empty($icao["GND"]["atis"]["lines"])) {
+        if (empty($icao)) {
             return null;
         } else {
-            $GND = $this->getRwy($icao["GND"]["atis"]["lines"]);
+            $GND = $this->getRwy($icao);
             return $GND;
         }
     }
@@ -94,19 +94,20 @@ class AtcController extends Controller
     public function getRwyFSS($icao)
     {
         //retouver le mot ARR dans le string
-        if (empty($icao["FSS"]["atis"]["lines"])) {
+        if (empty($icao)) {
             return null;
         } else {
-            $FSS = $this->getRwy($icao["FSS"]["atis"]["lines"]);
+            $FSS = $this->getRwy($icao);
             return $FSS;
         }
     }
 
-    public function resolve($icao){
-        $APP = $this->getRwyAPP($icao);
-        $TWR = $this->getRwyTWR($icao);
-        $GND = $this->getRwyGND($icao);
-        $FSS = $this->getRwyFSS($icao);
+    public function resolve($icao)
+    {
+        $APP = $this->getRwyAPP($icao["APP"]);
+        $TWR = $this->getRwyTWR($icao["TWR"]);
+        $GND = $this->getRwyGND($icao["GND"]);
+        $FSS = $this->getRwyFSS($icao["FSS"]);
 
         $r = array(
             "APP" => $APP,

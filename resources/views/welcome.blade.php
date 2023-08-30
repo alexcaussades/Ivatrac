@@ -13,8 +13,13 @@
 </div>
 </div>
 <div class="container">
+
     @auth
-    <h4 class="mt-3"> Welcome {{ auth()->user()->name }} ({{auth()->user()->vid}}) </h4>
+    @if ($online == true)
+    <h4 class="mt-3"> Welcome {{ auth()->user()->name }} ({{auth()->user()->vid}}) <a href="{{ Route("online")}}"><button type="submit" class="btn btn-sm btn-success">Online</button></a></h4>
+    @else
+    <h4 class="mt-3"> Welcome {{ auth()->user()->name }} ({{auth()->user()->vid}})</h4>
+    @endif
     @endauth
     @include('nav-wellcome')
     <div class="row mt-2">
