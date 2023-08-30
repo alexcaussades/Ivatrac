@@ -19,11 +19,19 @@
                 <div class="col"> <span class="text-info">Frequency :</span> {{ $atc["frequency"] }} Mhz </div>
                 <div class="col"> <span class="text-info">Time Online :</span> {{ $atc["time"] }}</div>
                 <div class="col"> <span class="text-info">Revision :</span> {{ $atc["revision"] }}</div>
+                <div> <span class="text-info">Metar :</span>
+                    @if ($atc["atis"][0] == null)
+                    <span class="text-danger">No ATIS</span>
+                    @else
+                    <span class="">{{$atc["atis"][3]}}</span>
+                    @endif
+                </div>
                 <div> <span class="text-info">ATIS :</span>
-                    @for ($i = 2; $i < $atis; $i++) @if ($i==0) {{ $atc["atis"][$i] }} @else <br>{{ $atc["atis"][$i] }}
-                        @endif
-
-                        @endfor
+                    @if ($atc["atis"][0] == null)
+                    <span class="text-danger">No ATIS</span>
+                    @else
+                    <span class="">{{$atc["atis"][4]}}</span>
+                    @endif
                 </div>
             </div>
             </p>

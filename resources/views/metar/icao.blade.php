@@ -49,7 +49,7 @@
         </div>
         <div class="card mt-2">
             <div class="card-body">
-                <h4 class="card-title d-flex align-items-center"> {{$metar["metar"]}}</h4>
+                <h4 class="card-title d-flex align-items-center"> {{$metar["metar"] ?? "NO METAR"}}</h4>
                 <p class="card-text">
                 <p>Time: {{$metar["meta_day"]["time"]}}</p>
                 <div class="row">
@@ -97,14 +97,14 @@
                 <h4> <span class="material-symbols-outlined">subdirectory_arrow_right</span></i> TAF :</h4>
             </div>
             <div class="card-body text-center text-white">
-                {{$taf["taf"]}}
+                {{$taf["taf"] ?? "No TAF"}}
             </div>
         </div>
         <hr class="mt-2">
         <h3><span class="material-symbols-outlined">map</span> CHART</h3>
         <div class="d-flex justify-content-center">
-            <a href="{{ $chartIFR }}" target="_blank"> <button type="submit" class="btn btn-dark"><span class="d-flex align-items-center"><span class="material-symbols-outlined">assistant_navigation</span>&nbsp IFR</span></button></a>
-            <a href="{{ $chartVFR }}" target="_blank"> <button type="submit" class="btn btn-dark ms-2"><span class="d-flex align-items-center"><span class="material-symbols-outlined">navigation</span> VFR</span></button></a>
+           
+
         </div>
         <hr class="mt-2">
         <h3><span class="material-symbols-outlined">cell_tower</span> IVAO</h3>

@@ -61,7 +61,13 @@ class myOnlineServeurController extends Controller
 
         if ($q['atc'] != null) {
             $time = Carbon::parse($q['atc'][0]['lastTrack']["time"])->format('H:i');
-            $atis = count($q['atc'][0]['atis']['lines']);
+            $r = $q['atc'][0]['atis']['lines'];
+            $r = explode(",", $r);
+            $r = array_values($r);
+            $r = str_replace('"', " ", $r);
+            $r = str_replace('[', " ", $r);
+            $r = str_replace(']', " ", $r);
+            $atis = $q['atc'][0]['atis']['lines'];
             $callsign = $q['atc'][0]['callsign'];
             $callsign = explode("_", $callsign);
             $callsign = $callsign[0];
@@ -72,7 +78,7 @@ class myOnlineServeurController extends Controller
                 "rating" => $q['atc'][0]['rating'],
                 "time" => $time,
                 "revision" => $q['atc'][0]['atis']['revision'],
-                "atis" => $q['atc'][0]['atis']['lines'],
+                "atis" => $r,
             ];
             $metarController = new metarController();
             $plateform = [

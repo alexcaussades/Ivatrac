@@ -73,7 +73,14 @@ Route::get('/', function (Request $request, usersController $usersController) {
     $bddid = new whazzupController();
     $idlast = $bddid->bddid();
     $heurechange = $bddid->heurechange();
-    return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange]);
+    $online = new myOnlineServeurController(Auth::user()->id, Auth::user()->vid);
+    $online = $online->VerrifOnlineServeur();
+    if ($online["atc"] != null || $online["pilot"] != null) {
+        $online = true;
+    } else {
+        $online = false;
+    }
+    return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange, "online" => $online]);
 })->where('client', '[0-9]+')->name("home");
 
 
@@ -325,17 +332,15 @@ Route::prefix("metar")->group(function () {
         $metar = $metarController->metar($icao);
         $taf = $metarController->taf($icao);
         $ATC = $metarController->getATC($icao);
-        $chart = new ChartController();
-        $chartIFR = $chart->chartIFR($icao);
-        $chartVFR = $chart->chartVFR($icao);
+        // Probleme de requete des cartes IFR et VFR    
         $pilots = new PilotIvaoController();
         $pilot = $pilots->getAirplaneToPilots($icao);
 
-        if ($metar == NULL || $taf == NULL || $ATC == NULL || $pilot == NULL || $chartIFR == NULL || $chartVFR == NULL) {
+        if ($metar == NULL || $taf == NULL || $ATC == NULL || $pilot == NULL) {
             return view("metar.reload", ["icao" => $icao]);
         }
 
-        return view("metar.icao", ["metar" => $metar, "taf" => $taf, "ATC" => $ATC, "pilot" => $pilot, "chartIFR" => $chartIFR, "chartVFR" => $chartVFR]);
+        return view("metar.icao", ["metar" => $metar, "taf" => $taf, "ATC" => $ATC, "pilot" => $pilot]);
     })->name("metars.icao");
 
     Route::get("/{icao}", function () {
@@ -384,7 +389,12 @@ Route::prefix("ivao")->group(function () {
         $ivao = $ivaoController->getATC($icao);
         $atc = $atcivao->resolve($ivao);
         $Pilot = $pilots->getAirplaneToPilots($icao);
-        return view("plateforme.plat", ["ATC" => $atc, "Pilot" => $Pilot, "ivao" => $ivao]);
+        $other = $ivaoController->getFirAtc($icao);
+        $other2 = $ivaoController->getFirCTR($icao);
+
+        $hosturl = $request->fullUrl();
+
+        return view("plateforme.plat", ["ATC" => $atc, "Pilot" => $Pilot, "ivao" => $ivao, "hosturl" => $hosturl, "other" => $other, "other2" => $other2]);
     })->name("ivao.plateforme");
 
     Route::get("/pilot", function (Request $request) {
@@ -534,6 +544,20 @@ Route::prefix("friends")->group(function () {
         return to_route("friends.all")->with("success", "Amis ajouté dans la liste");
     })->name("friends.add.post")->middleware(["auth:web"]);
 
+    Route::get("add-friend", function (Request $request) {
+        $request->merge([
+            "host" => $request->host,
+            "vid_friend" => $request->vid_friend,
+            "name_friend" => $request->name_friend ?? "No infomation"
+        ]);
+        $validator = Validator::make($request->all(), [
+            'vid_friend' => 'required|numeric',
+        ]);
+        $st = new frendly_userController(Auth::user()->id, $request->vid_friend, $request->name_friend);
+        $st->addFrendlyUser();
+        return redirect($request->host)->with("success", "Amis ajouté dans la liste");
+    })->name("friends.add.oter.page.post")->middleware(["auth:web"]);
+
     Route::post("destroy/{id}", function (Request $request) {
         $request->merge([
             "id" => $request->id,
@@ -601,8 +625,14 @@ Route::get("online", function (Request $request) {
 
 
 Route::get("test", function (Request $request) {
-    $online = new myOnlineServeurController("1", "445780");
-    $online = $online->check_online();
-    dd($online);
+    $online = new myOnlineServeurController("1", "318860");
+    $online = $online->getVerrifOnlineServeur();
+    return $online;
 })->name("test");
 
+Route::get("test2", function (Request $request) {
+    $ivaoController = new metarController();
+    $ivao = $ivaoController->getFirAtc("LFBL");
+    $ivao2 = $ivaoController->getFirCTR("LFBL");
+    dd($ivao, $ivao2);
+})->name("test2");

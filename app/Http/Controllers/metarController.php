@@ -24,6 +24,55 @@ class metarController extends Controller
         return $api;
     }
 
+    /** pour la recherche des positions de controle */
+    public function getFirAtc($icao)
+    {
+        $api = $this->whazzup();
+        $newrecherche = str_split($icao);
+        $newfinal = [$newrecherche[0], $newrecherche[1], $newrecherche[2]];
+        $newfinal = implode("", $newfinal);
+        $newfinal = strtoupper($newfinal);
+        $regex = $newfinal ."[A-Z]{1,}_[A-Za-z]{3,}";
+        $p = [];
+        foreach ($api["clients"]["atcs"] as $key => $value) {
+            if (preg_match_all("/".$regex."/", $value["callsign"], $matches)) {
+                if ($value["callsign"] == $matches[0][0]) {
+                    $p[] = [$value];
+                }
+            }
+        }
+        return $p;
+    }
+
+    /** pour la recherche des centres de controle */
+    public function getFirCTR($icao)
+    {
+        $api = $this->whazzup();
+        $newrecherche = str_split($icao);
+        $newfinal = [$newrecherche[0], $newrecherche[1]];
+        $newfinal = implode("", $newfinal);
+        $newfinal = strtoupper($newfinal);
+        $regex = $newfinal ."[A-Z]{1,}_[A-Z]{1,}_CTR";
+        $regex2 = $newfinal ."[A-Z]{1,}_CTR";
+        $p = [];
+        foreach ($api["clients"]["atcs"] as $key => $value) {
+            if (preg_match_all("/".$regex."/", $value["callsign"], $matches)) {
+                if ($value["callsign"] == $matches[0][0]) {
+                    $p[] = [$value];
+                }
+            }
+        }
+        foreach ($api["clients"]["atcs"] as $key => $value) {
+            if (preg_match_all("/".$regex2."/", $value["callsign"], $matches)) {
+                if ($value["callsign"] == $matches[0][0]) {
+                    $p[] = [$value];
+                }
+            }
+        }
+        return $p;
+    }
+
+    /** pour la recherche des APP */
     public function getApiATC_APP($icao)
     {
         $api = $this->whazzup();
@@ -40,6 +89,7 @@ class metarController extends Controller
         }
     }
 
+    /** pour la recherche des TWR */
     public function getApiATC_TWR($icao)
     {
         $api = $this->whazzup();
@@ -56,6 +106,7 @@ class metarController extends Controller
         }
     }
 
+    /** pour la recherche des TWR */
     public function getApiATC_GND($icao)
     {
         $api = $this->whazzup();
@@ -72,6 +123,7 @@ class metarController extends Controller
         }
     }
 
+    /** pour la recherche des FSS */
     public function getApiATC_FSS($icao)
     {
         $api = $this->whazzup();
