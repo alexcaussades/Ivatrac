@@ -21,7 +21,7 @@
                 <p class="card-text">
                     <div class="row">
                         <div class="col-6">
-                            <a href="{{env("APP_URL")}}/auth/verif-email/{{$user->remember_token}}" class="btn btn-success">Verrify your account</a>
+                            <a href="{{env("APP_URL")}}auth/verif-email/{{$user->remember_token}}" class="btn btn-success">Verrify your account</a>
                         </div>
                     </div>
                 </p>

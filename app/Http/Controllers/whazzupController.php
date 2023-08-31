@@ -105,4 +105,53 @@ class whazzupController extends Controller
         $whazzupbdd = $whazzupbdd->format('H:i');
         return $whazzupbdd;
     }
+
+    public function get_token()
+    {
+        $openid_url = 'https://api.ivao.aero/.well-known/openid-configuration';
+        $openid_url = 'https://api.ivao.aero/.well-known/openid-configuration';
+        $openid_result = file_get_contents($openid_url, false);
+        if ($openid_result === FALSE) {
+            /* Handle error */
+            die('Error while getting openid data');
+        }
+        $openid_data = json_decode($openid_result, true);
+        $idclient = env("ivao_api_client_id");
+        $secret = env("ivao_api_client_secret");
+        $token_req_data = array(
+            'grant_type' => 'client_credentials',
+            'client_id' => $idclient,
+            'client_secret' => $secret,
+            'scope' => 'tracker'
+        );
+
+        // use key 'http' even if you send the request to https://...
+        $token_options = array(
+            'http' => array(
+                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method'  => 'POST',
+                'content' => http_build_query($token_req_data)
+            )
+        );
+        $token_context  = stream_context_create($token_options);
+        $token_result = file_get_contents($openid_data['token_endpoint'], false, $token_context);
+        if ($token_result === FALSE) {
+            /* Handle error */
+            die('Error while getting token');
+        }
+        $token_res_data = json_decode($token_result, true);
+        $access_token = $token_res_data['access_token']; // Here is the access token
+        return $access_token;
+    }
+
+    public function API_request($path = null, $method = 'GET', $data = null, $headers = null)
+    {
+        $url = 'https://api.ivao.aero/' . $path;
+        $headers = [
+            'Authorization' => 'Bearer ' . $this->get_token(),
+            'Accept'        => 'application/json',
+        ];
+        $response = Http::withHeaders($headers)->get($url);
+        return $response;
+    }
 }
