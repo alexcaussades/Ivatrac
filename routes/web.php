@@ -73,7 +73,14 @@ Route::get('/', function (Request $request, usersController $usersController) {
     $bddid = new whazzupController();
     $idlast = $bddid->bddid();
     $heurechange = $bddid->heurechange();
-    return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange]);
+    $online = new myOnlineServeurController(Auth::user()->id, Auth::user()->vid);
+    $online = $online->VerrifOnlineServeur();
+    if ($online["atc"] != null || $online["pilot"] != null) {
+        $online = true;
+    } else {
+        $online = false;
+    }
+    return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange, "online" => $online]);
 })->where('client', '[0-9]+')->name("home");
 
 
