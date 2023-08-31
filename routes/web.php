@@ -317,7 +317,9 @@ Route::prefix("logs")->group(function () {
 
 Route::prefix("metar")->group(function () {
     Route::get("/", function (Request $request) {
-        return view("metar.index");
+        $temsi = new temsiController();
+        $temsi = $temsi->all_chart();
+        return view("metar.index", ["temsi" => $temsi]);
     })->name("metars.index");
 
     Route::get("/search", function (Request $request) {
@@ -631,8 +633,7 @@ Route::get("test", function (Request $request) {
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-    $ivaoController = new metarController();
-    $ivao = $ivaoController->getFirAtc("LFBL");
-    $ivao2 = $ivaoController->getFirCTR("LFBL");
-    dd($ivao, $ivao2);
+    $temsi = new temsiController();
+    $temsi = $temsi->all_chart();
+    dd($temsi);
 })->name("test2");
