@@ -73,14 +73,7 @@ Route::get('/', function (Request $request, usersController $usersController) {
     $bddid = new whazzupController();
     $idlast = $bddid->bddid();
     $heurechange = $bddid->heurechange();
-    $online = new myOnlineServeurController(Auth::user()->id, Auth::user()->vid);
-    $online = $online->VerrifOnlineServeur();
-    if ($online["atc"] != null || $online["pilot"] != null) {
-        $online = true;
-    } else {
-        $online = false;
-    }
-    return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange, "online" => $online]);
+    return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange]);
 })->where('client', '[0-9]+')->name("home");
 
 
@@ -317,7 +310,9 @@ Route::prefix("logs")->group(function () {
 
 Route::prefix("metar")->group(function () {
     Route::get("/", function (Request $request) {
-        return view("metar.index");
+        $temsi = new temsiController();
+        $temsi = $temsi->all_chart();
+        return view("metar.index", ["temsi" => $temsi]);
     })->name("metars.index");
 
     Route::get("/search", function (Request $request) {
@@ -631,8 +626,7 @@ Route::get("test", function (Request $request) {
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-    $ivaoController = new metarController();
-    $ivao = $ivaoController->getFirAtc("LFBL");
-    $ivao2 = $ivaoController->getFirCTR("LFBL");
-    dd($ivao, $ivao2);
+    $temsi = new temsiController();
+    $temsi = $temsi->all_chart();
+    dd($temsi);
 })->name("test2");

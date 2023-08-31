@@ -9,10 +9,6 @@ use Illuminate\Support\Facades\Storage;
 
 class temsiController extends Controller
 {
-    //https://aviation.meteo.fr/affiche_image.php?time=1691227758&type=sigwx/fr/france&date=20230805090000&mode=img
-    //https://aviation.meteo.fr/affiche_image.php?time=1691229945&type=sigwx/fr/france&date=20230805100000&mode=img&comment=
-    //https://aviation.meteo.fr/affiche_image.php?time=1691228397&type=wintemp/fr/france/fl020&date=20230805090000&mode=img&comment=
-
     public function timestamp()
     {
         $date = date("Y-m-d H:i:s");
@@ -51,29 +47,80 @@ class temsiController extends Controller
             $dates = "21";
         }
         $news_date = $dates;
-        $date = $date->format('Ymd' . $news_date . "0000");
+        $date = $date->format('Ymd' . $news_date . "00");
         return $date;
     }
 
-    public function link_temsi()
+    public function logique_time_temsi()
+    {
+        $date = new DateTime();
+        $dates = date("H");
+        // 3h 6h 9h 12h 15h 18h 21h 00h
+        if ($dates >= 0 && $dates < 3) {
+            $dates = "00";
+        } elseif ($dates >= 3 && $dates < 6) {
+            $dates = "03";
+        } elseif ($dates >= 6 && $dates < 9) {
+            $dates = "06";
+        } elseif ($dates >= 9 && $dates < 12) {
+            $dates = "09";
+        } elseif ($dates >= 12 && $dates < 15) {
+            $dates = "12";
+        } elseif ($dates >= 15 && $dates < 18) {
+            $dates = "15";
+        } elseif ($dates >= 18 && $dates < 21) {
+            $dates = "18";
+        } elseif ($dates >= 21 && $dates < 24) {
+            $dates = "21";
+        }
+        $news_date = $dates;
+        $date = $date->format('Ymd' . $news_date . "00");
+        return $date;
+    }
+
+    public function link_temsi_fr()
     {
 
-        $link = "https://aviation.meteo.fr/affiche_image.php?time=" . $this->timestamp() . "&type=sigwx/fr/france&date=" . $this->logique_time() . "&mode=img&comment=";
+        //https://aerometeo.fr/data/weather/temsi_france_202308310900.pdf
+        $link = "https://aerometeo.fr/data/weather/temsi_france_" . $this->logique_time_temsi() . ".pdf";
         return $link;
     }
 
-    public function link_wintemp()
+    public function link_wintemp_fr()
     {
 
-        $link = "https://aviation.meteo.fr/affiche_image.php?time=" . $this->timestamp() . "&type=wintemp/fr/france/fl020&date=" . $this->logique_time() . "&mode=img&comment=";
+        //https://aerometeo.fr/data/weather/wintem_france_202308310900.pdf
+        $link = "https://aerometeo.fr/data/weather/wintem_france_" . $this->logique_time() . ".pdf";
+        return $link;
+    }
+
+    public function link_temsi_eu()
+    {
+
+        //https://aerometeo.fr/data/weather/temsi_france_202308310900.pdf
+        $link = "https://aerometeo.fr/data/weather/temsi_euroc_" . $this->logique_time_temsi() . ".pdf";
+        return $link;
+    }
+
+    public function link_wintemp_eu()
+    {
+
+        //https://aerometeo.fr/data/weather/wintem_france_202308310900.pdf
+        $link = "https://aerometeo.fr/data/weather/wintem_euroc_" . $this->logique_time() . ".pdf";
         return $link;
     }
 
     public function all_chart()
     {
         $link = [
-            "sigwx" => $this->link_temsi(),
-            "wintemp" => $this->link_wintemp()
+            "FR" => [
+                "sigwx" => $this->link_temsi_fr(),
+                "wintemp" => $this->link_wintemp_fr()
+            ],
+            "EU" => [
+                "sigwx" => $this->link_temsi_eu(),
+                "wintemp" => $this->link_wintemp_eu()
+            ],
         ];
         return $link;
     }
