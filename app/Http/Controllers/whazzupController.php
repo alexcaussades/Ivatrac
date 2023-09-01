@@ -154,4 +154,19 @@ class whazzupController extends Controller
         $response = Http::withHeaders($headers)->get($url);
         return $response;
     }
+
+    public function Get_metar($icao=null){
+        $metar = $this->API_request("/v2/airports/".$icao."/metar");
+        return $metar;
+    }
+
+    public function Get_taf($icao=null){
+        $metar = $this->API_request("/v2/airports/".$icao."/taf");
+        return $metar;
+    }
+
+    public function Get_Position($icao=null){
+        $metar = $this->API_request("/v2/tracker/now/atc");
+        return $metar;
+    }
 }

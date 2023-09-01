@@ -638,14 +638,14 @@ Route::get("online", function (Request $request) {
 
 
 Route::get("test", function (Request $request) {
-    $online = new myOnlineServeurController("1", "540561");
+    $online = new myOnlineServeurController("1", "709009");
     $online = $online->getVerrifOnlineServeur();
     return $online;
 })->name("test");
 
 Route::get("test2", function (Request $request) {
     $whazzup = new whazzupController();
-    $whazzup = $whazzup->API_request("v2/airports/LFBL/metar");
-    return $whazzup;
-
+    $whazzup = $whazzup->Get_Position("LFBZ");
+    $r = json_decode($whazzup);
+    return $r;
 })->name("test2");
