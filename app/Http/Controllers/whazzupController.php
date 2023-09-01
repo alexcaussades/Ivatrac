@@ -220,7 +220,7 @@ class whazzupController extends Controller
     }
 
     public function track_session_id($idsession = null){
-        
+        //https://api.ivao.aero/.well-known/openid-configuration
         $metar = $this->API_request("/v2/tracker/sessions/53150078");
         return $metar;
     }
