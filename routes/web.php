@@ -644,8 +644,8 @@ Route::get("test", function (Request $request) {
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-    $whazzup = new whazzupController();
-    $whazzup = $whazzup->Get_Position("LFBZ");
-    $r = json_decode($whazzup);
-    return $r;
+   $whazzup = new whazzupController();
+   $z = $whazzup->API_request_session();
+   $u = $whazzup->track_session_id();
+   return $u;
 })->name("test2");
