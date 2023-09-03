@@ -114,7 +114,7 @@ class temsiController extends Controller
        /** recuperer les fichiers sur le serveur */
         $response = Http::get($this->link_temsi_fr());
         Storage::put("public/temsi/temsi.pdf", $response->body());
-        return Storage::download("public/temsi/temsi.pdf");
+        return response()->download("storage/temsi/temsi.pdf");
 
     }
 
@@ -122,7 +122,7 @@ class temsiController extends Controller
         /** mettre les entetes du PDF pour le lire */
         $response = Http::get($this->link_wintemp_fr());
         Storage::put("public/wintemp/wintemp.pdf", $response->body());
-        return Storage::download("public/wintemp/wintemp.pdf");
+        return response()->download("public/wintemp/wintemp.pdf");
     }
 
     public function all_chart()
