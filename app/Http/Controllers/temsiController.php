@@ -115,7 +115,6 @@ class temsiController extends Controller
         $response = Http::get($this->link_temsi_fr());
         Storage::put("public/temsi/temsi.pdf", $response->body());
         return response()->download("storage/temsi/temsi.pdf");
-
     }
 
     public function get_wintemp(){
