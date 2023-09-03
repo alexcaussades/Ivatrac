@@ -650,6 +650,7 @@ Route::get("online", function (Request $request) {
 
 
 Route::get("test", function (Request $request) {
+
     $online = new myOnlineServeurController("1", "366869");
     $online = $online->getVerrifOnlineServeur();
     return $online;

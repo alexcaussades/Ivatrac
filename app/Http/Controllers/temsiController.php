@@ -110,6 +110,22 @@ class temsiController extends Controller
         return $link;
     }
 
+    public function link_temsi_eu()
+    {
+
+        //https://aerometeo.fr/data/weather/temsi_france_202308310900.pdf
+        $link = "https://aerometeo.fr/data/weather/temsi_euroc_" . $this->logique_time_temsi() . ".pdf";
+        return $link;
+    }
+
+    public function link_wintemp_eu()
+    {
+
+        //https://aerometeo.fr/data/weather/wintem_france_202308310900.pdf
+        $link = "https://aerometeo.fr/data/weather/wintem_euroc_" . $this->logique_time() . ".pdf";
+        return $link;
+    }
+
     public function get_temsi(){
         /** mettre les entetes du PDF pour le lire */
         $headers = [
