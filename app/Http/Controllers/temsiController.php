@@ -111,25 +111,18 @@ class temsiController extends Controller
     }
 
     public function get_temsi(){
-        /** mettre les entetes du PDF pour le lire */
-        $headers = [
-            'Content-Type' => 'application/pdf',
-        ];
-        $link = $this->link_temsi_fr();
-        $response = Http::get($link);
-        $pdf = $response->body();
-        return response($pdf, 200, $headers);
+       /** recuperer les fichiers sur le serveur */
+        $response = Http::get($this->link_temsi_fr());
+        Storage::put("public/temsi/temsi.pdf", $response->body());
+        return Storage::download("public/temsi/temsi.pdf");
+
     }
 
     public function get_wintemp(){
         /** mettre les entetes du PDF pour le lire */
-        $headers = [
-            'Content-Type' => 'application/pdf',
-        ];
-        $link = $this->link_wintemp_fr();
-        $response = Http::get($link);
-        $pdf = $response->body();
-        return response($pdf, 200, $headers);
+        $response = Http::get($this->link_wintemp_fr());
+        Storage::put("public/wintemp/wintemp.pdf", $response->body());
+        return Storage::download("public/wintemp/wintemp.pdf");
     }
 
     public function all_chart()
