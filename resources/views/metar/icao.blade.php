@@ -11,20 +11,6 @@
         <div class="col-md-12">
             <h1> {{$metar["station"]}}</h1>
         </div>
-        <div class="d-flex">
-            @if ($metar["flight_rules"] == "VFR")
-            <button class="btn btn-success btn-sm"><i class='bi bi-123'></i> VFR</button>
-            @endif
-            @if ($metar["flight_rules"] == "LIFR")
-            <button class="btn btn-dark btn-sm">LIFR</button>
-            @endif
-            @if ($metar["flight_rules"] == "IFR")
-            <button class="btn btn-danger btn-sm">IFR</button>
-            @endif
-            @if ($metar["flight_rules"] == "MVFR")
-            <button class="btn btn-primary btn-sm">MVFR</button>
-            @endif
-        </div>
         <div class="d-flex flex-row-reverse text-warning">
             @auth
             <form action="#" method="post">

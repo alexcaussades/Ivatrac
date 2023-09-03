@@ -35,6 +35,7 @@ use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
 use App\Http\Controllers\frendly_userController;
 use App\Http\Controllers\myOnlineServeurController;
+use Illuminate\Support\Facades\Http;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +76,23 @@ Route::get('/', function (Request $request, usersController $usersController) {
     $heurechange = $bddid->heurechange();
     return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange]);
 })->where('client', '[0-9]+')->name("home");
+
+Route::get("callback", function (Request $request) {
+    $request->merge([
+        "code" => $request->code
+    ]);
+    $validator = Validator::make($request->all(), [
+        'code' => 'required|string',
+    ]);
+    if ($validator->fails()) {
+        return redirect()->route("auth.register")
+            ->withErrors("Erreur for authentification is not valid")
+            ->withInput();
+    }
+    $users = new usersController();
+    $users->callback($request);
+    return redirect()->route("auth.login");
+})->name("callback");
 
 
 Route::prefix("auth/")->group(function () {
@@ -620,13 +638,14 @@ Route::get("online", function (Request $request) {
 
 
 Route::get("test", function (Request $request) {
-    $online = new myOnlineServeurController("1", "318860");
+    $online = new myOnlineServeurController("1", "709009");
     $online = $online->getVerrifOnlineServeur();
     return $online;
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-    $temsi = new temsiController();
-    $temsi = $temsi->all_chart();
-    dd($temsi);
+   $whazzup = new whazzupController();
+   $z = $whazzup->API_request_session();
+   $u = $whazzup->track_session_id();
+   return $u;
 })->name("test2");
