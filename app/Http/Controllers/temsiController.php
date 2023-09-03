@@ -110,6 +110,44 @@ class temsiController extends Controller
         return $link;
     }
 
+    public function link_temsi_eu()
+    {
+
+        //https://aerometeo.fr/data/weather/temsi_france_202308310900.pdf
+        $link = "https://aerometeo.fr/data/weather/temsi_euroc_" . $this->logique_time_temsi() . ".pdf";
+        return $link;
+    }
+
+    public function link_wintemp_eu()
+    {
+
+        //https://aerometeo.fr/data/weather/wintem_france_202308310900.pdf
+        $link = "https://aerometeo.fr/data/weather/wintem_euroc_" . $this->logique_time() . ".pdf";
+        return $link;
+    }
+
+    public function get_temsi(){
+        /** mettre les entetes du PDF pour le lire */
+        $headers = [
+            'Content-Type' => 'application/pdf',
+        ];
+        $link = $this->link_temsi_fr();
+        $response = Http::get($link);
+        $pdf = $response->body();
+        return response($pdf, 200, $headers);
+    }
+
+    public function get_wintemp(){
+        /** mettre les entetes du PDF pour le lire */
+        $headers = [
+            'Content-Type' => 'application/pdf',
+        ];
+        $link = $this->link_wintemp_fr();
+        $response = Http::get($link);
+        $pdf = $response->body();
+        return response($pdf, 200, $headers);
+    }
+
     public function all_chart()
     {
         $link = [

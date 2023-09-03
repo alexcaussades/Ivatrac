@@ -219,8 +219,7 @@ class whazzupController extends Controller
         return $metar;
     }
 
-    public function track_session_id($idsession = null){
-        
+    public function track_session_id($idsession = null){        
         $metar = $this->API_request("/v2/tracker/sessions/53150078");
         return $metar;
     }
