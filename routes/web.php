@@ -501,6 +501,18 @@ Route::prefix("donwloader")->group(function () {
                 ->withInput();
         }
     })->name("download.auth");
+
+    Route::get("tempsi", function (Request $request) {
+        $temsi = new temsiController();
+        $temsi = $temsi->get_temsi($request->id);
+        return $temsi;
+    })->name("download.tempsi")->middleware(["auth:web"]);
+
+    Route::get("wintemp", function (Request $request) {
+        $temsi = new temsiController();
+        $temsi = $temsi->get_wintemp($request->id);
+        return $temsi;
+    })->name("download.wintemp")->middleware(["auth:web"]);
 });
 
 Route::prefix("friends")->group(function () {
@@ -638,14 +650,14 @@ Route::get("online", function (Request $request) {
 
 
 Route::get("test", function (Request $request) {
-    $online = new myOnlineServeurController("1", "709009");
+    $online = new myOnlineServeurController("1", "366869");
     $online = $online->getVerrifOnlineServeur();
     return $online;
 })->name("test");
 
 Route::get("test2", function (Request $request) {
    $whazzup = new whazzupController();
-   $z = $whazzup->API_request_session();
+   $whazzup->API_request_session();
    $u = $whazzup->track_session_id();
-   return $u;
+   return $u->json();
 })->name("test2");

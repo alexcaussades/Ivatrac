@@ -37,7 +37,7 @@
             <div class="card text-white bg-dark" style="max-width: 520px;">
                 <img class="card-img-top" src="{{asset("asset/img/webiste/temsi.png") }}" alt="">
                 <div class="card-body">
-                    <p class="card-text text-center"><a href="{{$temsi["FR"]["sigwx"]}}" target="_blank" rel="noopener noreferrer"><button class="btn btn-success btn-sm text-white">View TEMSI</button></a></p>
+                    <p class="card-text text-center"><a href="{{Route("download.tempsi")}}" target="_blank" rel="noopener noreferrer"><button class="btn btn-success btn-sm text-white">View TEMSI</button></a></p>
                 </div>
             </div>
         </div>
@@ -45,7 +45,7 @@
             <div class="card text-white bg-dark" style="max-width: 520px;">
                 <img class="card-img-top" src="{{asset("asset/img/webiste/wintep.png") }}" alt="">
                 <div class="card-body">
-                    <p class="card-text text-center text-light"><a href="{{$temsi["FR"]["wintemp"]}}" target="_blank" rel="noopener noreferrer"><button class="btn btn-success btn-sm text-white">View Wintep</button></a></p>
+                    <p class="card-text text-center text-light"><a href="{{Route("download.wintemp")}}" target="_blank" rel="noopener noreferrer"><button class="btn btn-success btn-sm text-white">View Wintep</button></a></p>
                 </div>
             </div>
         </div>
