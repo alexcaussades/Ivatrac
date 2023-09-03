@@ -226,7 +226,7 @@ class metarController extends Controller
                 "temp" => $ex[0],
                 "dewpoint" => $ex[1],
             ],
-            "qnh" => $QNH[0],
+            "qnh" => $QNH[0] ?? "0",
         ];
         return $r;
     }
