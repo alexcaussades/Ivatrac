@@ -205,22 +205,22 @@ class whazzupController extends Controller
     }
 
     public function Get_metar($icao=null){
-        $metar = $this->API_request("/v2/airports/".$icao."/metar");
+        $metar = $this->API_request("v2/airports/".$icao."/metar");
         return $metar;
     }
 
     public function Get_taf($icao=null){
-        $metar = $this->API_request("/v2/airports/".$icao."/taf");
+        $metar = $this->API_request("v2/airports/".$icao."/taf");
         return $metar;
     }
 
     public function Get_Position($icao=null){
-        $metar = $this->API_request("/v2/tracker/now/atc");
+        $metar = $this->API_request("v2/tracker/now/atc");
         return $metar;
     }
 
     public function track_session_id($idsession = null){        
-        $metar = $this->API_request("/v2/tracker/sessions/53150078");
+        $metar = $this->API_request("v2/tracker/sessions/" . $idsession);
         return $metar;
     }
 }
