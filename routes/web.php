@@ -10,6 +10,7 @@ use Illuminate\Support\Sleep;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Monolog\Formatter\JsonFormatter;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,8 @@ use App\Http\Controllers\PirepController;
 use App\Http\Controllers\temsiController;
 use App\Http\Controllers\usersController;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\DiscordContoller;
+use App\Http\Controllers\GithubController;
 use App\Http\Controllers\logginController;
 use App\Http\Controllers\testingContolleur;
 use App\Http\Controllers\whazzupController;
@@ -30,12 +33,11 @@ use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
+use App\Http\Controllers\frendly_userController;
 use App\Http\Controllers\MailRegisterController;
 use App\Http\Requests\registerValidationRequest;
-use App\Http\Controllers\CreatAuhUniqueUsersController;
-use App\Http\Controllers\frendly_userController;
 use App\Http\Controllers\myOnlineServeurController;
-use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\CreatAuhUniqueUsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -648,6 +650,25 @@ Route::get("online", function (Request $request) {
     return $online;
 })->name("online")->middleware(["auth:web"]);
 
+Route::prefix("feedback")->group(function () {
+    Route::get("/", function (Request $request) {
+        return view("feedback.index");
+    })->name("feedback.index");
+
+    Route::post("create", function (Request $request) {
+        $github = new GithubController();
+        $github = $github->send_issue($request);
+        $request->merge([
+            "user_id" => Auth::user()->id,
+            "body" => $request->body,
+            "link" => $github,
+            "label" => $request->label
+        ]);
+        $discord = new DiscordContoller();
+        $discord->send_feedback($request);
+        return to_route("feedback.index")->with("success", "Votre feedback à été envoyé !");
+    })->name("feedback.post");
+})->middleware(["auth:web"]);
 
 Route::get("test", function (Request $request) {
 
@@ -657,8 +678,13 @@ Route::get("test", function (Request $request) {
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-   $whazzup = new whazzupController();
-   $whazzup->API_request_session();
-   $u = $whazzup->track_session_id();
-   return $u->json();
+    $request->merge([
+        "user_id" => Auth::user()->id,
+        "body" => "coucou ouioui",
+        "link" => "https://api.github.com/repos/alexcaussades/L10/issues/62",
+        "label" => "bug"
+    ]);
+    $discord = new DiscordContoller();
+    $discord->send_feedback($request);
+ 
 })->name("test2");
