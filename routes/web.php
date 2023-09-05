@@ -677,14 +677,9 @@ Route::get("test", function (Request $request) {
     return $online;
 })->name("test");
 
-Route::get("test2", function (Request $request) {
-    $request->merge([
-        "user_id" => Auth::user()->id,
-        "body" => "coucou ouioui",
-        "link" => "https://api.github.com/repos/alexcaussades/L10/issues/62",
-        "label" => "bug"
-    ]);
-    $discord = new DiscordContoller();
-    $discord->send_feedback($request);
- 
+Route::get("test2", function (Request $request) 
+   $whazzup = new whazzupController();
+   $whazzup->API_request_session();
+   $u = $whazzup->track_session_id('53150078');
+   return $u->json();
 })->name("test2");
