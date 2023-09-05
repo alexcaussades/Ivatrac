@@ -178,8 +178,13 @@ class metarController extends Controller
         //direction du vent dans le metar
         $regexwings = "/[0-9]{5}KT/";
         preg_match($regexwings, $metar, $matchyy);
-        $ex = str_split($matchyy[0]);
-        $form =  $ex[0] . "" . $ex[1] . "" . $ex[2];
+        if($matchyy == null){
+            $matchyy[0] = "00000KT";
+            $form = "000";
+        }else{
+            $ex = str_split($matchyy[0]);
+            $form =  $ex[0] . "" . $ex[1] . "" . $ex[2];
+        }
         // variation du vent
         $regexvariable = "/[0-9]{3}V[0-9]{3}/";
         preg_match($regexvariable, $metar, $matchvariable);
