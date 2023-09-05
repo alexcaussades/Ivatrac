@@ -677,9 +677,9 @@ Route::get("test", function (Request $request) {
     return $online;
 })->name("test");
 
-Route::get("test2", function (Request $request) 
-   $whazzup = new whazzupController();
-   $whazzup->API_request_session();
-   $u = $whazzup->track_session_id('53150078');
-   return $u->json();
+Route::get("test2", function (Request $request) {
+    $whazzup = new whazzupController();
+    $whazzup->API_request_session();
+    $u = $whazzup->track_session_id('53150078');
+    return $u->json();
 })->name("test2");
