@@ -161,7 +161,13 @@ class metarController extends Controller
     {
         $regex_visibility_vertical = "/[0-9]{4}|CAVOK/";
         preg_match_all($regex_visibility_vertical, $metar, $matches);
-        return $matches[0][2];
+        /** Condition sur le nombre de chiffre de retour de la regex  */
+        if (count($matches[0]) > 3) {
+            $visibility = $matches[0][2];
+        } else {
+            $visibility = $matches[0][3];
+        }
+        return $visibility;
     }
 
     public function winds($metar)
@@ -207,11 +213,12 @@ class metarController extends Controller
         $regexclouds = "/(BKN|FEW|SCT|OVC)([0-9]{3})(CB|TCU)?/";
         preg_match_all($regexclouds, $metar, $clouds);
         // tout remetre dans une ligne avec une virgule
+        
         if ($clouds[0] != Null) {
             if (count($clouds[0]) > 1) {
                 $clouds = implode(", ", $clouds[0]);
             } else {
-                $clouds = $clouds[0];
+                $clouds = $clouds[0][0];
             }
         } else {
             $clouds = "No";
@@ -259,7 +266,7 @@ class metarController extends Controller
         $temp = $this->temp_qnh($metar->metar);
         $winds = $this->winds($metar->metar);
         $visibility = $this->visibility($metar->metar);
-        $clouds = $this->clouds($metar->metar);
+        $clouds = $this->clouds($metar->metar) ?? "None";
         $station = $this->station($metar->metar);
         $times = $this->time($metar->metar);
 
@@ -295,7 +302,7 @@ class metarController extends Controller
         $taf = $whazzup->Get_taf($icao);
         $taf = json_decode($taf);
         $taf = [
-            "taf" => $taf->taf,
+            "taf" => $taf->taf ?? "None",
         ];
         return $taf;
     }

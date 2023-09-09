@@ -672,14 +672,41 @@ Route::prefix("feedback")->group(function () {
 
 Route::get("test", function (Request $request) {
 
-    $online = new myOnlineServeurController("1", "440306");
+    $online = new myOnlineServeurController("1", "562637");
     $online = $online->getVerrifOnlineServeur();
     return $online;
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-    $whazzup = new whazzupController();
-    $whazzup->API_request_session();
-    $u = $whazzup->track_session_id('53150078');
-    return $u->json();
+    $request->merge([
+        "code" => $request->code
+    ]);
+    $q = Http::asForm()->post("https://discord.com/oauth2/token", [
+        /** data for connect api request token */
+
+        "client_id" => env('discord_client_id'),
+        "grant_type" => 'authorization_code',
+        "code" => $request->code,
+        "redirect_uri" => "http://127.0.0.1:8000/test2",
+        "client_secret" => env('discord_client_secret'),
+        "scope" => "identify email connections"
+    ]);
+    $q = json_decode($q);
+    dd($q);
 })->name("test2");
+
+Route::get("test3", function (Request $request) {
+    $request->merge([
+        "code" => $request->code
+    ]);
+    $q = Http::asForm()->post("https://discord.com/api/oauth2/token", [
+        /** data for connect api request token */
+
+        "client_id" => env('discord_client_id'),
+        "client_secret" => env('discord_client_secret'),
+        "grant_type" => 'authorization_code', // "authorization_code"
+        "code" => $request->code
+    ]);
+    $q = json_decode($q);
+    dd($q);
+})->name("test3");
