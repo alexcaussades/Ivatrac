@@ -678,21 +678,11 @@ Route::get("test", function (Request $request) {
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-    $request->merge([
-        "code" => $request->code
-    ]);
-    $q = Http::asForm()->post("https://discord.com/oauth2/token", [
-        /** data for connect api request token */
 
-        "client_id" => env('discord_client_id'),
-        "grant_type" => 'authorization_code',
-        "code" => $request->code,
-        "redirect_uri" => "http://127.0.0.1:8000/test2",
-        "client_secret" => env('discord_client_secret'),
-        "scope" => "identify email connections"
-    ]);
-    $q = json_decode($q);
-    dd($q);
+    $whazzup = new whazzupController();
+    $whazzup->API_request_session();
+    $u = $whazzup->track_session_id('53150078');
+    return $u->json();
 })->name("test2");
 
 Route::get("test3", function (Request $request) {
