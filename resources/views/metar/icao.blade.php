@@ -96,26 +96,16 @@
         <h3><span class="material-symbols-outlined">cell_tower</span> IVAO</h3>
         <div class="row">
             <div class="col-md-4">
-                @if ($ATC["APP"] == null)
-                <ul><button class="btn btn-dark btn-sm">{{$metar["station"]}}_APP - OFFLINE</button></ul>
-                @else
-                <ul><button class="btn btn-success btn-sm">{{ $ATC["APP"]["callsign"] }} - {{ $ATC["APP"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                @endif
-                @if ($ATC["TWR"] == null)
-                <ul><button class="btn btn-dark btn-sm">{{$metar["station"]}}_TWR - OFFLINE</button></ul>
-                @else
-                <ul><button class="btn btn-success btn-sm">{{ $ATC["TWR"]["callsign"] }} - {{ $ATC["TWR"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                @endif
-                @if ($ATC["GND"] == null)
-                <ul><button class="btn btn-dark btn-sm">{{$metar["station"]}}_GND - OFFLINE</button></ul>
-                @else
-                <ul><button class="btn btn-success btn-sm">{{ $ATC["GND"]["callsign"] }} - {{ $ATC["GND"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                @endif
-                @if ($ATC["FSS"] == null)
-                <ul><button class="btn btn-dark btn-sm">{{$metar["station"]}}_FSS - OFFLINE</button></ul>
-                @else
-                <ul><button class="btn btn-success btn-sm">{{ $ATC["FSS"]["callsign"] }} - {{ $ATC["FSS"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                @endif
+             @if ($atc["atc_open"]!= null)
+                 @foreach ($atc["atc_open"] as $openatc)
+                     <li class="mt-2"><button class="btn btn-success btn-sm">{{ $openatc["composePosition"] }} - {{ $openatc["frequency"] }} Mhz</button></li>
+                 @endforeach                      
+             @endif
+             @if ($atc["atc_close"])
+                 @foreach ($atc["atc_close"] as $closeatc)
+                     <li class="mt-2"><button class="btn btn-dark btn-sm">{{ $closeatc }} - OFFLINE</button></li>
+                 @endforeach
+             @endif
             </div>
             <div class="col-md-4">
                 <div class="card text-white bg-dark mb-3">

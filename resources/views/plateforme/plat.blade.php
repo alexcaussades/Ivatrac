@@ -14,89 +14,36 @@ use Illuminate\Support\Carbon;
 <div class="container">
     <a href="{{ Route('ivao.plateforme', ["icao" => $Pilot["icao"]] )}}" class="btn btn-success"><span class="d-flex align-items-center"><span class="material-symbols-outlined">sync</span> Refresh</span></a>
     <div class="row mt-2 d-flex justify-content-center">
-        @if ($ivao["APP"] != null)
-        <div class="col">
-            <div class="card text-white bg-dark mb-3">
+        <div class="col d-flex inline-flex">
+            @for ( $i = 0; $i < count($ivao["atc_open"]); $i++ ) 
+            <div class="card text-white bg-dark ms-3">
                 <div class="card-header text-center">
-                    <h4 class="text-warning">{{ $ivao["APP"]["callsign"]}}</h4>
-                    <span class="text-info">Online:</span> {{Carbon::parse($ivao["APP"]["lastTrack"]["time"])->format('H:i')}}
+                    <h4 class="text-warning">{{ $ivao["atc_open"][$i]["composePosition"]}}</h4>
+                    <span class="text-info">Online:</span>
                 </div>
                 <div class="card-body text-center">
-                    <span class="text-info">Freq:</span> {{ $ivao["APP"]["atcSession"]["frequency"] }} Mhz
+                    <span class="text-info">Freq:</span> {{ $ivao["atc_open"][$i]["frequency"] }} Mhz
                     <hr>
-                    <span class="text-info">Revision:</span> {{$ivao["APP"]["atis"]["revision"]}}
+                    <span class="text-info">Revision:</span>
                     <hr>
-                    <span class="text-info">Information:</span> {{$ATC["APP"] ?? ""}}
+                    <span class="text-info">Information:</span> 
+                    <div><span>{{$atc}}</span></div>
                 </div>
             </div>
-            <div class="d-flex justify-content-center">
-                <!-- <a href="{{ Route("friends.add.oter.page.post", ["vid_friend" => $ivao['APP']["userId"], "host" => $hosturl ] ) }}"><button type="button" class="btn btn-info">Add Friend</button></a> -->
-            </div>
-        </div>
-        @endif
-        @if ($ivao["TWR"] != null)
-        <div class="col">
-            <div class="card text-white bg-dark mb-3">
-                <div class="card-header text-center">
-                    <h4 class="text-warning">{{ $ivao["TWR"]["callsign"]}}</h4>
-                    <span class="text-info">Online:</span> {{Carbon::parse($ivao["TWR"]["lastTrack"]["time"])->format('H:i')}}
-                </div>
-                <div class="card-body text-center">
-                    <span class="text-info">Freq:</span> {{ $ivao["TWR"]["atcSession"]["frequency"] }} Mhz
-                    <hr>
-                    <span class="text-info">Revision:</span> {{$ivao["TWR"]["atis"]["revision"]}}
-                    <hr>
-                    <span class="text-info">Information:</span> {{$ATC["TWR"] ?? ""}}
-                </div>
-            </div>
-        </div>
-        @endif
-        @if ($ivao["GND"] != null)
-        <div class="col">
-        <div class="card text-white bg-dark mb-3">
-                <div class="card-header text-center">
-                    <h4 class="text-warning">{{ $ivao["GND"]["callsign"]}}</h4>
-                    <span class="text-info">Online:</span> {{Carbon::parse($ivao["GND"]["lastTrack"]["time"])->format('H:i')}}
-                </div>
-                <div class="card-body text-center">
-                    <span class="text-info">Freq:</span> {{ $ivao["GND"]["atcSession"]["frequency"] }} Mhz
-                    <hr>
-                    <span class="text-info">Revision:</span> {{$ivao["GND"]["atis"]["revision"]}}
-                    <hr>
-                    <span class="text-info">Information:</span> {{$ATC["GND"] ?? ""}}
-                </div>
-            </div>
-        </div>
-        @endif
-        @if ($ivao["FSS"] != null)
-        <div class="col">
-        <div class="card text-white bg-dark mb-3">
-                <div class="card-header text-center">
-                    <h4 class="text-warning">{{ $ivao["FSS"]["callsign"]}}</h4>
-                    <span class="text-info">Online:</span> {{Carbon::parse($ivao["FSS"]["lastTrack"]["time"])->format('H:i')}}
-                </div>
-                <div class="card-body text-center">
-                    <span class="text-info">Freq:</span> {{ $ivao["FSS"]["atcSession"]["frequency"] }} Mhz
-                    <hr>
-                    <span class="text-info">Revision:</span> {{$ivao["FSS"]["atis"]["revision"]}}
-                    <hr>
-                    <span class="text-info">Information:</span> {{$ATC["FSS"] ?? ""}}
-                </div>
-            </div>
-        </div>
-        @endif
-    </div>
-    <hr>
-    <div class="row mt-2 d-flex justify-content-center">
-        <h6>ATC Zone In / Out</h6>
-        <div class="col-12">
-            @foreach ($other as $r )
-            @for ($i = 0; $i < count($r); $i++) <div class="d-flex d-inline-flex">
-                <button class="btn btn-info">{{$r[$i]["callsign"]}}</button>
-        </div>
         @endfor
-        @endforeach
     </div>
+</div>
+<hr>
+<div class="row mt-2 d-flex justify-content-center">
+    <h6>ATC Zone In / Out</h6>
+    <div class="col-12">
+        @foreach ($other as $r )
+        @for ($i = 0; $i < count($r); $i++) <div class="d-flex d-inline-flex">
+            <button class="btn btn-info">{{$r[$i]["callsign"]}}</button>
+    </div>
+    @endfor
+    @endforeach
+</div>
 </div>
 <hr>
 <div class="">

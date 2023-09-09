@@ -47,74 +47,10 @@ class AtcController extends Controller
 
     public function getRwy($icao)
     {
-        $r = $icao['atis']['lines'];
-        
-        $r = explode(",", $r);
-        $r = array_values($r); 
-        $r = str_replace('"', " ", $r);
-        $r = str_replace('[', " ", $r);
-        $r = str_replace(']', " ", $r);
-        return $r[4];
+        $whazzup = new whazzupController();
+        $p = $whazzup->get_rwy($icao);
+        return $p;
+
     }
 
-    public function getRwyAPP($icao)
-    {
-        //retouver le mot ARR dans le string
-        if (empty($icao)) {
-            return null;
-        } else {
-            $APP = $this->getRwy($icao);
-            return $APP;
-        }
-    }
-
-    public function getRwyTWR($icao)
-    {
-        //retouver le mot ARR dans le string
-        if (empty($icao)) {
-            return null;
-        } else {
-            $TWR = $this->getRwy($icao);
-            return $TWR;
-            
-        }
-    }
-
-    public function getRwyGND($icao)
-    {
-        //retouver le mot ARR dans le string
-        if (empty($icao)) {
-            return null;
-        } else {
-            $GND = $this->getRwy($icao);
-            return $GND;
-        }
-    }
-
-    public function getRwyFSS($icao)
-    {
-        //retouver le mot ARR dans le string
-        if (empty($icao)) {
-            return null;
-        } else {
-            $FSS = $this->getRwy($icao);
-            return $FSS;
-        }
-    }
-
-    public function resolve($icao)
-    {
-        $APP = $this->getRwyAPP($icao["APP"]);
-        $TWR = $this->getRwyTWR($icao["TWR"]);
-        $GND = $this->getRwyGND($icao["GND"]);
-        $FSS = $this->getRwyFSS($icao["FSS"]);
-
-        $r = array(
-            "APP" => $APP,
-            "TWR" => $TWR,
-            "GND" => $GND,
-            "FSS" => $FSS
-        );
-        return $r;
-    }
 }
