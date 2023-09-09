@@ -324,6 +324,9 @@ class whazzupController extends Controller
         $ry = $ry->toArray();
         /** rechercher dans l'atis les LES MOTS "ARR" */
         $atis = $atis->json();
+        if($atis == null){
+            return null;
+        }
         $ARR_search = $atis[0]["lines"];
         $ARR_search = collect($ARR_search);
         $ARR_search = $ARR_search->filter(function ($value, $key) {
