@@ -689,7 +689,6 @@ Route::get("test2", function (Request $request) {
 })->name("test2");
 
 Route::get("test3", function (Request $request) {
-
     $whazzup = new whazzupController();
     $get_all_atc = $whazzup->Get_Position();
     $get_all_atc = $get_all_atc->json();
@@ -704,8 +703,4 @@ Route::get("test3", function (Request $request) {
         }
     }
     return $get_atc_onlined;
-       
-
-    
-    
 })->name("test3");
