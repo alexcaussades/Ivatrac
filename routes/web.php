@@ -344,9 +344,10 @@ Route::prefix("metar")->group(function () {
         ]);
         $icao = strtoupper($request->icao);
         $metarController = new metarController();
+        $wazzup = new whazzupController();
         $metar = $metarController->metar($icao);
         $taf = $metarController->taf($icao);
-        $ATC = $metarController->getATC($icao);
+        $ATC = $wazzup->ckeck_online_atc($icao);
         // Probleme de requete des cartes IFR et VFR    
         $pilots = new PilotIvaoController();
         $pilot = $pilots->getAirplaneToPilots($icao);
@@ -355,7 +356,7 @@ Route::prefix("metar")->group(function () {
             return view("metar.reload", ["icao" => $icao]);
         }
 
-        return view("metar.icao", ["metar" => $metar, "taf" => $taf, "ATC" => $ATC, "pilot" => $pilot]);
+        return view("metar.icao", ["metar" => $metar, "taf" => $taf, "atc" => $ATC, "pilot" => $pilot]);
     })->name("metars.icao");
 
     Route::get("/{icao}", function () {
@@ -401,15 +402,17 @@ Route::prefix("ivao")->group(function () {
         $ivaoController = new metarController();
         $atcivao = new AtcController();
         $pilots = new PilotIvaoController();
-        $ivao = $ivaoController->getATC($icao);
-        $atc = $atcivao->resolve($ivao);
+        $whazzup = new whazzupController();
+        $ivao2 = $ivaoController->getATC($icao);
+        $atc = $atcivao->getRwy($request->icao);
+        $ivao = $whazzup->ckeck_online_atc($request->icao);
         $Pilot = $pilots->getAirplaneToPilots($icao);
         $other = $ivaoController->getFirAtc($icao);
         $other2 = $ivaoController->getFirCTR($icao);
 
         $hosturl = $request->fullUrl();
 
-        return view("plateforme.plat", ["ATC" => $atc, "Pilot" => $Pilot, "ivao" => $ivao, "hosturl" => $hosturl, "other" => $other, "other2" => $other2]);
+        return view("plateforme.plat", ["atc" => $atc, "Pilot" => $Pilot, "ivao" => $ivao, "hosturl" => $hosturl, "other" => $other, "other2" => $other2]);
     })->name("ivao.plateforme");
 
     Route::get("/pilot", function (Request $request) {
@@ -686,17 +689,18 @@ Route::get("test2", function (Request $request) {
 })->name("test2");
 
 Route::get("test3", function (Request $request) {
-    $request->merge([
-        "code" => $request->code
-    ]);
-    $q = Http::asForm()->post("https://discord.com/api/oauth2/token", [
-        /** data for connect api request token */
-
-        "client_id" => env('discord_client_id'),
-        "client_secret" => env('discord_client_secret'),
-        "grant_type" => 'authorization_code', // "authorization_code"
-        "code" => $request->code
-    ]);
-    $q = json_decode($q);
-    dd($q);
+    $whazzup = new whazzupController();
+    $get_all_atc = $whazzup->Get_Position();
+    $get_all_atc = $get_all_atc->json();
+    $get_atc_online = $whazzup->ckeck_online_atc("LFBO");
+    //recherche de Array $get_all_atc corespndant a liste $get_atc_online
+    $get_atc_onlined = [];
+    foreach ($get_all_atc as $key => $value) {
+        foreach ($get_atc_online as $key2 => $value2) {
+            if ($value["callsign"] == $value2["callsign"]) {
+                $get_atc_onlined[] = $value;
+            }
+        }
+    }
+    return $get_atc_onlined;
 })->name("test3");

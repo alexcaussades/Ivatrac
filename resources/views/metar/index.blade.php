@@ -35,7 +35,11 @@
         <hr>
         <div class="col-6">
             <div class="card text-white bg-dark" style="max-width: 520px;">
-                <img class="card-img-top" src="{{asset("asset/img/webiste/temsi.png") }}" alt="">
+                @if (ENV('APP_ENV') == 'local')
+                <img class="card-img-top" src="{{ asset("asset/img/webiste/temsi.png") }}" alt="">
+                @else
+                <img class="card-img-top" src="{{ asset("public/asset/img/webiste/temsi.png") }}" alt="">
+                @endif
                 <div class="card-body">
                     <p class="card-text text-center"><a href="{{Route("download.tempsi")}}" target="_blank" rel="noopener noreferrer"><button class="btn btn-success btn-sm text-white">View TEMSI</button></a></p>
                 </div>
@@ -43,7 +47,11 @@
         </div>
         <div class="col-6">
             <div class="card text-white bg-dark" style="max-width: 520px;">
-                <img class="card-img-top" src="{{asset("asset/img/webiste/wintep.png") }}" alt="">
+                @if (ENV('APP_ENV') == 'local')
+                <img class="card-img-top" src="{{ asset("asset/img/webiste/wintep.png") }}" alt="">
+                @else
+                <img class="card-img-top" src="{{ asset("public/asset/img/webiste/wintep.png") }}" alt="">
+                @endif
                 <div class="card-body">
                     <p class="card-text text-center text-light"><a href="{{Route("download.wintemp")}}" target="_blank" rel="noopener noreferrer"><button class="btn btn-success btn-sm text-white">View Wintep</button></a></p>
                 </div>

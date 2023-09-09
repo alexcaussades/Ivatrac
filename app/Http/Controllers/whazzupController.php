@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\whazzupdd;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -109,7 +110,7 @@ class whazzupController extends Controller
     public function get_token()
     {
         $openid_url = 'https://api.ivao.aero/.well-known/openid-configuration';
-        
+
         $openid_result = file_get_contents($openid_url, false);
 
         if ($openid_result === FALSE) {
@@ -121,7 +122,7 @@ class whazzupController extends Controller
 
         $idclient = env("ivao_api_client_id");
         $secret = env("ivao_api_client_secret");
-        
+
         $token_req_data = array(
             'grant_type' => 'client_credentials',
             'client_id' => $idclient,
@@ -148,7 +149,7 @@ class whazzupController extends Controller
 
         $token_res_data = json_decode($token_result, true);
         $access_token = $token_res_data['access_token']; // Here is the access token
-        
+
         return $access_token;
     }
 
@@ -212,23 +213,126 @@ class whazzupController extends Controller
         return $response;
     }
 
-    public function Get_metar($icao=null){
-        $metar = $this->API_request("v2/airports/".$icao."/metar");
+    public function Get_metar($icao = null)
+    {
+        $metar = $this->API_request("v2/airports/" . $icao . "/metar");
         return $metar;
     }
 
-    public function Get_taf($icao=null){
-        $metar = $this->API_request("v2/airports/".$icao."/taf");
+    public function Get_taf($icao = null)
+    {
+        $metar = $this->API_request("v2/airports/" . $icao . "/taf");
         return $metar;
     }
 
-    public function Get_Position($icao=null){
+    public function Get_Position($icao = null)
+    {
         $metar = $this->API_request("v2/tracker/now/atc");
         return $metar;
     }
 
-    public function track_session_id($idsession = null){        
+    public function track_session_id($idsession = null)
+    {
         $metar = $this->API_request("v2/tracker/sessions/" . $idsession);
         return $metar;
+    }
+
+    public function get_atis_lasted($session_ivao = null)
+    {
+        $atis = $this->API_request("v2/ATCPositions/" . $session_ivao );
+        return $atis;
+    }
+
+    public function get_rwys($icao){
+        $rwy = $this->API_request("/v2/airports/".$icao."/runways");
+        return $rwy;
+    }
+
+    public function get_traffics($icao = null)
+    {
+        $metar = $this->API_request("v2/airports/" . $icao . "/traffics");
+        return $metar;
+    }
+
+    public function get_atis_latest($icao = null)
+    {
+        $metar = $this->API_request("v2/ATCPositions/" . $icao . "/atis");
+        return $metar;
+    }
+
+    public function position_search($icao = null)
+    {
+        $metar = $this->API_request("v2/positions/search?startsWith=" . $icao);
+        $u = collect($metar->json());
+        $id = [];
+        // for ($i = 0; $i < count($u); $i++) {
+        //     $id[$i] = $u[$i]["composePosition"];
+        // }
+        // cree un array avec les id des callsign
+        foreach ($u as $key => $value) {
+            $id[$key] = $value["composePosition"];
+        }
+        $id = collect($id);
+
+        return $id;
+    }
+
+    public function ckeck_online_atc($icao)
+    {
+        $act_possition = $this->position_search($icao);
+        $position = $this->Get_Position();
+        $position = $position->json();
+        $position = collect($position);
+        $o = [];
+       for ($i = 0; $i < count($position); $i++) {
+            $o[$i] = $position[$i]["callsign"];
+            $o = collect($o);
+        }
+        $o = $o->toArray();
+        $o = array_values($o);
+        $act_possition = $act_possition->toArray();
+        $l = array_intersect($act_possition, $o);
+        $l = array_values($l);
+        //rechercher la direfrence entre les deux array
+        $diff = array_diff($act_possition, $l);
+        $diff = array_values($diff);
+        $open_atc = [];
+
+        for ($i = 0; $i < count($l); $i++) {
+            
+            $open_atc[$i] = $this->get_atis_lasted($l[$i]);
+            $open_atc[$i] = $open_atc[$i]->json();
+        }
+        $open_atc = collect($open_atc);
+        $r = [
+            "atc_open" => $open_atc,
+            "atc_close" => $diff
+        ];
+        return $r;
+        
+        
+    }
+
+    public function get_rwy($icao){
+        $rwy = $this->get_rwys($icao);
+        $ry = [];
+        for ($i=0; $i < count($rwy->json()); $i++) { 
+            $ry[$i] = $rwy[$i]["runway"];
+            $ry = collect($ry);
+        }
+        $atis = $this->API_request("v2/airports/".$icao."/atis");
+        $ry = $ry->toArray();
+        /** rechercher dans l'atis les LES MOTS "ARR" */
+        $atis = $atis->json();
+        $ARR_search = $atis[0]["lines"];
+        $ARR_search = collect($ARR_search);
+        $ARR_search = $ARR_search->filter(function ($value, $key) {
+            return Str::contains($value, 'ARR');
+        });
+        $ARR_search = $ARR_search->toArray();
+        $ARR_search = array_values($ARR_search);
+        $ARR_search = $ARR_search[0];
+        return $ARR_search;
+        
     }
 }

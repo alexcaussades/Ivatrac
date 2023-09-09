@@ -165,7 +165,7 @@ class metarController extends Controller
         if (count($matches[0]) > 3) {
             $visibility = $matches[0][2];
         } else {
-            $visibility = $matches[0][3];
+            $visibility = $matches[0][1];
         }
         return $visibility;
     }
