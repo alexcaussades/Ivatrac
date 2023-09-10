@@ -22,21 +22,22 @@ class whazzupController extends Controller
 
     public function donwload_whazzup()
     {
-        $whazzup = Http::get('https://api.ivao.aero/v2/tracker/whazzup');
+        $whazzup = $this->whazzup_api_traker();
         return $whazzup;
     }
 
     public function store_file_whazzup()
     {
         $wha = $this->donwload_whazzup();
-        $date = json_decode($wha);
+        $date = $wha["updatedAt"];
+        $wha = json_encode($wha);
         $name = Str::random(15);
         $sto = Storage::put('public/whazzup/' . $name . '.json', $wha);
         $sto = Storage::url('public/whazzup/' . $name . '.json', $wha);
         //$review = Storage::get('public/whazzup/'.$name.'.json');
         $r = [
             "name" => $name,
-            "date" => $date->updatedAt,
+            "date" => $date,
             "url" => $sto
         ];
         //$a = json_decode($r["review"]);
