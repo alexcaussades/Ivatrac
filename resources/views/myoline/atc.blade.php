@@ -8,7 +8,7 @@
 @section('content')
 
 <div class="container mt-5">
-    <h2>{{$atc["atis"][1]}} ({{$atc["callsign"]}}) </h2>
+    <h2>{{$atc["callsign"]}} </h2>
     <div class="text-muted">Tracker Id : {{$atc['id_session']}}</div>
 
     <div class="card text-white bg-dark">
@@ -21,16 +21,23 @@
                 <div class="col"> <span class="text-info">Revision :</span> {{ $atc["revision"] }}</div>
                 <div> <span class="text-info">Metar :</span>
                     @if ($atc["atis"][0] == null)
-                    <span class="text-danger">No ATIS</span>
+                    <span class="text-danger">No Metar</span>
                     @else
-                    <span class="">{{$atc["atis"][3]}}</span>
+                    <span class="">{{$atc["metar"]}}</span>
+                    @endif
+                </div>
+                <div> <span class="text-info">Taf :</span>
+                    @if ($atc["atis"][0] == null)
+                    <span class="text-danger">No taf</span>
+                    @else
+                    <span class="">{{$atc["taf"]}}</span>
                     @endif
                 </div>
                 <div> <span class="text-info">ATIS :</span>
                     @if ($atc["atis"][0] == null)
                     <span class="text-danger">No ATIS</span>
                     @else
-                    <span class="">{{$atc["atis"][4]}}</span>
+                    <span class="">{{$atc["atis"]}}</span>
                     @endif
                 </div>
             </div>
@@ -45,23 +52,10 @@
             <div class="row">
                 <!-- Information des ATCs sur le depart -->
                 <div class="col-12 mt-2">
-                    @if ($plateform["plateform"]["APP"] == null)
-                    @else
-                    <ul><button class="btn btn-success btn-sm">{{ $plateform["plateform"]["APP"]["callsign"] }} - {{ $plateform["plateform"]["APP"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                    @endif
-                    @if ($plateform["plateform"]["TWR"] == null)
-                    @else
-                    <ul><button class="btn btn-success btn-sm">{{ $plateform["plateform"]["TWR"]["callsign"] }} - {{ $plateform["plateform"]["TWR"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                    @endif
-                    @if ($plateform["plateform"]["GND"] == null)
-
-                    @else
-                    <ul><button class="btn btn-success btn-sm">{{ $plateform["plateform"]["GND"]["callsign"] }} - {{ $plateform["plateform"]["GND"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                    @endif
-                    @if ($plateform["plateform"]["FSS"] == null)
-
-                    @else
-                    <ul><button class="btn btn-success btn-sm">{{ $plateform["plateform"]["FSS"]["callsign"] }} - {{ $plateform["plateform"]["FSS"]["atcSession"]["frequency"] }} Mhz</button></ul>
+                    @if ($plateform["atc_open"]!= null)
+                    @foreach ($plateform["atc_open"] as $openatc)
+                    <li class="mt-2"><button class="btn btn-success btn-sm">{{ $openatc["composePosition"] }} - {{ $openatc["frequency"] }} Mhz</button></li>
+                    @endforeach
                     @endif
                 </div>
             </div>
@@ -152,8 +146,8 @@
                             </tbody>
                         </table>
                         @endif
+                    </div>
+                    </p>
                 </div>
-                </p>
             </div>
         </div>
-    </div>

@@ -27,6 +27,32 @@
         </div>
     </div>
     <hr>
+    <!-- Service metar -->
+    <div class="row">
+        <div class="col-6">
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <p class="card-text">
+                    <span class="text-info"> Departure : </span> {{ $pilot["flightPlan"]['departureId'] }} <br>
+                    <span class="text-info"> METAR : </span> {{ $metar["departure"]["metar"] }} <br>
+                    <span class="text-info"> TAF : </span>{{ $metar["departure"]["taf"] }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <p class="card-text">
+                    <span class="text-info"> Arrival : </span> {{ $pilot["flightPlan"]['arrivalId'] }} <br>
+                    <span class="text-info"> METAR : </span>{{ $metar["arrival"]["metar"] }} <br>
+                    <span class="text-info"> TAF : </span>{{ $metar["arrival"]["taf"] }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
     <!-- Service ATCS -->
     <div class="card text-white bg-dark">
         <div class="card-body">
@@ -43,42 +69,18 @@
             <div class="row">
                 <!-- Information des ATCs sur le depart -->
                 <div class="col mt-2">
-                    @if ($atc["depature"]["APP"] == null)
-                    @else
-                    <ul><button class="btn btn-success btn-sm">{{ $atc["depature"]["APP"]["callsign"] }} - {{ $atc["depature"]["APP"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                    @endif
-                    @if ($atc["depature"]["TWR"] == null)
-                    @else
-                    <ul><button class="btn btn-success btn-sm">{{ $atc["depature"]["TWR"]["callsign"] }} - {{ $atc["depature"]["TWR"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                    @endif
-                    @if ($atc["depature"]["GND"] == null)
-
-                    @else
-                    <ul><button class="btn btn-success btn-sm">{{ $atc["depature"]["GND"]["callsign"] }} - {{ $atc["depature"]["GND"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                    @endif
-                    @if ($atc["depature"]["FSS"] == null)
-
-                    @else
-                    <ul><button class="btn btn-success btn-sm">{{ $atc["depature"]["FSS"]["callsign"] }} - {{ $atc["depature"]["FSS"]["atcSession"]["frequency"] }} Mhz</button></ul>
+                    @if ($atc["depature"][0]["atc_open"]!= null)
+                    @foreach ($atc["depature"][0]["atc_open"] as $openatc)
+                    <li class="mt-2"><button class="btn btn-success btn-sm">{{ $openatc["composePosition"] }} - {{ $openatc["frequency"] }} Mhz</button></li>
+                    @endforeach
                     @endif
                 </div>
                 <!-- Information des ATCs sur l'arrivée -->
                 <div class="col mt-2">
-                    @if ($atc["arrival"]["APP"] == null)
-                    @else
-                    <ul><button class="btn btn-success btn-sm">{{ $atc["arrival"]["APP"]["callsign"] }} - {{ $atc["arrival"]["APP"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                    @endif
-                    @if ($atc["arrival"]["TWR"] == null)
-                    @else
-                    <ul><button class="btn btn-success btn-sm">{{ $atc["arrival"]["TWR"]["callsign"] }} - {{ $atc["arrival"]["TWR"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                    @endif
-                    @if ($atc["arrival"]["GND"] == null)
-                    @else
-                    <ul><button class="btn btn-success btn-sm">{{ $atc["arrival"]["GND"]["callsign"] }} - {{ $atc["arrival"]["GND"]["atcSession"]["frequency"] }} Mhz</button></ul>
-                    @endif
-                    @if ($atc["arrival"]["FSS"] == null)
-                    @else
-                    <ul><button class="btn btn-success btn-sm">{{ $atc["arrival"]["FSS"]["callsign"] }} - {{ $atc["arrival"]["FSS"]["atcSession"]["frequency"] }} Mhz</button></ul>
+                    @if ($atc["arrival"][0]["atc_open"]!= null)
+                    @foreach ($atc["arrival"][0]["atc_open"] as $openatc)
+                    <li class="mt-2"><button class="btn btn-success btn-sm">{{ $openatc["composePosition"] }} - {{ $openatc["frequency"] }} Mhz</button></li>
+                    @endforeach
                     @endif
                 </div>
             </div>
