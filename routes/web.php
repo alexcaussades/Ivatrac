@@ -72,9 +72,11 @@ Route::get('/', function (Request $request, usersController $usersController) {
     /** creation d'un cookie sur laravel */
     $users = $usersController->autentification_via_cookie();
     $whazzup = new whazzupController();
+    $whazzup->getwhazzup();
     $whazzup = $whazzup->connexion();
     $bddid = new whazzupController();
     $idlast = $bddid->bddid();
+    
     $heurechange = $bddid->heurechange();
     return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange]);
 })->where('client', '[0-9]+')->name("home");
@@ -675,17 +677,16 @@ Route::prefix("feedback")->group(function () {
 
 Route::get("test", function (Request $request) {
 
-    $online = new myOnlineServeurController("1", "709972");
+    $online = new myOnlineServeurController("1", "437050");
     $online = $online->getVerrifOnlineServeur();
     return $online;
 })->name("test");
 
 Route::get("test2", function (Request $request) {
 
-    $whazzup = new whazzupController();
-    $whazzup->API_request_session();
-    $u = $whazzup->track_session_id('53227334');
-    return $u->json();
+    $metar = new metarController();
+    $metar = $metar->getFirAtc("LFBO");
+    dd($metar);
 })->name("test2");
 
 Route::get("test3", function (Request $request) {

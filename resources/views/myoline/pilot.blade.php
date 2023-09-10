@@ -33,8 +33,10 @@
             <div class="card text-white bg-dark">
                 <div class="card-body">
                     <p class="card-text">
-                    <span class="text-info"> Departure : </span> {{ $pilot["flightPlan"]['departureId'] }} <br>
-                    <span class="text-info"> METAR : </span> {{ $metar["departure"]["metar"] }} <br>
+                    <span class="text-info"> Departure : </span> {{ $pilot["flightPlan"]['departureId'] }}
+                    <hr>
+                    <span class="text-info"> METAR : </span> {{ $metar["departure"]["metar"] }}
+                    <hr>
                     <span class="text-info"> TAF : </span>{{ $metar["departure"]["taf"] }}
                     </p>
                 </div>
@@ -44,8 +46,10 @@
             <div class="card text-white bg-dark">
                 <div class="card-body">
                     <p class="card-text">
-                    <span class="text-info"> Arrival : </span> {{ $pilot["flightPlan"]['arrivalId'] }} <br>
-                    <span class="text-info"> METAR : </span>{{ $metar["arrival"]["metar"] }} <br>
+                    <span class="text-info"> Arrival : </span> {{ $pilot["flightPlan"]['arrivalId'] }}
+                    <hr>
+                    <span class="text-info"> METAR : </span>{{ $metar["arrival"]["metar"] }}
+                    <hr>
                     <span class="text-info"> TAF : </span>{{ $metar["arrival"]["taf"] }}
                     </p>
                 </div>
