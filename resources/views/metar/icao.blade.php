@@ -101,11 +101,6 @@
                      <li class="mt-2"><button class="btn btn-success btn-sm">{{ $openatc["composePosition"] }} - {{ $openatc["frequency"] }} Mhz</button></li>
                  @endforeach                      
              @endif
-             @if ($atc["atc_close"])
-                 @foreach ($atc["atc_close"] as $closeatc)
-                     <li class="mt-2"><button class="btn btn-dark btn-sm">{{ $closeatc }} - OFFLINE</button></li>
-                 @endforeach
-             @endif
             </div>
             <div class="col-md-4">
                 <div class="card text-white bg-dark mb-3">

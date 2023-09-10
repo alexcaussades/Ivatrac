@@ -675,7 +675,7 @@ Route::prefix("feedback")->group(function () {
 
 Route::get("test", function (Request $request) {
 
-    $online = new myOnlineServeurController("1", "562637");
+    $online = new myOnlineServeurController("1", "709972");
     $online = $online->getVerrifOnlineServeur();
     return $online;
 })->name("test");
@@ -684,7 +684,7 @@ Route::get("test2", function (Request $request) {
 
     $whazzup = new whazzupController();
     $whazzup->API_request_session();
-    $u = $whazzup->track_session_id('53150078');
+    $u = $whazzup->track_session_id('53227334');
     return $u->json();
 })->name("test2");
 

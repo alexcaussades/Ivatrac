@@ -86,7 +86,7 @@ class whazzupController extends Controller
 
     public function connexion()
     {
-        $api = $this->getwhazzup();
+        $api = $this->whazzup_api_traker();
         return $api["connections"];
     }
 
@@ -260,6 +260,19 @@ class whazzupController extends Controller
         return $metar;
     }
 
+
+    public function whazzup_api_traker(){
+        $whazzup = $this->API_request("v2/tracker/whazzup");
+        $whazzup = $whazzup->json();
+        return $whazzup;
+    }
+
+    public function get_flightPlans($id){
+        $whazzup = $this->API_request("v2/tracker/sessions/".$id."/flightPlans");
+        $whazzup = $whazzup->json();
+        return $whazzup;
+    }
+
     public function position_search($icao = null)
     {
         $metar = $this->API_request("v2/positions/search?startsWith=" . $icao);
@@ -338,4 +351,6 @@ class whazzupController extends Controller
         return $ARR_search;
         
     }
+
+
 }
