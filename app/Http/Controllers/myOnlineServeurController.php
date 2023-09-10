@@ -108,6 +108,7 @@ class myOnlineServeurController extends Controller
             $metar = $whazzupp->Get_metar($new_icao);
             $taf = $whazzupp->Get_taf($new_icao);
             $atc_online = $whazzupp->ckeck_online_atc($new_icao);
+
             $atis = $q['atc'][0]['atis']['lines'] ?? null;
             $callsign = $q['atc'][0]['callsign'];
             $callsign = explode("_", $callsign);
@@ -160,6 +161,7 @@ class myOnlineServeurController extends Controller
             $metar_arr = $whazzupp->Get_metar($fp_session["arrivalId"]);
             $taf_dep = $whazzupp->Get_taf($fp_session["departureId"]);
             $taf_arr = $whazzupp->Get_taf($fp_session["arrivalId"]);
+
 
             if ($speed <= 0) {
                 $speed = 1;

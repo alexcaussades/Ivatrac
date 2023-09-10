@@ -46,6 +46,7 @@
             <div class="card text-white bg-dark">
                 <div class="card-body">
                     <p class="card-text">
+
                     <span class="text-info"> Arrival : </span> {{ $pilot["flightPlan"]['arrivalId'] }}
                     <hr>
                     <span class="text-info"> METAR : </span>{{ $metar["arrival"]["metar"] }}

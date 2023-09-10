@@ -676,14 +676,12 @@ Route::prefix("feedback")->group(function () {
 })->middleware(["auth:web"]);
 
 Route::get("test", function (Request $request) {
-
     $online = new myOnlineServeurController("1", "437050");
     $online = $online->getVerrifOnlineServeur();
     return $online;
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-
     $metar = new metarController();
     $metar = $metar->getFirAtc("LFBO");
     dd($metar);
