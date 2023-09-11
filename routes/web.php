@@ -405,7 +405,6 @@ Route::prefix("ivao")->group(function () {
         $atcivao = new AtcController();
         $pilots = new PilotIvaoController();
         $whazzup = new whazzupController();
-        $ivao2 = $ivaoController->getATC($icao);
         $atc = $atcivao->getRwy($request->icao);
         $ivao = $whazzup->ckeck_online_atc($request->icao);
         $Pilot = $pilots->getAirplaneToPilots($icao);
@@ -676,7 +675,7 @@ Route::prefix("feedback")->group(function () {
 })->middleware(["auth:web"]);
 
 Route::get("test", function (Request $request) {
-    $online = new myOnlineServeurController("1", "437050");
+    $online = new myOnlineServeurController("1", "191514");
     $online = $online->getVerrifOnlineServeur();
     return $online;
 })->name("test");

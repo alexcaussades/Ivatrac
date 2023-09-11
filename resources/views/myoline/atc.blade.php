@@ -53,9 +53,11 @@
                 <!-- Information des ATCs sur le depart -->
                 <div class="col-12 mt-2">
                     @if ($plateform["atc_open"]!= null)
-                    @foreach ($plateform["atc_open"] as $openatc)
-                    <li class="mt-2"><button class="btn btn-success btn-sm">{{ $openatc["composePosition"] }} - {{ $openatc["frequency"] }} Mhz</button></li>
-                    @endforeach
+                        @foreach ($plateform["atc_open"] as $openatc)
+                            @if ($openatc["composePosition"] != $atc["callsign"])
+                                <li class="mt-2"><button class="btn btn-success btn-sm">{{ $openatc["composePosition"] }} - {{ $openatc["frequency"] }} Mhz</button></li>
+                            @endif
+                        @endforeach
                     @endif
                 </div>
             </div>

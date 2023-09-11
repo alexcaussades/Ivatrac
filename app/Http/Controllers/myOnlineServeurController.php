@@ -60,44 +60,45 @@ class myOnlineServeurController extends Controller
         $q = $this->VerrifOnlineServeur();
         $whazzupp = new whazzupController();
 
-        if ($q['atc'][0]['atcSession']['position'] == "CTR" ){
-            $ivao_session = $whazzupp->track_session_id($q['atc'][0]['id']);
-            $ivao_session_decode = json_decode($ivao_session, true);
-            $time = Carbon::parse($ivao_session_decode["time"])->format('H:i');
-            $metar = new metarController();
-            $ident = $q['atc'][0]['callsign'];
-            $ident = explode("_", $ident);
-            $ident[0] = substr($ident[0], 0, -1);
-            $metar = $metar->getFirAtc($ident[0]);
-            //différence entre les deux array pour avoir les callsign des atc online
-            // $metar = array_diff_key($metar, $ident);  
-            // $metar = array_values($metar);                 
-            $atc_online = [];
-            for ($i = 0; $i < count($metar); $i++) {
-                $atc_online[$i]["icao"] = $metar[$i][0]["callsign"];
-                $atc_online[$i]["icao"] = explode("_", $atc_online[$i]["icao"]);
-                $atc_online[$i]["icao"] = $atc_online[$i]["icao"][0];
-                $atc_online[$i]["callsign"] = $metar[$i][0]["callsign"];
-                $atc_online[$i]["frequency"] = $metar[$i][0]["atcSession"]["frequency"];
-                $atc_online[$i]["time"] = Carbon::parse($metar[$i][0]["time"])->format('H:i');
-                $atc_online[$i]["metar"] = $whazzupp->Get_metar($atc_online[$i]["icao"])->json();
-                $atc_online[$i]["metar"] = $atc_online[$i]["metar"]["metar"] ?? null;
-                $atc_online[$i]["taf"] = $whazzupp->Get_taf($atc_online[$i]["icao"])->json();
-                $atc_online[$i]["revision"] = $metar[$i][0]["atis"]["revision"];
-            }
-                        
-            $atc = [
-                "callsign" => $ivao_session_decode['callsign'],
-                "id_session" => $ivao_session_decode['id'],
-                "frequency" => $ivao_session_decode["atcSession"]['frequency'],
-                "rating" =>$ivao_session_decode["user"]['rating']["atcRating"]["shortName"],
-                "time" => $time,
-                "revision" => $q['atc'][0]['atis']['revision'],
-            ];
-            
-            return view("myoline.ccr", ["atc" => $atc, "atc_online" => $atc_online]);
-        }
         if ($q['atc'] != null) {
+
+            if ($q['atc'][0]['atcSession']['position'] == "CTR") {
+                $ivao_session = $whazzupp->track_session_id($q['atc'][0]['id']);
+                $ivao_session_decode = json_decode($ivao_session, true);
+                $time = Carbon::parse($ivao_session_decode["time"])->format('H:i');
+                $metar = new metarController();
+                $ident = $q['atc'][0]['callsign'];
+                $ident = explode("_", $ident);
+                $ident[0] = substr($ident[0], 0, -1);
+                $metar = $metar->getFirAtc($ident[0]);
+                //différence entre les deux array pour avoir les callsign des atc online
+                // $metar = array_diff_key($metar, $ident);  
+                // $metar = array_values($metar);                 
+                $atc_online = [];
+                for ($i = 0; $i < count($metar); $i++) {
+                    $atc_online[$i]["icao"] = $metar[$i][0]["callsign"];
+                    $atc_online[$i]["icao"] = explode("_", $atc_online[$i]["icao"]);
+                    $atc_online[$i]["icao"] = $atc_online[$i]["icao"][0];
+                    $atc_online[$i]["callsign"] = $metar[$i][0]["callsign"];
+                    $atc_online[$i]["frequency"] = $metar[$i][0]["atcSession"]["frequency"];
+                    $atc_online[$i]["time"] = Carbon::parse($metar[$i][0]["time"])->format('H:i');
+                    $atc_online[$i]["metar"] = $whazzupp->Get_metar($atc_online[$i]["icao"])->json();
+                    $atc_online[$i]["metar"] = $atc_online[$i]["metar"]["metar"] ?? null;
+                    $atc_online[$i]["taf"] = $whazzupp->Get_taf($atc_online[$i]["icao"])->json();
+                    $atc_online[$i]["revision"] = $metar[$i][0]["atis"]["revision"];
+                }
+
+                $atc = [
+                    "callsign" => $ivao_session_decode['callsign'],
+                    "id_session" => $ivao_session_decode['id'],
+                    "frequency" => $ivao_session_decode["atcSession"]['frequency'],
+                    "rating" => $ivao_session_decode["user"]['rating']["atcRating"]["shortName"],
+                    "time" => $time,
+                    "revision" => $q['atc'][0]['atis']['revision'],
+                ];
+
+                return view("myoline.ccr", ["atc" => $atc, "atc_online" => $atc_online]);
+            }
             $ivao_session = $whazzupp->track_session_id($q['atc'][0]['id']);
             $ivao_session_decode = json_decode($ivao_session, true);
             $time = Carbon::parse($ivao_session_decode["time"])->format('H:i');
@@ -117,7 +118,7 @@ class myOnlineServeurController extends Controller
                 "callsign" => $ivao_session_decode['callsign'],
                 "id_session" => $ivao_session_decode['id'],
                 "frequency" => $ivao_session_decode["atcSession"]['frequency'],
-                "rating" =>$ivao_session_decode["user"]['rating']["atcRating"]["shortName"],
+                "rating" => $ivao_session_decode["user"]['rating']["atcRating"]["shortName"],
                 "time" => $time,
                 "revision" => $q['atc'][0]['atis']['revision'],
                 "atis" => $r,
@@ -128,7 +129,7 @@ class myOnlineServeurController extends Controller
             $plateform = $atc_online;
             $pilots = new PilotIvaoController();
             $pilots = $pilots->getAirplaneToPilots($callsign);
-                
+
             $fly = [
                 "fly" => [
                     "departure" => [
@@ -141,10 +142,9 @@ class myOnlineServeurController extends Controller
                     ]
                 ]
             ];
-            
+
             return view("myoline.atc", ["atc" => $atc, "atis" => $atis, "plateform" => $plateform, "fly" => $fly]);
-        }
-        elseif ($q['pilot'] != null) {
+        } elseif ($q['pilot'] != null) {
             $ivao_session = $whazzupp->track_session_id($q['pilot'][0]['id']);
             $ivao_session_decode = json_decode($ivao_session, true);
             $fp_session = $whazzupp->get_flightPlans($ivao_session_decode["id"]);
@@ -153,7 +153,7 @@ class myOnlineServeurController extends Controller
             $atc_online_departure = $whazzupp->ckeck_online_atc($fp_session['departureId']);
             $atc_online_arrival = $whazzupp->ckeck_online_atc($fp_session['arrivalId']);
             $q = $q['pilot'];
-            
+
             $distance_arrival = $q[0]['lastTrack']['arrivalDistance'] ?? null;
             $distance_arrival = explode(".", $distance_arrival);
             $speed = $q[0]['lastTrack']['groundSpeed'] / 60 ?? 1;
@@ -242,13 +242,11 @@ class myOnlineServeurController extends Controller
     {
         $q = $this->VerrifOnlineServeur();
 
-        if($q["atc"] != null){
+        if ($q["atc"] != null) {
             return true;
-        }
-        elseif($q["pilot"] != null){
+        } elseif ($q["pilot"] != null) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
