@@ -20,6 +20,9 @@
                 <div class="col"> <span class="text-info">Time Online :</span> {{ $atc["time"] }}</div>
                 <div class="col"> <span class="text-info">Revision :</span> {{ $atc["revision"] }}</div>
             </div>
+            @if ($chart_crr != null)
+                <div class="mt-2"><a href="{{$chart_crr}}" target="_blank"><button class="btn btn-warning btn-sm text-black"><span class=" d-flex d-inline"><span class="material-symbols-outlined">attach_file</span>FILE CCR</span></button></a></div>
+            @endif
         </div>
     </div>
 </div>
@@ -40,6 +43,9 @@
                         <span class="text-info">Revision:</span> {{ $atcs["revision"] }} <br>
                         @if ($atcs["metar"] != null)
                         <span class="text-info">Metar:</span> {{ $atcs["metar"] }} <br>
+                        @endif
+                        @if ($atcs["chart_ivao"]!= null)
+                             <div class="mt-2"><a href="{{$atcs["chart_ivao"]}}" target="_blank"><button class="btn btn-info btn-sm text-black"><span class=" d-flex d-inline"><span class="material-symbols-outlined">description</span>Memo IVAO</span></button></a></div>
                         @endif
                     </p>
                 </div>
