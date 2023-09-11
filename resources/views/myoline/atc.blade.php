@@ -49,6 +49,9 @@
         <div class="card-body">
             <h4 class="card-title">Services ATC</h4>
             <p class="card-text">
+                @if ($chart_ivao != null)
+                   <div class="mt-2"><a href="{{$chart_ivao}}" target="_blank"><button class="btn btn-info btn-sm text-black"><span class=" d-flex d-inline"><span class="material-symbols-outlined">description</span>Memo IVAO</span></button></a></div>
+                @endif
             <div class="row">
                 <!-- Information des ATCs sur le depart -->
                 <div class="col-12 mt-2">

@@ -59,6 +59,7 @@ class myOnlineServeurController extends Controller
     {
         $q = $this->VerrifOnlineServeur();
         $whazzupp = new whazzupController();
+        $chartIvaoFRcontroller = new chartIvaoFRcontroller();
 
         if ($q['atc'] != null) {
 
@@ -71,15 +72,14 @@ class myOnlineServeurController extends Controller
                 $ident = explode("_", $ident);
                 $ident[0] = substr($ident[0], 0, -1);
                 $metar = $metar->getFirAtc($ident[0]);
-                //différence entre les deux array pour avoir les callsign des atc online
-                // $metar = array_diff_key($metar, $ident);  
-                // $metar = array_values($metar);                 
+                $chart_crr = $chartIvaoFRcontroller->chart_ccr($ident[0]);             
                 $atc_online = [];
                 for ($i = 0; $i < count($metar); $i++) {
                     $atc_online[$i]["icao"] = $metar[$i][0]["callsign"];
                     $atc_online[$i]["icao"] = explode("_", $atc_online[$i]["icao"]);
                     $atc_online[$i]["icao"] = $atc_online[$i]["icao"][0];
                     $atc_online[$i]["callsign"] = $metar[$i][0]["callsign"];
+                    $atc_online[$i]["chart_ivao"] = $chartIvaoFRcontroller->chart_ivao($atc_online[$i]["icao"]);
                     $atc_online[$i]["frequency"] = $metar[$i][0]["atcSession"]["frequency"];
                     $atc_online[$i]["time"] = Carbon::parse($metar[$i][0]["time"])->format('H:i');
                     $atc_online[$i]["metar"] = $whazzupp->Get_metar($atc_online[$i]["icao"])->json();
@@ -96,8 +96,8 @@ class myOnlineServeurController extends Controller
                     "time" => $time,
                     "revision" => $q['atc'][0]['atis']['revision'],
                 ];
+                return view("myoline.ccr", ["atc" => $atc, "atc_online" => $atc_online, "chart_crr" => $chart_crr]);
 
-                return view("myoline.ccr", ["atc" => $atc, "atc_online" => $atc_online]);
             }
             $ivao_session = $whazzupp->track_session_id($q['atc'][0]['id']);
             $ivao_session_decode = json_decode($ivao_session, true);
@@ -109,7 +109,7 @@ class myOnlineServeurController extends Controller
             $metar = $whazzupp->Get_metar($new_icao);
             $taf = $whazzupp->Get_taf($new_icao);
             $atc_online = $whazzupp->ckeck_online_atc($new_icao);
-
+            $chart_ivao = $chartIvaoFRcontroller->chart_ivao($new_icao);
             $atis = $q['atc'][0]['atis']['lines'] ?? null;
             $callsign = $q['atc'][0]['callsign'];
             $callsign = explode("_", $callsign);
@@ -142,8 +142,8 @@ class myOnlineServeurController extends Controller
                     ]
                 ]
             ];
-
-            return view("myoline.atc", ["atc" => $atc, "atis" => $atis, "plateform" => $plateform, "fly" => $fly]);
+            return view("myoline.atc", ["atc" => $atc, "atis" => $atis, "plateform" => $plateform, "fly" => $fly, "chart_ivao" => $chart_ivao]);
+        
         } elseif ($q['pilot'] != null) {
             $ivao_session = $whazzupp->track_session_id($q['pilot'][0]['id']);
             $ivao_session_decode = json_decode($ivao_session, true);
