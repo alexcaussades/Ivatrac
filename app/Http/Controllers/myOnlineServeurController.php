@@ -96,8 +96,8 @@ class myOnlineServeurController extends Controller
                     "time" => $time,
                     "revision" => $q['atc'][0]['atis']['revision'],
                 ];
-
                 return view("myoline.ccr", ["atc" => $atc, "atc_online" => $atc_online, "chart_crr" => $chart_crr]);
+
             }
             $ivao_session = $whazzupp->track_session_id($q['atc'][0]['id']);
             $ivao_session_decode = json_decode($ivao_session, true);
@@ -142,8 +142,8 @@ class myOnlineServeurController extends Controller
                     ]
                 ]
             ];
-
             return view("myoline.atc", ["atc" => $atc, "atis" => $atis, "plateform" => $plateform, "fly" => $fly, "chart_ivao" => $chart_ivao]);
+        
         } elseif ($q['pilot'] != null) {
             $ivao_session = $whazzupp->track_session_id($q['pilot'][0]['id']);
             $ivao_session_decode = json_decode($ivao_session, true);
