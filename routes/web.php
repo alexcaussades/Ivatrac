@@ -665,6 +665,7 @@ Route::get("vid/{vid}", function (Request $request) {
     return $online;
 })->name("vid");
 
+
 Route::get("online", function (Request $request) {
     $online = new myOnlineServeurController(auth::user()->vid);
     $online = $online->getVerrifOnlineServeur();

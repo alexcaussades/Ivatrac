@@ -13,7 +13,6 @@ class myOnlineServeurController extends Controller
     public $vid;
     public $option;
 
-
     public function __construct($vid = null)
     {
         $this->vid = $vid ?? null;
