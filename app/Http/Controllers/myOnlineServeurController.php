@@ -15,10 +15,10 @@ class myOnlineServeurController extends Controller
     public $option;
 
 
-    public function __construct($id, $vid = null)
+    public function __construct($id = null, $vid = null)
     {
         $this->vid = $vid ?? null;
-        $this->id = $id;
+        $this->id = $id ?? null;
     }
 
     public function get_VID()

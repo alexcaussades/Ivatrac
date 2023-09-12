@@ -33,6 +33,7 @@ use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
+use App\Http\Controllers\chartIvaoFRcontroller;
 use App\Http\Controllers\frendly_userController;
 use App\Http\Controllers\MailRegisterController;
 use App\Http\Requests\registerValidationRequest;
@@ -647,6 +648,22 @@ Route::prefix("friends")->group(function () {
     })->name("friends.edit.post")->middleware(["auth:web"]);
 })->middleware(["auth:web"]);
 
+Route::get("vid/{vid}", function (Request $request) {
+    $request->merge([
+        "vid" => $request->vid
+    ]);
+    $validator = Validator::make($request->all(), [
+        'vid' => 'required|numeric',
+    ]);
+    if ($validator->fails()) {
+        return redirect()->route("auth.register")
+            ->withErrors("Erreur for authentification is not valid")
+            ->withInput();
+    }
+    $online = new myOnlineServeurController(auth::user()->id, $request->vid);
+    $online = $online->getVerrifOnlineServeur();
+    return $online;
+})->name("vvid");
 
 Route::get("online", function (Request $request) {
     $online = new myOnlineServeurController(auth::user()->id, auth::user()->vid);
@@ -675,15 +692,15 @@ Route::prefix("feedback")->group(function () {
 })->middleware(["auth:web"]);
 
 Route::get("test", function (Request $request) {
-    $online = new myOnlineServeurController("1", "191514");
+    $online = new myOnlineServeurController("1", "661650");
     $online = $online->getVerrifOnlineServeur();
     return $online;
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-    $metar = new metarController();
-    $metar = $metar->getFirAtc("LFBO");
-    dd($metar);
+   $icaochart = new chartIvaoFRcontroller();
+   $o = $icaochart->chart_ccr("LFBB");
+   dd($o);
 })->name("test2");
 
 Route::get("test3", function (Request $request) {
