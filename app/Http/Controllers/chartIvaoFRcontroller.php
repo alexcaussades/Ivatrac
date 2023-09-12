@@ -46,7 +46,6 @@ class chartIvaoFRcontroller extends Controller
 
     public function chart_ccr($ccr){
         $structure = $this->structure_CCR($ccr);
-        dd($structure);
         $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_".$structure["ccr"].".xlsx";
         $response = Http::get($url);
         if ($response->status() == 200) {
