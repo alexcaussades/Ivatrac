@@ -79,6 +79,7 @@ class myOnlineServeurController extends Controller
                     $atc_online[$i]["icao"] = $atc_online[$i]["icao"][0];
                     $atc_online[$i]["callsign"] = $metar[$i][0]["callsign"];
                     $atc_online[$i]["chart_ivao"] = $chartIvaoFRcontroller->chart_ivao($atc_online[$i]["icao"]);
+                    $atc_online[$i]["atis"] = $whazzupp->get_rwy($atc_online[$i]["icao"]);
                     $atc_online[$i]["frequency"] = $metar[$i][0]["atcSession"]["frequency"];
                     $atc_online[$i]["time"] = Carbon::parse($metar[$i][0]["time"])->format('H:i');
                     $atc_online[$i]["metar"] = $whazzupp->Get_metar($atc_online[$i]["icao"])->json();
