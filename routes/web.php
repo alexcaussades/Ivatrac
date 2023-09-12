@@ -77,7 +77,7 @@ Route::get('/', function (Request $request, usersController $usersController) {
     $whazzup = $whazzup->connexion();
     $bddid = new whazzupController();
     $idlast = $bddid->bddid();
-    
+
     $heurechange = $bddid->heurechange();
     return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange]);
 })->where('client', '[0-9]+')->name("home");
@@ -660,13 +660,13 @@ Route::get("vid/{vid}", function (Request $request) {
             ->withErrors("Erreur for authentification is not valid")
             ->withInput();
     }
-    $online = new myOnlineServeurController(auth::user()->id, $request->vid);
+    $online = new myOnlineServeurController($request->vid);
     $online = $online->getVerrifOnlineServeur();
     return $online;
-})->name("vvid");
+})->name("vid");
 
 Route::get("online", function (Request $request) {
-    $online = new myOnlineServeurController(auth::user()->id, auth::user()->vid);
+    $online = new myOnlineServeurController(auth::user()->vid);
     $online = $online->getVerrifOnlineServeur();
     return $online;
 })->name("online")->middleware(["auth:web"]);
@@ -692,15 +692,15 @@ Route::prefix("feedback")->group(function () {
 })->middleware(["auth:web"]);
 
 Route::get("test", function (Request $request) {
-    $online = new myOnlineServeurController("1", "661650");
+    $online = new myOnlineServeurController("661650");
     $online = $online->getVerrifOnlineServeur();
     return $online;
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-   $icaochart = new chartIvaoFRcontroller();
-   $o = $icaochart->chart_ccr("LFBB");
-   dd($o);
+    $icaochart = new chartIvaoFRcontroller();
+    $o = $icaochart->chart_ccr("LFBB");
+    dd($o);
 })->name("test2");
 
 Route::get("test3", function (Request $request) {
