@@ -4,9 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\metarController;
+use App\Http\Controllers\PilotIvaoController;
+use App\Http\Controllers\whazzupController;
+use App\Http\Controllers\chartIvaoFRcontroller;
+use App\Http\Controllers\chartController;
+
 
 class myOnlineServeurController extends Controller
 {
