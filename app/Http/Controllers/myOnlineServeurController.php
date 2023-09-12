@@ -14,6 +14,7 @@ use App\Http\Controllers\chartIvaoFRcontroller;
 use App\Http\Controllers\CarteSIAController;
 
 
+
 class myOnlineServeurController extends Controller
 {
     public $vid;
@@ -58,7 +59,6 @@ class myOnlineServeurController extends Controller
         $whazzupp = new whazzupController();
         $chartIvaoFRcontroller = new chartIvaoFRcontroller();
         $chartController = new CarteSIAController();
-
         if ($q['atc'] != null) {
 
             if ($q['atc'][0]['atcSession']['position'] == "CTR") {
