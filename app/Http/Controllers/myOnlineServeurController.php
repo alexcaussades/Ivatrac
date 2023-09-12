@@ -11,7 +11,8 @@ use App\Http\Controllers\metarController;
 use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whazzupController;
 use App\Http\Controllers\chartIvaoFRcontroller;
-use App\Http\Controllers\chartController;
+use App\Http\Controllers\CarteSIAController;
+
 
 
 class myOnlineServeurController extends Controller
@@ -57,8 +58,7 @@ class myOnlineServeurController extends Controller
         $q = $this->VerrifOnlineServeur();
         $whazzupp = new whazzupController();
         $chartIvaoFRcontroller = new chartIvaoFRcontroller();
-        $chartController = new chartController();
-
+        $chartController = new CarteSIAController();
         if ($q['atc'] != null) {
 
             if ($q['atc'][0]['atcSession']['position'] == "CTR") {

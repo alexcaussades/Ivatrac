@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use DateTime;
 use Illuminate\Http\Request;
 
-class ChartController extends Controller
+class CarteSIAController extends Controller
 {
     public function config_Date()
     {
