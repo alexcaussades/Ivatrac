@@ -57,6 +57,7 @@ class myOnlineServeurController extends Controller
         $q = $this->VerrifOnlineServeur();
         $whazzupp = new whazzupController();
         $chartIvaoFRcontroller = new chartIvaoFRcontroller();
+        $chartController = new chartController();
 
         if ($q['atc'] != null) {
 
@@ -217,7 +218,6 @@ class myOnlineServeurController extends Controller
                     "taf" => $taf_arr['taf']
                 ]
             ];
-            $chartController = new chartController();
             $chart = [
                 "departure" => [
                     "IFR" => $chartController->chartIFR($p["flightPlan"]["departureId"]),
