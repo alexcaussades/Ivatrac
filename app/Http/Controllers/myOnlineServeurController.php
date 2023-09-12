@@ -11,22 +11,13 @@ use App\Http\Controllers\metarController;
 class myOnlineServeurController extends Controller
 {
     public $vid;
-    public $id;
     public $option;
 
-
-    public function __construct($id = null, $vid = null)
+    public function __construct($vid = null)
     {
         $this->vid = $vid ?? null;
-        $this->id = $id ?? null;
     }
 
-    public function get_VID()
-    {
-        $myOnlineServeur = new usersController();
-        $users = $myOnlineServeur->get_info_user($this->id);
-        return $users->vid;
-    }
 
     public function get_whazzup()
     {
@@ -250,4 +241,5 @@ class myOnlineServeurController extends Controller
             return false;
         }
     }
+
 }
