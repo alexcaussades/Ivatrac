@@ -34,18 +34,18 @@ class chartIvaoFRcontroller extends Controller
     public function structure_CCR($ccr){
         $ccr_search = str_split($ccr);
         $new_icao = $ccr_search[0].$ccr_search[1].$ccr_search[2].$ccr_search[2];
-        $new_icao = strtolower($new_icao);      
+        $new_icao = strtolower($new_icao);
+        $icaoUpper = strtoupper($new_icao);     
         
         $r =[
             "new_icao" => $new_icao,
-            "ccr" => $ccr,
+            "ccr" => $icaoUpper,
         ];
         return $r;
     }
 
     public function chart_ccr($ccr){
         $structure = $this->structure_CCR($ccr);
-        //dd($structure);
         $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_".$structure["ccr"].".xlsx";
         $response = Http::get($url);
         if ($response->status() == 200) {

@@ -44,6 +44,9 @@
                         @if ($atcs["metar"] != null)
                         <span class="text-info">Metar:</span> {{ $atcs["metar"] }} <br>
                         @endif
+                        @if ($atcs["atis"]!= null)
+                        <span class="text-info">ATIS:</span> {{ $atcs["atis"] }} <br>
+                        @endif
                         @if ($atcs["chart_ivao"]!= null)
                              <div class="mt-2"><a href="{{$atcs["chart_ivao"]}}" target="_blank"><button class="btn btn-info btn-sm text-black"><span class=" d-flex d-inline"><span class="material-symbols-outlined">description</span>Memo IVAO</span></button></a></div>
                         @endif

@@ -71,7 +71,7 @@
     <div class="col-12">
         <div class="card text-white bg-dark">
             <div class="card-body">
-                <h4 class="card-title">Pilots</h4>
+                <h4 class="card-title">Departure</h4>
                 <p class="card-text">
                 <div class="row">
                     <!-- Information des ATCs sur le depart -->
@@ -116,14 +116,14 @@
     <div class="col-12">
         <div class="card text-white bg-dark">
             <div class="card-body">
-                <h4 class="card-title">Pilots</h4>
+                <h4 class="card-title">Arrival</h4>
                 <p class="card-text">
                 <div class="row">
                     <!-- Information des ATCs sur le depart -->
                     <div class="col-12 mt-2">
                         @if ($fly["fly"]["arrivals"]["count"] == 0)
                         <div class="alert alert-info" role="alert">
-                            No departure
+                            No Arrival
                         </div>
                         @else
                         <table class="table table-striped table-inverse table-responsive text-white">
