@@ -74,6 +74,13 @@
                         </ul>
                     </div>
                 </div>
+                @if ($metar["tempo"] != null)
+                <div class="card text-black bg-warning">
+                    <div class="card-body">
+                        <p class="card-text">TEMPO BKN010 SCT016CB BECMG 13015G30KT</p>
+                    </div>
+                </div>
+                @endif
                 </p>
             </div>
         </div>
@@ -89,18 +96,18 @@
         <hr class="mt-2">
         <h3><span class="material-symbols-outlined">map</span> CHART</h3>
         <div class="d-flex justify-content-center">
-           
+
 
         </div>
         <hr class="mt-2">
         <h3><span class="material-symbols-outlined">cell_tower</span> IVAO</h3>
         <div class="row">
             <div class="col-md-4">
-             @if ($atc["atc_open"]!= null)
-                 @foreach ($atc["atc_open"] as $openatc)
-                     <li class="mt-2"><button class="btn btn-success btn-sm">{{ $openatc["composePosition"] }} - {{ $openatc["frequency"] }} Mhz</button></li>
-                 @endforeach                      
-             @endif
+                @if ($atc["atc_open"]!= null)
+                @foreach ($atc["atc_open"] as $openatc)
+                <li class="mt-2"><button class="btn btn-success btn-sm">{{ $openatc["composePosition"] }} - {{ $openatc["frequency"] }} Mhz</button></li>
+                @endforeach
+                @endif
             </div>
             <div class="col-md-4">
                 <div class="card text-white bg-dark mb-3">

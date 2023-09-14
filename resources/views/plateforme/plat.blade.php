@@ -15,8 +15,7 @@ use Illuminate\Support\Carbon;
     <a href="{{ Route('ivao.plateforme', ["icao" => $Pilot["icao"]] )}}" class="btn btn-success"><span class="d-flex align-items-center"><span class="material-symbols-outlined">sync</span> Refresh</span></a>
     <div class="row mt-2 d-flex justify-content-center">
         <div class="col d-flex inline-flex">
-            @for ( $i = 0; $i < count($ivao["atc_open"]); $i++ ) 
-            <div class="card text-white bg-dark ms-3">
+            @for ( $i = 0; $i < count($ivao["atc_open"]); $i++ ) <div class="card text-white bg-dark ms-3">
                 <div class="card-header text-center">
                     <h4 class="text-warning">{{ $ivao["atc_open"][$i]["composePosition"]}}</h4>
                     <span class="text-info">Online:</span>
@@ -26,10 +25,10 @@ use Illuminate\Support\Carbon;
                     <hr>
                     <span class="text-info">Revision:</span>
                     <hr>
-                    <span class="text-info">Information:</span> 
+                    <span class="text-info">Information:</span>
                     <div><span>{{$atc}}</span></div>
                 </div>
-            </div>
+        </div>
         @endfor
     </div>
 </div>
@@ -58,6 +57,7 @@ use Illuminate\Support\Carbon;
                     <th>FlightRules</th>
                     <th>TO</th>
                     <th>Online</th>
+                    <th>Live</th>
                 </tr>
             </thead>
             <tbody>
@@ -70,6 +70,11 @@ use Illuminate\Support\Carbon;
                     <td>{{ $PilotData["flightPlan"]["flightRules"] }}</td>
                     <td>{{ $PilotData["flightPlan"]["arrivalId"] }}</td>
                     <td>{{ Carbon::parse($PilotData["lastTrack"]["time"])->format('H:i') }}</td>
+                    <td>
+                        <form action="{{Route("vid",[$PilotData["userId"]])}}" method="get">
+                            <button class="btn btn-dark btn-sm" type="submit"> View</button>
+                        </form>
+                    </td>
                 </tr>
 
                 @endforeach
@@ -88,6 +93,7 @@ use Illuminate\Support\Carbon;
                     <th>FROM</th>
                     <th>Arrived in</th>
                     <th>Online</th>
+                    <th>Live</th>
                 </tr>
             </thead>
             <tbody>
@@ -105,6 +111,12 @@ use Illuminate\Support\Carbon;
                     <td>{{ $PilotData["flightPlan"]["departureId"] }}</td>
                     <td>{{ $distance_arrival[0] }} NM</td>
                     <td>{{ Carbon::parse($PilotData["lastTrack"]["time"])->format('H:i') }}</td>
+                    <td>
+                        <form action="{{Route("vid",[$PilotData["userId"]])}}" method="get">
+                            @csrf
+                            <button class="btn btn-dark btn-sm" type="submit"> View</button>
+                        </form>
+                    </td>
                 </tr>
 
                 @endforeach
