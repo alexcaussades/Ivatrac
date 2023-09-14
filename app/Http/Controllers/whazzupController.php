@@ -335,6 +335,9 @@ class whazzupController extends Controller
             $ry = collect($ry);
         }
         $atis = $this->API_request("v2/airports/".$icao."/atis");
+       if($atis->status() == 404){
+           return null;
+         }
         $ry = $ry->toArray();
         /** rechercher dans l'atis les LES MOTS "ARR" */
         $atis = $atis->json();
