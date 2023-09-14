@@ -258,6 +258,20 @@ class metarController extends Controller
         return $time;
     }
 
+    public function tempo($metar)
+    {
+        $regex = "/TEMPO/";
+        preg_match($regex, $metar, $tempo);
+        if ($tempo == null) {
+            $tempo = null;
+        } else {
+            $regex = "/TEMPO(.*)/";
+            preg_match($regex, $metar, $tempo);
+            $tempo = "TEMPO".$tempo[1];
+        }
+        return $tempo;	
+    }
+
     public function metar($icao)
     {
         $whazzup = new whazzupController();
@@ -269,6 +283,7 @@ class metarController extends Controller
         $clouds = $this->clouds($metar->metar) ?? "None";
         $station = $this->station($metar->metar);
         $times = $this->time($metar->metar);
+        $tempo = $this->tempo($metar->metar);
 
 
         $r = [
@@ -277,6 +292,7 @@ class metarController extends Controller
             'visibility' => $visibility ?? "None",
             'flight_rules' => "None",
             "QNH" => $temp["qnh"] ?? "None",
+            "tempo" => $tempo ?? null,
             "wind" => [
                 "wind" => $winds["direction"] ?? "None",
                 "direction" => $winds["direction"] ?? "None",
