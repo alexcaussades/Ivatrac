@@ -17,3 +17,12 @@ body{
 .tile{
     font-family: 'Oswald', sans-serif;
 }
+
+.footer{
+    position: absolute;
+    background-color: #000;
+    color: #fff;
+    bottom:-150px;
+    width: 100%;
+        
+}
