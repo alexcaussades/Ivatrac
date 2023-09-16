@@ -77,7 +77,7 @@
                 @if ($metar["tempo"] != null)
                 <div class="card text-black bg-warning">
                     <div class="card-body">
-                        <p class="card-text">TEMPO BKN010 SCT016CB BECMG 13015G30KT</p>
+                        <p class="card-text">{{$metar["tempo"]}}</p>
                     </div>
                 </div>
                 @endif

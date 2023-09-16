@@ -25,7 +25,11 @@
         <tbody>
             @for ($i = 0; $i < count($friends); $i++) <tr>
                 <td>{{$friends[$i]["name"]}}</td>
-                <td>{{$friends[$i]["VID"]}}</td>
+                <td>
+                    <form action="{{Route("vid",[$friends[$i]["VID"]])}}" method="get">
+                        <button class="btn btn-dark btn-sm" type="submit">{{$friends[$i]["VID"]}}</button>
+                    </form>
+                </td>
                 <td>{{$friends[$i]["callsign"]}}</td>
                 <td>{{$friends[$i]["time"]}}</td>
                 <td>{{$friends[$i]["info"]}}</td>

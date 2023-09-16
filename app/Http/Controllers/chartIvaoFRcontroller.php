@@ -47,6 +47,32 @@ class chartIvaoFRcontroller extends Controller
     public function chart_ccr($ccr){
         $structure = $this->structure_CCR($ccr);
         $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_".$structure["ccr"].".xlsx";
+        //https://storage.ivao.fr/lfrr_public/Memo_CCR/LFRR_CTR.xlsx
+        switch ($structure["ccr"]) {
+            case 'LFBB':
+                $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_LFBB_CTR.xlsx";
+                break;
+            case 'LFEE':
+                $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_LFEE.xlsx";
+                break;
+            case 'LFFF':
+                $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_LFFF.xlsx";
+                break;
+            case 'LFRR':
+                $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_LFRR_CTR.xlsx";
+                break;
+            default:
+                $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_".$structure["ccr"].".xlsx";
+                break;
+        }
+        if($structure["ccr"] == "LFMM"){
+            $data = [
+                "LFMM_NW" => "https://storage.ivao.fr/lfmm_public/Memo_CCR/Memo_LFMM_NW.xlsx",
+                "LFMM_S" => "https://storage.ivao.fr/lfmm_public/Memo_CCR/Memo_LFMM_S.xlsx",
+                "count"=> 2,
+            ];
+            return $data;
+        }
         $response = Http::get($url);
         if ($response->status() == 200) {
             return $url;
