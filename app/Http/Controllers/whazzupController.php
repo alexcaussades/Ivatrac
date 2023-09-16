@@ -356,5 +356,22 @@ class whazzupController extends Controller
         
     }
 
+    public function Bookings(){
+        $bookings = $this->API_request("/v2/atc/bookings/daily");
+        $bookings = $bookings->json();
+        $book = [];
+        for ($i=0; $i < count($bookings); $i++) {
+            $book[$i]["id"] = $bookings[$i]["id"];
+            $book[$i]["Start_time"] = Carbon::parse($bookings[$i]["startDate"])->format('H:i')." Z";
+            $book[$i]["End_time"] = Carbon::parse($bookings[$i]["endDate"])->format('H:i')." Z";
+            $book[$i]["voice"] = $bookings[$i]["voice"];
+            $book[$i]["training"] = $bookings[$i]["training"];
+            $book[$i]["airport"] = $bookings[$i]["atcPosition"];
+            $book[$i]["user"] = [
+                "vid" => $bookings[$i]["user"]["id"],
+            ];
+        }
+         return $book;
+    }
 
 }

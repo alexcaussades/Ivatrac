@@ -14,7 +14,7 @@
           <a class="nav-link" href="{{ Route("metars.index") }}">Metar</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ Route("pirep.index") }}">Pirep</a>
+          <a class="nav-link" href="{{ Route("pirep.index") }}">FPL</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://sdoaci.skydreamsoft.fr/" target="_blank">Sdoaci</a>
@@ -26,6 +26,7 @@
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="https://webeye.ivao.aero/" target="_blank">Webeye</a></li>
             <li><a class="dropdown-item" href="https://www.ivao.aero/" target="_blank">IVAO Website</a></li>
+            <li><a class="dropdown-item" href="{{Route('ivao.bookings')}}">Bookings ATC</a></li>
           </ul>
         </li>
         @auth

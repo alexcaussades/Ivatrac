@@ -21,7 +21,17 @@
                 <div class="col"> <span class="text-info">Revision :</span> {{ $atc["revision"] }}</div>
             </div>
             @if ($chart_crr != null)
-                <div class="mt-2"><a href="{{$chart_crr}}" target="_blank"><button class="btn btn-warning btn-sm text-black"><span class=" d-flex d-inline"><span class="material-symbols-outlined">attach_file</span>FILE CCR</span></button></a></div>
+            @if ($chart_crr["count"] == 2)
+            @if ($atc["callsign"] == "LFMM_NW_CTR")
+            <div class="mt-2"><a href="{{$chart_crr["LFMM_NW"]}}" target="_blank"><button class="btn btn-warning btn-sm text-black"><span class=" d-flex d-inline"><span class="material-symbols-outlined">attach_file</span>FILE CCR</span></button></a></div>
+            @endif
+            @if ($atc["callsign"] == "LFMM_S_CTR")
+            <div class="mt-2"><a href="{{$chart_crr["LFMM_S"]}}" target="_blank"><button class="btn btn-warning btn-sm text-black"><span class=" d-flex d-inline"><span class="material-symbols-outlined">attach_file</span>FILE CCR</span></button></a></div>
+            @endif
+            @else
+            <div class="mt-2"><a href="{{$chart_crr}}" target="_blank"><button class="btn btn-warning btn-sm text-black"><span class=" d-flex d-inline"><span class="material-symbols-outlined">attach_file</span>FILE CCR</span></button></a></div>
+            @endif
+
             @endif
         </div>
     </div>
@@ -48,8 +58,8 @@
                         <span class="text-info">ATIS:</span> {{ $atcs["atis"] }} <br>
                         @endif
                         @if ($atcs["chart_ivao"]!= null)
-                             <div class="mt-2"><a href="{{$atcs["chart_ivao"]}}" target="_blank"><button class="btn btn-info btn-sm text-black"><span class=" d-flex d-inline"><span class="material-symbols-outlined">description</span>Memo IVAO</span></button></a></div>
-                        @endif
+                    <div class="mt-2"><a href="{{$atcs["chart_ivao"]}}" target="_blank"><button class="btn btn-info btn-sm text-black"><span class=" d-flex d-inline"><span class="material-symbols-outlined">description</span>Memo IVAO</span></button></a></div>
+                    @endif
                     </p>
                 </div>
             </div>

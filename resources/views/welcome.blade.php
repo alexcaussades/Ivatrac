@@ -22,7 +22,7 @@
         <div class="col-6">
             <div class="card text-white bg-dark">
                 <div class="card-body bg-dark border-dark text-white text-opacity-75">
-                    <h4 class="card-title text-center">Metar</h4>
+                    <h4 class="card-title text-center text-info">Metar</h4>
                     <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined ms-2">air</span> <span class="ms-2"> Search the metar at the plateform </span></p>
                     <p class="card-footer text-center"><a href="{{ Route("metars.index")}}" class="btn btn-success">Search Metar</a></p>
                 </div>
@@ -31,13 +31,27 @@
         <div class="col-6">
             <div class="card text-white bg-dark">
                 <div class="card-body bg-dark border-dark text-white text-opacity-75">
-                    <h4 class="card-title text-center">Pirep</h4>
-                    <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined ms-2">description</span> <span class="ms-2"> Register and store the pirep (FPL)</span></p>
+                    <h4 class="card-title text-center text-info">FPL</h4>
+                    <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined ms-2">description</span> <span class="ms-2"> Register and store the FPL</span></p>
                     @auth
                     <p class="card-footer text-center"><a href="{{ Route("pirep.index")}}" class="btn btn-success">Creat FPL</a></p>
                     @endauth
                     @guest
-                    <p class="card-footer text-center"><a href="{{ Route("auth.login")}}" title="register on the platform only" class="btn btn-secondary">Creat FPL</a></p>
+                    <p class="card-footer text-center"><a href="{{ Route("auth.login")}}" title="register on the platform only" class="btn btn-secondary">Register Only</a></p>
+                    @endguest
+                </div>
+            </div>
+        </div>
+        <div class="col-6 mt-2">
+            <div class="card text-white bg-dark">
+                <div class="card-body bg-dark border-dark text-white text-opacity-75">
+                    <h4 class="card-title text-center text-info">Bookings ATC World</h4>
+                    <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined">calendar_month</span> <span class="ms-2">See the ATC world reserves of the day</span></p>
+                    @auth
+                    <p class="card-footer text-center"><a href="{{ Route("ivao.bookings")}}" class="btn btn-success">See Bookings</a></p>
+                    @endauth
+                    @guest
+                    <p class="card-footer text-center"><a href="{{ Route("auth.login")}}" title="register on the platform only" class="btn btn-secondary">Register Only</a></p>
                     @endguest
                 </div>
             </div>
@@ -49,24 +63,24 @@
         <div class="col-4 mt-2">
             <div class="card text-white bg-dark">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Total</h4>
-                    <p class="card-text text-center">{{ $whazzup["total"] }}</p>
+                    <h4 class="card-title text-center text-info">Total</h4>
+                    <p class="card-text text-center text-info">{{ $whazzup["total"] }}</p>
                 </div>
             </div>
         </div>
         <div class="col-4 mt-2">
             <div class="card text-white bg-dark">
                 <div class="card-body">
-                    <h4 class="card-title text-center">ATC</h4>
-                    <p class="card-text text-center">{{ $whazzup["atc"] }}</p>
+                    <h4 class="card-title text-center text-info">ATC</h4>
+                    <p class="card-text text-center text-info">{{ $whazzup["atc"] }}</p>
                 </div>
             </div>
         </div>
         <div class="col-4 mt-2">
             <div class="card text-white bg-dark">
                 <div class="card-body">
-                    <h4 class="card-title text-center">Pilot</h4>
-                    <p class="card-text text-center">{{ $whazzup["pilot"] }}</p>
+                    <h4 class="card-title text-center text-info">Pilot</h4>
+                    <p class="card-text text-center text-info">{{ $whazzup["pilot"] }}</p>
                 </div>
             </div>
         </div>

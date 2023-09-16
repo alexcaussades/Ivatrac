@@ -33,6 +33,7 @@ use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
+use App\Http\Controllers\AuthIVAOController;
 use App\Http\Controllers\chartIvaoFRcontroller;
 use App\Http\Controllers\frendly_userController;
 use App\Http\Controllers\MailRegisterController;
@@ -86,17 +87,7 @@ Route::get("callback", function (Request $request) {
     $request->merge([
         "code" => $request->code
     ]);
-    $validator = Validator::make($request->all(), [
-        'code' => 'required|string',
-    ]);
-    if ($validator->fails()) {
-        return redirect()->route("auth.register")
-            ->withErrors("Erreur for authentification is not valid")
-            ->withInput();
-    }
-    $users = new usersController();
-    $users->callback($request);
-    return redirect()->route("auth.login");
+    dd($request);
 })->name("callback");
 
 
@@ -413,7 +404,6 @@ Route::prefix("ivao")->group(function () {
         $other2 = $ivaoController->getFirCTR($icao);
 
         $hosturl = $request->fullUrl();
-
         return view("plateforme.plat", ["atc" => $atc, "Pilot" => $Pilot, "ivao" => $ivao, "hosturl" => $hosturl, "other" => $other, "other2" => $other2]);
     })->name("ivao.plateforme");
 
@@ -425,6 +415,13 @@ Route::prefix("ivao")->group(function () {
         $response = $pilots->getAirplaneToPilots($request->icao);
         return $response;
     });
+
+    Route::get("/bookings", function (Request $request){
+        $whazzup = new whazzupController();
+        $bookings = $whazzup->Bookings();
+        $date = date("d/m/Y");
+        return view("ivao.bookings", ["bookings" => $bookings, "date" => $date]);
+    })->name("ivao.bookings")->middleware(["auth:web"]);
 });
 
 Route::prefix("pirep")->group(function () {
@@ -699,9 +696,9 @@ Route::get("test", function (Request $request) {
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-    $icaochart = new chartIvaoFRcontroller();
-    $o = $icaochart->chart_ccr("LFBB");
-    dd($o);
+    $authivao = new AuthIVAOController();
+    $oo = $authivao->sso($request);
+    return $oo;
 })->name("test2");
 
 Route::get("test3", function (Request $request) {
