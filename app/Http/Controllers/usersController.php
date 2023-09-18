@@ -93,7 +93,7 @@ class usersController extends Controller
         ]);
     }
 
-    public function connect_via_ivao($request)
+    public function connect_via_ivao($request, $data)
     {
         $user = users::where("vid", $request->id)->first();
         //** generate session users */
@@ -119,17 +119,17 @@ class usersController extends Controller
         } else {
             $request->merge([
                 'vid' => $request->id,
-                'name_first' => $request->firstName,
-                'name_last' => $request->lastName,
-                'email' => $request->email,
+                'name_first' => $data["firstName"],
+                'name_last' => $data["lastName"],
+                'email' => $data["email"],
                 'password' => Hash::make("ivao"),
                 'email_verified_at' => now(),
                 'remember_token' => Str::random(10),
                 'role' => 1,
                 'condition' => 1,
                 'age' => 1,
-                'name_rp' => $request->firstName . " " . $request->lastName,
-                'name' => $request->firstName . " " . $request->lastName,
+                'name_rp' => $data["firstName"] . " " . $data["lastName"],
+                'name' => $data["firstName"] . " " . $data["lastName"],
             ]);
             $this->create($request);
             $user = users::where("vid", $request->id)->first();
