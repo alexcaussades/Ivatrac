@@ -15,15 +15,11 @@
                 <div class="card-body">
                     <p class="card-text">
                         <span class="mt-2"> Add Friends ? </span>
-                    <form action="{{ Route("friends.add.post") }}" method="POST">
+                    <form action="{{ Route("friends.add.post.webeye") }}" method="get">
                         @csrf
                         <div class="mb-3">
                             <label for="vid_friend" class="form-label">VID <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="vid_friend" name="vid_friend">
-                        </div>
-                        <div class="mb-3">
-                            <label for="name_friend" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name_friend" name="name_friend">
+                            <input type="text" class="form-control" id="vid" name="vid">
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>

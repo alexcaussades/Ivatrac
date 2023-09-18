@@ -24,14 +24,16 @@ class frendly_userController extends Controller
 
     public function getFrendlyUser()
     {
-        $frendly_user = friendlyUserModel::where("id_user", $this->id_user)->get();
+        $whazzup = new whazzupController();
+        $frendly_user = $whazzup->get_friends();
         $frendly_user_array = [];
-        foreach ($frendly_user as $key => $value) {
-            $frendly_user_array[] = [
-                "id" => $value->id,
-                "vid_friend" => $value->vid_friend,
-                "name_friend" => $value->name_friend];
+        //dd($frendly_user);
+        for ($i = 0; $i < count($frendly_user); $i++) {
+            $frendly_user_array[$i]["vid_friend"] = $frendly_user[$i]["friendId"];
+            $frendly_user_array[$i]["name_friend"] = $frendly_user[$i]["friend"]["firstName"]. " ". $frendly_user[$i]["friend"]["lastName"];
+            $frendly_user_array[$i]["session"] = $frendly_user[$i]["session"];
         }
+        //dd($frendly_user_array);
         return $frendly_user_array;
     }
 

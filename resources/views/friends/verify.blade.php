@@ -1,3 +1,6 @@
+<?php
+use Illuminate\Support\Carbon;
+?>
 @extends("metar-base")
 
 @section("title", "My Friends")
@@ -19,20 +22,18 @@
                 <th scope="col">VID</th>
                 <th scope="col">Callsing</th>
                 <th scope="col">Time Online</th>
-                <th scope="col">Information</th>
             </tr>
         </thead>
         <tbody>
             @for ($i = 0; $i < count($friends); $i++) <tr>
-                <td>{{$friends[$i]["name"]}}</td>
+                <td>{{$friends[$i]["friend"]["firstName"]}} {{$friends[$i]["friend"]["lastName"]}}</td>
                 <td>
-                    <form action="{{Route("vid",[$friends[$i]["VID"]])}}" method="get">
-                        <button class="btn btn-dark btn-sm" type="submit">{{$friends[$i]["VID"]}}</button>
+                    <form action="{{Route("vid",[$friends[$i]["friendId"]])}}" method="get">
+                        <button class="btn btn-dark btn-sm" type="submit">{{$friends[$i]["friendId"]}}</button>
                     </form>
                 </td>
-                <td>{{$friends[$i]["callsign"]}}</td>
-                <td>{{$friends[$i]["time"]}}</td>
-                <td>{{$friends[$i]["info"]}}</td>
+                <td>{{$friends[$i]["session"]["callsign"]}}</td>
+                <td>{{Carbon::parse($friends[$i]["session"]["time"])->format('H:i')}}</td>
                 </tr>
                 @endfor
         </tbody>
@@ -46,15 +47,11 @@
                     <h4 class="card-title text-center">No Friend online </h4>
                     <p class="card-text">
                         <span class="mt-2"> Add Friends ? </span>
-                    <form action="{{ Route("friends.add.post") }}" method="POST">
+                    <form action="{{ Route("friends.add.post.webeye") }}" method="get">
                         @csrf
                         <div class="mb-3">
                             <label for="vid_friend" class="form-label">VID <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="vid_friend" name="vid_friend">
-                        </div>
-                        <div class="mb-3">
-                            <label for="name_friend" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name_friend" name="name_friend">
+                            <input type="text" class="form-control" id="vid" name="vid">
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>

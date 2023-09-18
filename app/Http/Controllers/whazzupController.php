@@ -206,11 +206,41 @@ class whazzupController extends Controller
     public function API_request($path = null, $method = 'GET', $data = null, $headers = null)
     {
         $url = 'https://api.ivao.aero/' . $path;
+        if (session("ivao_tokens")) {
+            
+            $json = session("ivao_tokens");
+            $json = json_decode($json);
+            $json = $json->access_token;
+            $headers = [
+                'Authorization' => 'Bearer ' . $json,
+                'Accept'        => 'application/json',
+            ];
+        } else {
+            $headers = [
+                'Authorization' => 'Bearer ' . $this->get_token(),
+                'Accept'        => 'application/json',
+            ];
+        }
+
+        $response = Http::withHeaders($headers)->get($url);
+        return $response;
+    }
+
+    public function refresh_token_api_ivao(){
+
+    }
+
+    public function API_POST($path = null, $method = 'POST', $data = null, $headers = null)
+    {
+        $json = session("ivao_tokens");
+        $json = json_decode($json);
+        $json = $json->access_token;
+        $url = 'https://api.ivao.aero/' . $path;
         $headers = [
-            'Authorization' => 'Bearer ' . $this->get_token(),
+            'Authorization' => 'Bearer ' . $json,
             'Accept'        => 'application/json',
         ];
-        $response = Http::withHeaders($headers)->get($url);
+        $response = Http::withHeaders($headers)->post($url, $data);
         return $response;
     }
 
@@ -240,12 +270,13 @@ class whazzupController extends Controller
 
     public function get_atis_lasted($session_ivao = null)
     {
-        $atis = $this->API_request("v2/ATCPositions/" . $session_ivao );
+        $atis = $this->API_request("v2/ATCPositions/" . $session_ivao);
         return $atis;
     }
 
-    public function get_rwys($icao){
-        $rwy = $this->API_request("/v2/airports/".$icao."/runways");
+    public function get_rwys($icao)
+    {
+        $rwy = $this->API_request("/v2/airports/" . $icao . "/runways");
         return $rwy;
     }
 
@@ -262,14 +293,36 @@ class whazzupController extends Controller
     }
 
 
-    public function whazzup_api_traker(){
+    public function whazzup_api_traker()
+    {
         $whazzup = $this->API_request("v2/tracker/whazzup");
         $whazzup = $whazzup->json();
         return $whazzup;
     }
 
-    public function get_flightPlans($id){
-        $whazzup = $this->API_request("v2/tracker/sessions/".$id."/flightPlans");
+    public function get_flightPlans($id)
+    {
+        $whazzup = $this->API_request("v2/tracker/sessions/" . $id . "/flightPlans");
+        $whazzup = $whazzup->json();
+        return $whazzup;
+    }
+
+    public function get_friends()
+    {
+        $whazzup = $this->API_request("v2/webeye/friends");
+        $whazzup = $whazzup->json();
+        return $whazzup;
+    }
+
+    public function get_friends_online()
+    {
+        $whazzup = $this->API_request("v2/webeye/friends/online");
+        $whazzup = $whazzup->json();
+        return $whazzup;
+    }
+    public function post_friends($vid)
+    {
+        $whazzup = $this->API_POST("v2/webeye/friends/" . $vid);
         $whazzup = $whazzup->json();
         return $whazzup;
     }
@@ -298,7 +351,7 @@ class whazzupController extends Controller
         $position = $position->json();
         $position = collect($position);
         $o = [];
-       for ($i = 0; $i < count($position); $i++) {
+        for ($i = 0; $i < count($position); $i++) {
             $o[$i] = $position[$i]["callsign"];
             $o = collect($o);
         }
@@ -313,7 +366,7 @@ class whazzupController extends Controller
         $open_atc = [];
 
         for ($i = 0; $i < count($l); $i++) {
-            
+
             $open_atc[$i] = $this->get_atis_lasted($l[$i]);
             $open_atc[$i] = $open_atc[$i]->json();
         }
@@ -323,25 +376,24 @@ class whazzupController extends Controller
             "atc_close" => $diff
         ];
         return $r;
-        
-        
     }
 
-    public function get_rwy($icao){
+    public function get_rwy($icao)
+    {
         $rwy = $this->get_rwys($icao);
         $ry = [];
-        for ($i=0; $i < count($rwy->json()); $i++) { 
+        for ($i = 0; $i < count($rwy->json()); $i++) {
             $ry[$i] = $rwy[$i]["runway"];
             $ry = collect($ry);
         }
-        $atis = $this->API_request("v2/airports/".$icao."/atis");
-       if($atis->status() == 404){
-           return null;
-         }
+        $atis = $this->API_request("v2/airports/" . $icao . "/atis");
+        if ($atis->status() == 404) {
+            return null;
+        }
         $ry = $ry->toArray();
         /** rechercher dans l'atis les LES MOTS "ARR" */
         $atis = $atis->json();
-        if($atis == null){
+        if ($atis == null) {
             return null;
         }
         $ARR_search = $atis[0]["lines"];
@@ -351,19 +403,22 @@ class whazzupController extends Controller
         });
         $ARR_search = $ARR_search->toArray();
         $ARR_search = array_values($ARR_search);
+        if ($ARR_search == null) {
+            return null;
+        }
         $ARR_search = $ARR_search[0];
         return $ARR_search;
-        
     }
 
-    public function Bookings(){
+    public function Bookings()
+    {
         $bookings = $this->API_request("/v2/atc/bookings/daily");
         $bookings = $bookings->json();
         $book = [];
-        for ($i=0; $i < count($bookings); $i++) {
+        for ($i = 0; $i < count($bookings); $i++) {
             $book[$i]["id"] = $bookings[$i]["id"];
-            $book[$i]["Start_time"] = Carbon::parse($bookings[$i]["startDate"])->format('H:i')." Z";
-            $book[$i]["End_time"] = Carbon::parse($bookings[$i]["endDate"])->format('H:i')." Z";
+            $book[$i]["Start_time"] = Carbon::parse($bookings[$i]["startDate"])->format('H:i') . " Z";
+            $book[$i]["End_time"] = Carbon::parse($bookings[$i]["endDate"])->format('H:i') . " Z";
             $book[$i]["voice"] = $bookings[$i]["voice"];
             $book[$i]["training"] = $bookings[$i]["training"];
             $book[$i]["airport"] = $bookings[$i]["atcPosition"];
@@ -371,7 +426,6 @@ class whazzupController extends Controller
                 "vid" => $bookings[$i]["user"]["id"],
             ];
         }
-         return $book;
+        return $book;
     }
-
 }

@@ -40,6 +40,7 @@ use App\Http\Controllers\MailRegisterController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\myOnlineServeurController;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
+use Symfony\Component\HttpKernel\Controller\ErrorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,7 +88,12 @@ Route::get("callback", function (Request $request) {
     $request->merge([
         "code" => $request->code
     ]);
-    dd($request);
+    $validator = Validator::make($request->all(), [
+        'code' => 'required|string',
+    ]);
+    $authivao = new AuthIVAOController();
+    $oo = $authivao->sso($request);
+    return $oo;
 })->name("callback");
 
 
@@ -416,12 +422,18 @@ Route::prefix("ivao")->group(function () {
         return $response;
     });
 
-    Route::get("/bookings", function (Request $request){
+    Route::get("/bookings", function (Request $request) {
         $whazzup = new whazzupController();
         $bookings = $whazzup->Bookings();
         $date = date("d/m/Y");
         return view("ivao.bookings", ["bookings" => $bookings, "date" => $date]);
     })->name("ivao.bookings")->middleware(["auth:web"]);
+
+    Route::get("connect", function (Request $request) {
+        $authivao = new AuthIVAOController();
+        $oo = $authivao->sso($request);
+        return $oo;
+    })->name("ivao.connect");
 });
 
 Route::prefix("pirep")->group(function () {
@@ -527,9 +539,15 @@ Route::prefix("friends")->group(function () {
     })->name("friends.all")->middleware(["auth:web"]);
 
     Route::get("verify", function (Request $request) {
-        $st = new frendly_userController(Auth::user()->id);
-        $r = $st->get_friens_online();
-        return view("friends.verify", ["friends" => $r]);
+        $whazzup = new whazzupController();
+        $friends = $whazzup->get_friends_online();
+        if ($friends == null ) {
+            $authivao = new AuthIVAOController();
+            $authivao->sso($request);
+            $friends = $whazzup->get_friends_online();
+            return view("friends.verify", ["friends" => $friends]);
+        }
+        return view("friends.verify", ["friends" => $friends]);
     })->name("friends.verify")->middleware(["auth:web"]);
 
     Route::get("/add", function (Request $request) {
@@ -551,43 +569,20 @@ Route::prefix("friends")->group(function () {
         return to_route("friends.all");
     })->name("friends.add")->middleware(["auth:web"]);
 
+    Route::get("post-webeye", function (Request $request) {
+        $request->merge([
+            "vid" => $request->vid
+        ]);
+        $whazzup = new whazzupController();
+        $whazzup->post_friends($request->vid);
+        return to_route("friends.all")->with("success", "Amis ajouté dans la liste");
+    })->name("friends.add.post.webeye")->middleware(["auth:web"]);
+
     Route::get("add-form", function (Request $request) {
         return view("friends.add");
     })->name("friends.add")->middleware(["auth:web"]);
 
-    Route::post("add-form", function (Request $request) {
-        $request->merge([
-            "vid_friend" => $request->vid_friend,
-            "name_friend" => $request->name_friend ?? null
-        ]);
-        $validator = Validator::make($request->all(), [
-            'vid_friend' => 'required|numeric',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->route("auth.register")
-                ->withErrors("Erreur for authentification is not valid")
-                ->withInput();
-        }
-        $st = new frendly_userController(Auth::user()->id, $request->vid_friend, $request->name_friend);
-        $st->addFrendlyUser();
-        return to_route("friends.all")->with("success", "Amis ajouté dans la liste");
-    })->name("friends.add.post")->middleware(["auth:web"]);
-
-    Route::get("add-friend", function (Request $request) {
-        $request->merge([
-            "host" => $request->host,
-            "vid_friend" => $request->vid_friend,
-            "name_friend" => $request->name_friend ?? "No infomation"
-        ]);
-        $validator = Validator::make($request->all(), [
-            'vid_friend' => 'required|numeric',
-        ]);
-        $st = new frendly_userController(Auth::user()->id, $request->vid_friend, $request->name_friend);
-        $st->addFrendlyUser();
-        return redirect($request->host)->with("success", "Amis ajouté dans la liste");
-    })->name("friends.add.oter.page.post")->middleware(["auth:web"]);
-
-    Route::post("destroy/{id}", function (Request $request) {
+    Route::get("destroy/{id}", function (Request $request) {
         $request->merge([
             "id" => $request->id,
         ]);
@@ -605,44 +600,6 @@ Route::prefix("friends")->group(function () {
         $st->deleteFrendlyUser($request->id);
         return to_route("friends.all")->with("success", "le VID " . $remenber["vid_friend"] . " à été supprimé dans la liste !");
     })->name("friends.destroy")->middleware(["auth:web"]);
-
-    Route::get("edit", function (Request $request) {
-        $request->merge([
-            "id" => $request->id
-        ]);
-        $validator = Validator::make($request->all(), [
-            'id' => 'required|numeric',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->route("friends.add")
-                ->withErrors("Erreur for authentification is not valid")
-                ->withInput();
-        }
-        $st = new frendly_userController(Auth::user()->id);
-        $r = $st->get_friends_via_id($request->id);
-        return view("friends.edit", ["friends" => $r]);
-    })->name("friends.edit")->middleware(["auth:web"]);
-
-    Route::post("edit", function (Request $request) {
-        $request->merge([
-            "id" => $request->id,
-            "vid_friend" => $request->vid_friend,
-            "name_friend" => $request->name_friend
-        ]);
-        $validator = Validator::make($request->all(), [
-            'id' => 'required|numeric',
-            'vid_friend' => 'required|numeric',
-            'name_friend' => 'required|string',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->route("friends.add")
-                ->withErrors("Erreur for authentification is not valid")
-                ->withInput();
-        }
-        $st = new frendly_userController(Auth::user()->id, $request->vid_friend, $request->name_friend);
-        $st->updateFrendlyUser($request->id);
-        return to_route("friends.all")->with("success", "Vous avez mofifier le VID " . $request->vid_friend . " avec l'information suivante " . $request->name_friend . "");
-    })->name("friends.edit.post")->middleware(["auth:web"]);
 })->middleware(["auth:web"]);
 
 Route::get("vid/{vid}", function (Request $request) {
@@ -696,24 +653,13 @@ Route::get("test", function (Request $request) {
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-    $authivao = new AuthIVAOController();
-    $oo = $authivao->sso($request);
-    return $oo;
+    $whazzup = new whazzupController();
+    $ff = $whazzup->get_friends_online();
+    return $ff;
 })->name("test2");
 
 Route::get("test3", function (Request $request) {
     $whazzup = new whazzupController();
-    $get_all_atc = $whazzup->Get_Position();
-    $get_all_atc = $get_all_atc->json();
-    $get_atc_online = $whazzup->ckeck_online_atc("LFBO");
-    //recherche de Array $get_all_atc corespndant a liste $get_atc_online
-    $get_atc_onlined = [];
-    foreach ($get_all_atc as $key => $value) {
-        foreach ($get_atc_online as $key2 => $value2) {
-            if ($value["callsign"] == $value2["callsign"]) {
-                $get_atc_onlined[] = $value;
-            }
-        }
-    }
-    return $get_atc_onlined;
+    $get_all_atc = $whazzup->track_session_id("53291542");
+    dd($get_all_atc->json());
 })->name("test3");

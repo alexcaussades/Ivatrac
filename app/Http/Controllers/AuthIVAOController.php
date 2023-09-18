@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
+use PharIo\Manifest\Url;
 
 class AuthIVAOController extends Controller
 {
@@ -25,7 +26,7 @@ class AuthIVAOController extends Controller
 
         $base_url = $openid_data["authorization_endpoint"];
         $reponse_type = "code";
-        $scopes = "profile configuration email";
+        $scopes = "profile configuration email bookings:write friends friends:read friends:write flight_plans:read flight_plans:write";
         $state = rand(100000, 999999); // Random string to prevent CSRF attacks
 
         $query = [
@@ -81,7 +82,7 @@ class AuthIVAOController extends Controller
                     "refresh_token" => $refresh_token,
                 ]),
             ]);
-            return redirect()->route("ivao.login-sso");
+            return redirect()->route("home");
             // header("Location: user.php"); // Remove the code and state from URL since they aren't valid anymore
         } elseif (session()->has("ivao_tokens")) {
             // User has already logged in
@@ -155,10 +156,11 @@ class AuthIVAOController extends Controller
                     ]),
                 ]);
 
-                return redirect()->route("ivao.login-sso");
+                return redirect()->route("home");
             } else {
                 // dd($user_res_data); // Display user data fetched with the access token
-                return $this->handlerLogin($user_res_data);
+                return redirect()->route(session(["_previous"]["url"]));
+                //return $this->handlerLogin($user_res_data);
             }
         } else {
             // First visit : Unauthenticated user
@@ -168,6 +170,7 @@ class AuthIVAOController extends Controller
 
     public function handlerLogin($user)
     {
+        dd($user);
         function staffLogin($data)
         {
             $staff = [];
@@ -192,7 +195,7 @@ class AuthIVAOController extends Controller
             $finduser->division = $user["divisionId"];
             $finduser->country = $user["countryId"];
             $finduser->staff = staffLogin($user["userStaffPositions"]);
-
+            
             $finduser->save();
             Auth::login($finduser);
         } else {
@@ -216,4 +219,22 @@ class AuthIVAOController extends Controller
 
         return redirect()->route("home");
     }
+
+    public function logout()
+    {
+        Auth::logout();
+        session()->forget("ivao_tokens");
+        return redirect()->route("welcome");
+    }
+
+    public function callback()
+    {
+        return view("callback");
+    }
+
+    
+
+   
 }
+
+

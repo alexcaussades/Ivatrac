@@ -71,7 +71,7 @@ class myOnlineServeurController extends Controller
                 $new_ccr = $ident[0];
                 $ident[0] = substr($ident[0], 0, -1);
                 $metar = $metar->getFirAtc($ident[0]);
-                $chart_crr = $chartIvaoFRcontroller->chart_ccr($new_ccr);      
+                $chart_crr = $chartIvaoFRcontroller->chart_ccr($new_ccr);   
                 $atc_online = [];
                 for ($i = 0; $i < count($metar); $i++) {
                     $atc_online[$i]["icao"] = $metar[$i][0]["callsign"];
