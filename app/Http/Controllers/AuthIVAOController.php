@@ -111,6 +111,11 @@ class AuthIVAOController extends Controller
                 $user_context
             );
             $user_res_data = json_decode($user_result, true);
+            $request->merge([
+                "id" => $user_res_data["id"],
+            ]);
+            $users = new usersController();
+            $users->connect_via_ivao($request);
 
             if (
                 isset($user_res_data["description"]) &&

@@ -100,7 +100,7 @@ Route::get("callback", function (Request $request) {
         'code' => 'required|string',
     ]);
     $authivao = new AuthIVAOController();
-    $oo = $authivao->sso($request);
+    $oo = $authivao->sso($request, "test2");
     return $oo;
 })->name("callback");
 
@@ -662,9 +662,10 @@ Route::get("test", function (Request $request) {
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-    $whazzup = new whazzupController();
-    $ff = $whazzup->online_me();
-    return $ff->json();
+    $ivao = new AuthIVAOController();
+    $q = $ivao->sso($request, "home");
+    return $q;
+    
 })->name("test2");
 
 Route::get("test3", function (Request $request) {

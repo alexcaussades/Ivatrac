@@ -36,7 +36,7 @@
           </a>
 
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{ Route("login") }}">My Account</a></li>
+            <li><a class="dropdown-item" href="{{ Route("ivao.connect") }}">My Account</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>

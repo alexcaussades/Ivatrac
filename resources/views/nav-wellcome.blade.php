@@ -20,7 +20,7 @@
         @endauth
         @guest
         <li class="nav-item">
-          <a class="nav-link text-white" href="{{ Route("auth.login")}}">Login</a>
+          <a class="nav-link text-white" href="{{ Route("ivao.connect")}}">Login</a>
         </li>
         @endguest
         </li>

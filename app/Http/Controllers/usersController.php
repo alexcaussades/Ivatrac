@@ -11,6 +11,7 @@ use App\Models\loggin;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -68,7 +69,7 @@ class usersController extends Controller
             $request->session()->regenerate();
             $user = users::where("id", auth()->user()->id)->first();
             Cookie::queue('email-Users', $user->email, time() + 60 * 60 * 24 * 30);
-            if ($request->remember == "on"){
+            if ($request->remember == "on") {
                 Cookie::queue('remember_token', $user->remember_token, time() + 86400 * 30);
             }
             //** Check if user is admin */
@@ -92,11 +93,64 @@ class usersController extends Controller
         ]);
     }
 
-    public function autentification_via_cookie(){
+    public function connect_via_ivao($request)
+    {
+        $user = users::where("vid", $request->id)->first();
+        //** generate session users */
+        if ($user) {
+            Auth::login($user);
+            $request->session()->regenerate();
+            $user = users::where("id", auth()->user()->id)->first();
+            Cookie::queue('email-Users', $user->email, time() + 60 * 60 * 24 * 30);
+            //** Check if user is admin */
+            $admin = new Admin();
+            $check = $admin::where('email', $user->email)->first();
+            if ($check) {
+                Auth::guard('admin')->login($user);
+            }
+            $modo = new modo();
+            $check = $modo::where('email', $user->email)->first();
+            if ($check) {
+                Auth::guard('modo')->login($user);
+            }
+            $logginController = new logginController();
+            $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
+            return redirect()->intended('serveur');
+        } else {
+            $request->merge([
+                'vid' => $request->id,
+                'name_first' => $request->firstName,
+                'name_last' => $request->lastName,
+                'email' => $request->email,
+                'password' => Hash::make("ivao"),
+                'email_verified_at' => now(),
+                'remember_token' => Str::random(10),
+                'role' => 1,
+                'condition' => 1,
+                'age' => 1,
+                'name_rp' => $request->firstName . " " . $request->lastName,
+                'name' => $request->firstName . " " . $request->lastName,
+            ]);
+            $this->create($request);
+            $user = users::where("vid", $request->id)->first();
+            Auth::login($user);
+            $request->session()->regenerate();
+            $user = users::where("id", auth()->user()->id)->first();
+            Cookie::queue('email-Users', $user->email, time() + 60 * 60 * 24 * 30);
+            $lastId = DB::getPdo()->lastInsertId();
+            $mail = new MailRegisterController();
+            $mail->MailRegister($lastId);
+            $logginController = new logginController();
+            $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
+            return redirect()->intended('serveur');
+        }
+    }
+    public function autentification_via_cookie()
+    {
         $request = new Request();
-        
-        if( Cookie::get('email-Users') && Cookie::get('remember_token')){
-           
+
+        if (Cookie::get('email-Users') && Cookie::get('remember_token')) {
+
             if (Cookie::get('remember_token') == null) {
                 Auth::logout();
                 Cookie::queue(Cookie::forget('remember_token'));
@@ -104,25 +158,24 @@ class usersController extends Controller
                 return to_route("auth.login")->withErrors([
                     'error' => 'Les informations de connexion sont incorrectes. Veuillé vérifier votre adresse email et votre mot de passe.'
                 ]);
-            }          
-                $user = users::where("email", Cookie::get('email-Users'))->where("remember_token", Cookie::get('remember_token'))->first();
-                Auth::loginUsingId($user->id);
-                //** Check if user is admin */
-                $admin = new Admin();
-                $check = $admin::where('email', $user->email)->first();
-                if ($check) {
-                    Auth::guard('admin')->login($user);
-                }
-                $modo = new modo();
-                $check = $modo::where('email', Cookie::get('email-Users'))->first();
-                if ($check) {
-                    Auth::guard('modo')->login($user);
-                }
-    
-                $logginController = new logginController();
-                $logginController->infoLog("Automatique Session de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
-                return redirect()->intended('serveur');
-            
+            }
+            $user = users::where("email", Cookie::get('email-Users'))->where("remember_token", Cookie::get('remember_token'))->first();
+            Auth::loginUsingId($user->id);
+            //** Check if user is admin */
+            $admin = new Admin();
+            $check = $admin::where('email', $user->email)->first();
+            if ($check) {
+                Auth::guard('admin')->login($user);
+            }
+            $modo = new modo();
+            $check = $modo::where('email', Cookie::get('email-Users'))->first();
+            if ($check) {
+                Auth::guard('modo')->login($user);
+            }
+
+            $logginController = new logginController();
+            $logginController->infoLog("Automatique Session de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
+            return redirect()->intended('serveur');
         }
     }
 
@@ -165,9 +218,10 @@ class usersController extends Controller
     {
         $users = users::all();
         return $users;
-    }   
+    }
 
-    public function forget_password($request){
+    public function forget_password($request)
+    {
         $user = users::where("email", $request->email)->first();
         $paswordNew = Str::password(10);
         $user->password = Hash::make($paswordNew);
@@ -177,19 +231,19 @@ class usersController extends Controller
         $logginController = new logginController();
         $logginController->infoLog("Demande de réinitialisation de mot de passe de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
         return $user;
-
     }
 
-    public function verif_email($request){
+    public function verif_email($request)
+    {
         /** Check if email via le token remenber */
         $user = users::where("remember_token", $request->token)->first();
-        if($user){
+        if ($user) {
             $user->email_verified_at = now();
             $user->save();
             $logginController = new logginController();
             $logginController->infoLog("Vérification de l'email de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
             return $user;
-        }else{
+        } else {
             return false;
         }
     }
