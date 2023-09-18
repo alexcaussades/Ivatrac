@@ -117,7 +117,7 @@ class AuthIVAOController extends Controller
                 "id" => $user_res_data["id"],
             ]);
             $users = new usersController();
-            $users->connect_via_ivao($request);
+            $users->connect_via_ivao($request, $user_res_data);
             if (
                 isset($user_res_data["description"]) &&
                 ($user_res_data["description"] ===
