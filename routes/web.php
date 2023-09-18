@@ -378,6 +378,58 @@ Route::prefix("ivao")->group(function () {
         return to_route("metars.index");
     });
 
+    Route::get("/info", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $request->validate([
+            "icao" => "required|size:4"
+        ]);
+        $icao = strtoupper($request->icao);
+        $ivaoController = new metarController();
+        $atcivao = new AtcController();
+        $pilots = new PilotIvaoController();
+        $ivao = $ivaoController->getATC($icao);
+        $atc = $atcivao->resolve($ivao);
+        $Pilot = $pilots->getAirplaneToPilots($icao);
+        return [
+            "ATC" => $atc,
+            "Pilot" => $Pilot,
+            "ivao" => $ivao,
+        ];
+    })->name("ivao.info");
+
+    Route::get("/plateforme", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $request->validate([
+            "icao" => "required|size:4"
+        ]);
+        $icao = strtoupper($request->icao);
+        $ivaoController = new metarController();
+        $atcivao = new AtcController();
+        $pilots = new PilotIvaoController();
+        $whazzup = new whazzupController();
+        $atc = $atcivao->getRwy($request->icao);
+        $ivao = $whazzup->ckeck_online_atc($request->icao);
+        $Pilot = $pilots->getAirplaneToPilots($icao);
+        $other = $ivaoController->getFirAtc($icao);
+        $other2 = $ivaoController->getFirCTR($icao);
+
+        $hosturl = $request->fullUrl();
+        return view("plateforme.plat", ["atc" => $atc, "Pilot" => $Pilot, "ivao" => $ivao, "hosturl" => $hosturl, "other" => $other, "other2" => $other2]);
+    })->name("ivao.plateforme");
+
+    Route::get("/pilot", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $pilots = new PilotIvaoController();
+        $response = $pilots->getAirplaneToPilots($request->icao);
+        return $response;
+    });
+
     Route::get("/bookings", function (Request $request) {
         $whazzup = new whazzupController();
         $bookings = $whazzup->Bookings();
