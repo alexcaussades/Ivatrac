@@ -58,7 +58,7 @@
         </div>
         <div class="col-6 mt-2">
             <div class="card text-white bg-dark">
-                @if ($online != null)
+                @if (isset($online["callsign"]))
                 <div class="card-body bg-dark border-dark text-white text-opacity-75">
                     <h4 class="card-title text-center text-info">ONLINE</h4>
                     <p class="card-text text-center"><span class="ms-2">{{$online["callsign"]}}</span></p>
