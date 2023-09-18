@@ -79,9 +79,17 @@ Route::get('/', function (Request $request, usersController $usersController) {
     $whazzup = $whazzup->connexion();
     $bddid = new whazzupController();
     $idlast = $bddid->bddid();
-
     $heurechange = $bddid->heurechange();
-    return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange]);
+    if(Session::get("ivao_tokens")){
+        $authivao = new AuthIVAOController();
+        $authivao->sso($request, "home");
+        $whaz = new whazzupController();
+        $online = $whaz->online_me();
+        $online = json_decode($online, true);
+        return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange, "online" => $online]);
+    }
+    $online = null;
+    return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange, "online" => $online]);
 })->where('client', '[0-9]+')->name("home");
 
 Route::get("callback", function (Request $request) {
@@ -370,58 +378,6 @@ Route::prefix("ivao")->group(function () {
         return to_route("metars.index");
     });
 
-    Route::get("/info", function (Request $request) {
-        $request->merge([
-            "icao" => $request->icao
-        ]);
-        $request->validate([
-            "icao" => "required|size:4"
-        ]);
-        $icao = strtoupper($request->icao);
-        $ivaoController = new metarController();
-        $atcivao = new AtcController();
-        $pilots = new PilotIvaoController();
-        $ivao = $ivaoController->getATC($icao);
-        $atc = $atcivao->resolve($ivao);
-        $Pilot = $pilots->getAirplaneToPilots($icao);
-        return [
-            "ATC" => $atc,
-            "Pilot" => $Pilot,
-            "ivao" => $ivao,
-        ];
-    })->name("ivao.info");
-
-    Route::get("/plateforme", function (Request $request) {
-        $request->merge([
-            "icao" => $request->icao
-        ]);
-        $request->validate([
-            "icao" => "required|size:4"
-        ]);
-        $icao = strtoupper($request->icao);
-        $ivaoController = new metarController();
-        $atcivao = new AtcController();
-        $pilots = new PilotIvaoController();
-        $whazzup = new whazzupController();
-        $atc = $atcivao->getRwy($request->icao);
-        $ivao = $whazzup->ckeck_online_atc($request->icao);
-        $Pilot = $pilots->getAirplaneToPilots($icao);
-        $other = $ivaoController->getFirAtc($icao);
-        $other2 = $ivaoController->getFirCTR($icao);
-
-        $hosturl = $request->fullUrl();
-        return view("plateforme.plat", ["atc" => $atc, "Pilot" => $Pilot, "ivao" => $ivao, "hosturl" => $hosturl, "other" => $other, "other2" => $other2]);
-    })->name("ivao.plateforme");
-
-    Route::get("/pilot", function (Request $request) {
-        $request->merge([
-            "icao" => $request->icao
-        ]);
-        $pilots = new PilotIvaoController();
-        $response = $pilots->getAirplaneToPilots($request->icao);
-        return $response;
-    });
-
     Route::get("/bookings", function (Request $request) {
         $whazzup = new whazzupController();
         $bookings = $whazzup->Bookings();
@@ -539,14 +495,13 @@ Route::prefix("friends")->group(function () {
     })->name("friends.all")->middleware(["auth:web"]);
 
     Route::get("verify", function (Request $request) {
+        if(empty(Session::get("ivao_tokens"))){
+            return redirect()->route("ivao.connect");
+        }
+        $authivao = new AuthIVAOController();
+        $authivao->sso($request, "friends.verify");
         $whazzup = new whazzupController();
         $friends = $whazzup->get_friends_online();
-        if ($friends == null ) {
-            $authivao = new AuthIVAOController();
-            $authivao->sso($request);
-            $friends = $whazzup->get_friends_online();
-            return view("friends.verify", ["friends" => $friends]);
-        }
         return view("friends.verify", ["friends" => $friends]);
     })->name("friends.verify")->middleware(["auth:web"]);
 
@@ -573,6 +528,8 @@ Route::prefix("friends")->group(function () {
         $request->merge([
             "vid" => $request->vid
         ]);
+        $authivao = new AuthIVAOController();
+        $authivao->sso($request, "home");
         $whazzup = new whazzupController();
         $whazzup->post_friends($request->vid);
         return to_route("friends.all")->with("success", "Amis ajouté dans la liste");
@@ -654,12 +611,12 @@ Route::get("test", function (Request $request) {
 
 Route::get("test2", function (Request $request) {
     $whazzup = new whazzupController();
-    $ff = $whazzup->get_friends_online();
-    return $ff;
+    $ff = $whazzup->online_me();
+    return $ff->json();
 })->name("test2");
 
 Route::get("test3", function (Request $request) {
     $whazzup = new whazzupController();
-    $get_all_atc = $whazzup->track_session_id("53291542");
-    dd($get_all_atc->json());
+    $get_all_atc = $whazzup->revoke_token();
+    return $get_all_atc;
 })->name("test3");

@@ -268,6 +268,18 @@ class whazzupController extends Controller
         return $metar;
     }
 
+    public function online_me()
+    {
+        $online = $this->API_request("/v2/users/me/sessions/now");
+        return $online;
+    }
+
+    public function revoke_token()
+    {
+        $token = $this->API_POST("v2/oauth/token/revoke");
+        return $token;
+    }
+
     public function get_atis_lasted($session_ivao = null)
     {
         $atis = $this->API_request("v2/ATCPositions/" . $session_ivao);
