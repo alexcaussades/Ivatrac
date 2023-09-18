@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Redirect;
 class AuthIVAOController extends Controller
 {
     public function sso(Request $request, $url="home")
+
     {
         // Now we can take care of the actual authentication
         $client_id = env("ivao_api_client_id");
@@ -87,6 +88,7 @@ class AuthIVAOController extends Controller
                 ]),
             ]);
             return redirect()->route($url);
+
             // header("Location: user.php"); // Remove the code and state from URL since they aren't valid anymore
         } elseif (session()->has("ivao_tokens")) {
             // User has already logged in
@@ -116,7 +118,6 @@ class AuthIVAOController extends Controller
             ]);
             $users = new usersController();
             $users->connect_via_ivao($request);
-
             if (
                 isset($user_res_data["description"]) &&
                 ($user_res_data["description"] ===
@@ -164,7 +165,6 @@ class AuthIVAOController extends Controller
                         "refresh_token" => $refresh_token,
                     ]),
                 ]);
-
                 return redirect()->route($url);
             } else {
                 // dd($user_res_data); // Display user data fetched with the access token
@@ -204,7 +204,6 @@ class AuthIVAOController extends Controller
             $finduser->division = $user["divisionId"];
             $finduser->country = $user["countryId"];
             $finduser->staff = staffLogin($user["userStaffPositions"]);
-            
             $finduser->save();
             Auth::login($finduser);
         } else {
@@ -228,7 +227,6 @@ class AuthIVAOController extends Controller
 
         return redirect()->route("home");
     }
-
     public function logout()
     {
         Auth::logout();

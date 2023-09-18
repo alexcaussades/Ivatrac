@@ -58,6 +58,20 @@
         </div>
         <div class="col-6 mt-2">
             <div class="card text-white bg-dark">
+                <div class="card-body bg-dark border-dark text-white text-opacity-75">
+                    <h4 class="card-title text-center text-info">Bookings ATC World</h4>
+                    <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined">calendar_month</span> <span class="ms-2">See the ATC world reserves of the day</span></p>
+                    @auth
+                    <p class="card-footer text-center"><a href="{{ Route("ivao.bookings")}}" class="btn btn-success">See Bookings</a></p>
+                    @endauth
+                    @guest
+                    <p class="card-footer text-center"><a href="{{ Route("auth.login")}}" title="register on the platform only" class="btn btn-secondary">Register Only</a></p>
+                    @endguest
+                </div>
+            </div>
+        </div>
+        <div class="col-6 mt-2">
+            <div class="card text-white bg-dark">
                 @if ($online != null)
                 <div class="card-body bg-dark border-dark text-white text-opacity-75">
                     <h4 class="card-title text-center text-info">ONLINE</h4>

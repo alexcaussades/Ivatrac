@@ -440,4 +440,5 @@ class whazzupController extends Controller
         }
         return $book;
     }
+
 }

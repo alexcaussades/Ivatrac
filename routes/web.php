@@ -431,13 +431,14 @@ Route::prefix("ivao")->group(function () {
     });
 
     Route::get("/bookings", function (Request $request) {
+
         $whazzup = new whazzupController();
         $bookings = $whazzup->Bookings();
         $date = date("d/m/Y");
         return view("ivao.bookings", ["bookings" => $bookings, "date" => $date]);
     })->name("ivao.bookings")->middleware(["auth:web"]);
 
-    Route::get("connect", function (Request $request) {
+  Route::get("connect", function (Request $request) {
         $authivao = new AuthIVAOController();
         $oo = $authivao->sso($request);
         return $oo;
@@ -665,7 +666,6 @@ Route::get("test2", function (Request $request) {
     $ivao = new AuthIVAOController();
     $q = $ivao->sso($request, "home");
     return $q;
-    
 })->name("test2");
 
 Route::get("test3", function (Request $request) {
