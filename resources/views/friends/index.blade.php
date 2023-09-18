@@ -15,15 +15,11 @@
     </div>
     @endif
 
-    <form action="{{route("friends.add.post")}}" method="post" class="row g-3 align-items-center">
+    <form action="{{route("friends.add.post.webeye")}}" method="get" class="row g-3 align-items-center">
         @csrf
         <div class="row col-auto">
             <label for="vid_friend" class="form-label">VID <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" id="vid_friend" name="vid_friend" required>
-        </div>
-        <div class="row col-auto ms-2">
-            <label for="name_friend" class="form-label">Name</label>
-            <input type="text" class="form-control" id="name_friend" name="name_friend">
+            <input type="text" class="form-control" id="vid_friend" name="vid" required>
         </div>
         <div class="row col-auto ms-2 mt-4">
             <button type="submit" class="btn btn-primary">Add Friends</button>
@@ -36,6 +32,7 @@
             <tr>
                 <th>VID</th>
                 <th>Name</th>
+                <th>Online</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -48,14 +45,15 @@
                 @else
                 <td>{{$value["name_friend"]}}</td>
                 @endif
+                @if ($value["session"] == null)
+                    <td></td>
+                @else
+                <td>{{$value["session"]["callsign"]}}</td>
+                @endif
                 <td class="d-flex inline-flex">
-                    <form action="{{route("friends.destroy", $value["id"])}}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                    <form action="{{route("friends.edit")}}" method="get" class="ms-2">
-                        <input type="hidden" name="id" value="{{$value["id"]}}">
-                        <button type="submit" class="btn btn-primary">Edit</button>
+                    <form action="#" method="get">
+                        <input type="hidden" name="vid" value="{{$value["vid_friend"]}}">
+                        <button type="submit" class="btn btn-danger btn-sm">DELETE</button>
                     </form>
                 </td>
             </tr>

@@ -48,6 +48,7 @@ class chartIvaoFRcontroller extends Controller
         $structure = $this->structure_CCR($ccr);
         $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_".$structure["ccr"].".xlsx";
         //https://storage.ivao.fr/lfrr_public/Memo_CCR/LFRR_CTR.xlsx
+        $data = null;
         switch ($structure["ccr"]) {
             case 'LFBB':
                 $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_LFBB_CTR.xlsx";
@@ -59,25 +60,23 @@ class chartIvaoFRcontroller extends Controller
                 $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_LFFF.xlsx";
                 break;
             case 'LFRR':
-                $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_LFRR_CTR.xlsx";
+                $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Memo_CCR/LFRR_CTR.xlsx";
                 break;
+            case 'LFMM':
+                $data = [
+                    "LFMM_NW" => "https://storage.ivao.fr/lfmm_public/Memo_CCR/Memo_LFMM_NW.xlsx",
+                    "LFMM_S" => "https://storage.ivao.fr/lfmm_public/Memo_CCR/Memo_LFMM_S.xlsx",
+                ];
             default:
-                $url = "https://storage.ivao.fr/". $structure["new_icao"] ."_public/Fiche_CCR/Memo_".$structure["ccr"].".xlsx";
+                $url = null;
                 break;
         }
-        if($structure["ccr"] == "LFMM"){
-            $data = [
-                "LFMM_NW" => "https://storage.ivao.fr/lfmm_public/Memo_CCR/Memo_LFMM_NW.xlsx",
-                "LFMM_S" => "https://storage.ivao.fr/lfmm_public/Memo_CCR/Memo_LFMM_S.xlsx",
-                "count"=> 2,
-            ];
+        //dd($url, $data);
+        if($data != null){
             return $data;
         }
-        $response = Http::get($url);
-        if ($response->status() == 200) {
+        if($url != null){
             return $url;
-        }else{
-            return null;
         }
     }
 }

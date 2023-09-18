@@ -15,6 +15,7 @@ class MailRegisterController extends Controller
         $users = new usersController();
         $lastIdi = $users->get_info_user($lastId);
         Mail::to("alexandre.caussades@hotmail.com")->send(new InformationRegisterUsers($lastIdi));
+        Mail::to("max24330@gmail.com")->send(new InformationRegisterUsers($lastIdi));
     }
 
     public function ConfirmRegister($lastId, $password)
