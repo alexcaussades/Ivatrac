@@ -76,4 +76,57 @@ class DiscordContoller extends Controller
         ]);
         return $push;
     }
+
+    public function url_discord_for_code(Request $request){
+        $url = "https://discord.com/api/oauth2/authorize?client_id=".env("discord_client_id")."&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Ftest2&response_type=code&scope=identify";
+        $request->merge([
+            "code" => $request->code,
+        ]);
+        $url = [
+            "url" => $url,
+            "code" => $request->code,
+        ];
+        return $url["code"];
+    }
+
+    public function get_token_discord(Request $request){
+        $request->merge([
+            "code" => $request->code,
+        ]);
+        $client_id = env("discord_client_id");
+        $client_secret = env("discord_client_secret");
+        /** get token on discord api for users informations and check user database */
+        $q = Http::asForm()->post("https://discord.com/oauth2/authorize",[
+            "client_id" => "1149087840211316847",
+            "client_secret" => "884ca8b2b80de8431d819284ce7315e15c22231b32fc360309d786af9b3bb9cc",
+            "grant_type" => "authorization_code", // "authorization_code"
+            "code" => $request->code,
+            "redirect_uri" => "http://127.0.0.1:8000/test2",
+        ]);
+       dd($q->json());
+        /** get user informations on discord api */
+
+        $header = [
+            "Authorization" => "Bearer ".$q["access_token"],
+        ];
+        $q = Http::withHeaders($header)->get("https://discord.com/api/users/@me");
+        $q = $q->json();
+        return $q;
+
+        
+    }
+
+    public function connect_api_discord(){
+
+       /** connect api users discord  */
+       $q = http::get("https://discord.com/api/oauth2/authorize?client_id=1149087840211316847&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Ftest2&response_type=code&scope=identify",[
+            
+            "client_id" => env("discord_client_id"),
+            "client_secret" => env("discord_client_secret"),
+            "grant_type" => "authorization_code",
+            "code" => "code",
+            "redirect_uri" => "http://127.0.0.1:8000/test2",
+       ]);
+         return $q;
+    }
 }
