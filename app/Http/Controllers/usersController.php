@@ -95,7 +95,7 @@ class usersController extends Controller
 
     public function connect_via_ivao($request, $data)
     {
-        $user = users::where("vid", $request->id)->first();
+        $user = users::where("vid", $data["id"])->first();
         //** generate session users */
         if ($user) {
             Auth::login($user);
