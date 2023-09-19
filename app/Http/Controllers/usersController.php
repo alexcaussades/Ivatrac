@@ -160,21 +160,24 @@ class usersController extends Controller
                 ]);
             }
             $user = users::where("email", Cookie::get('email-Users'))->where("remember_token", Cookie::get('remember_token'))->first();
-            Auth::loginUsingId($user->id);
-            //** Check if user is admin */
-            $admin = new Admin();
-            $check = $admin::where('email', $user->email)->first();
-            if ($check) {
-                Auth::guard('admin')->login($user);
-            }
-            $modo = new modo();
-            $check = $modo::where('email', Cookie::get('email-Users'))->first();
-            if ($check) {
-                Auth::guard('modo')->login($user);
+            if ($user) {
+                Auth::loginUsingId($user->id);
+                //** Check if user is admin */
+                $admin = new Admin();
+                $check = $admin::where('email', $user->email)->first();
+                if ($check) {
+                    Auth::guard('admin')->login($user);
+                }
+                $modo = new modo();
+                $check = $modo::where('email', Cookie::get('email-Users'))->first();
+                if ($check) {
+                    Auth::guard('modo')->login($user);
+                }
+
+                $logginController = new logginController();
+                $logginController->infoLog("Automatique Session de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
             }
 
-            $logginController = new logginController();
-            $logginController->infoLog("Automatique Session de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
             return redirect()->intended('serveur');
         }
     }
