@@ -82,7 +82,7 @@ Route::get('/', function (Request $request, usersController $usersController) {
     $heurechange = $bddid->heurechange();
     if(Session::get("ivao_tokens") != null){
         $authivao = new AuthIVAOController();
-        $authivao->sso($request, "home");
+        //$authivao->sso($request, "home");
         $whaz = new whazzupController();
         $online = $whaz->online_me();
         $online = json_decode($online, true);
