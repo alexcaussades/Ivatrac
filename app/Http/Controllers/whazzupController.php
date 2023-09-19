@@ -441,4 +441,16 @@ class whazzupController extends Controller
         return $book;
     }
 
+    public function get_fp_me(){
+        $fp = $this->API_request("/v2/users/me/flightPlans");
+        $fp = $fp->json();
+        return $fp;
+    }
+
+    public function get_fp($id){
+        $fp = $this->API_request("/v2/users/me/flightPlans/".$id);
+        $fp = $fp->json();
+        return $fp;
+    }
+
 }

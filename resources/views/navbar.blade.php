@@ -59,9 +59,6 @@
             <li><a class="dropdown-item" href="{{ Route("friends.add") }}">Add Friend </a></li>
           </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ Route("serveur.api") }}">API</a>
-        </li>
         @endauth
       </ul>
     </div>

@@ -13,7 +13,6 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{ Route("serveur.index") }}" title="My account the website">Dashboard</a></li>
-            <li><a class="dropdown-item" href="{{ Route("serveur.api") }}">API</a></li>
             <li><a class="dropdown-item" href="{{ Route("auth.logout") }}" title="Disconect the website">Logout</a></li>
           </ul>
         </li>
