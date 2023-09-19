@@ -113,10 +113,6 @@ class AuthIVAOController extends Controller
                 $user_context
             );
             $user_res_data = json_decode($user_result, true);
-            if ($user_res_data != null) {
-                $users = new usersController();
-                $users->connect_via_ivao($request, $user_res_data);
-            }
             if (
                 isset($user_res_data["description"]) &&
                 ($user_res_data["description"] ===
@@ -166,7 +162,9 @@ class AuthIVAOController extends Controller
                 ]);
                 return redirect()->route($url);
             } else {
-                // dd($user_res_data); // Display user data fetched with the access token
+                    $users = new usersController();
+                    $users->connect_via_ivao($request, $user_res_data);
+                
                 return redirect()->route($url);
                 //return $this->handlerLogin($user_res_data);
             }
