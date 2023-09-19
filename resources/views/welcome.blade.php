@@ -34,7 +34,7 @@
                     <h4 class="card-title text-center text-info">FPL</h4>
                     <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined ms-2">description</span> <span class="ms-2"> Register and store the FPL</span></p>
                     @auth
-                    <p class="card-footer text-center"><a href="{{ Route("pirep.index")}}" class="btn btn-success">Creat FPL</a></p>
+                    <p class="card-footer text-center"><a href="{{ Route("pirep.index")}}" class="btn btn-success">View my FPL</a></p>
                     @endauth
                     @guest
                     <p class="card-footer text-center"><a href="{{ Route("auth.login")}}" title="register on the platform only" class="btn btn-secondary">Register Only</a></p>

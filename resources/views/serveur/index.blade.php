@@ -52,12 +52,6 @@
         <form action="{{ Route("auth.logout") }}" method="get">
             <button type="submit" class="btn btn-danger btn-sm" title="Déconnection de votre compte du site intenet">Se déconnecter</button>
         </form>
-        <form action="#" method="get">
-            <button type="submit" class="ms-1 btn btn-dark btn-sm" title="Une demande de supression de votre c'est ici !" disabled>Demande de supression</button>
-        </form>
-        <form action="{{ Route("serveur.api") }}">
-            <button type="submit" class="ms-1 btn btn-info btn-sm position-relative" title="Accès l'API">API <span class="badge rounded-pill text-bg-danger">New</span></button>
-        </form>
         @auth('admin')
         <form action="#" method="get">
             <button type="submit" class="ms-1 btn btn-success btn-sm" title="Accès au panel administrateur" disabled>Panel Admin</button>

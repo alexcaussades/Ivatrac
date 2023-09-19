@@ -55,43 +55,7 @@ Route::get('/test', function (Request $request) {
     }
 });
 
-Route::get('/whitelist/{id}', function (Request $request) {
-    $request->merge([
-        'id' => $request->id,
-        'value' => $request->header('Client-Id')
-    ]);
-    $loggin = new logginController();
-    $verifyToken = new ApiGestionController();
-    $verifyToken = $verifyToken->verifyToken($request);
-    if ($verifyToken) {
-        Http::withToken("Bearer " . $request->bearerToken());
-        if ($request->bearerToken() == $verifyToken) {
-            $whitelist = whitelist::where('id', $request->id)->get();
-            $users = new ApiGestionController();
-            $users = $users->ckeck_users($request);
-            if ($whitelist == !null) {
-                $loggin->req_api("Get whitelist with id: " . $request->id, $users->users_id, $request->ip(), 0);
-                return whitelist::where('id', $request->id)->get();
-            } else {
-                $loggin->warningLog("No id found with this whitelist: " . $request->id, $users->users_id, $request->ip(), 0);
-                return [
-                    "message" => "You are not authorized to access this page",
-                    "status" => "404",
-                    "error" => " id not found",
-                ];
-            }
-        }
-    } else {
-        $loggin->warningLog("Bearer is not valid for the request on id: " . $request->id, 0, $request->ip(), 0);
-        return [
-            "auth" => false,
-            "message" => "You are not authorized to access this page",
-            "error" => "401 Unauthorized",
-            "status" => "401",
-            "Token" => "Bearer is not valid"
-        ];
-    }
-});
+
 
 Route::get("/friends", function (Request $request) {
     $verifyToken = new ApiGestionController();

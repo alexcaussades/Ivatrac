@@ -184,12 +184,12 @@ class usersController extends Controller
 
     public function logout(Request $request)
     {
-        $user = users::where("id", auth()->user()->id)->first();
-        $logginController = new logginController();
-        $logginController->infoLog("Logout de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
-        Auth::logout();
-        Cookie::queue(Cookie::forget('remember_token'));
+        /** remove all session from the website */
+        $request->session()->forget('email-Users');
+        $request->session()->forget('remember_token');
+        $request->session()->forget('ivao_tokens');
         $request->session()->flush();
+        
     }
 
     public function get_info_user($id)

@@ -45,9 +45,6 @@
             <li><a class="dropdown-item" href="{{ Route("logout") }}">Logout</a></li>
           </ul>
         </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ Route("serveur.api") }}">API</a>
-      </li>
       @endauth
       </ul>
 

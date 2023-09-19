@@ -100,7 +100,7 @@ Route::get("callback", function (Request $request) {
         'code' => 'required|string',
     ]);
     $authivao = new AuthIVAOController();
-    $oo = $authivao->sso($request, "test2");
+    $oo = $authivao->sso($request, "home");
     return $oo;
 })->name("callback");
 
@@ -176,7 +176,7 @@ Route::prefix("auth/")->group(function () {
 
     Route::get("logout", function (usersController $usersController, Request $request) {
         $usersController->logout($request);
-        return redirect()->route("auth.login");
+        return redirect()->route("home");
     })->name("auth.logout");
 });
 
@@ -661,9 +661,9 @@ Route::get("test", function (Request $request) {
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-    $ivao = new AuthIVAOController();
-    $q = $ivao->sso($request, "home");
-    return $q;
+    $w = new whazzupController();
+    $w = $w->get_fp(8942817);
+    return $w;
 })->name("test2");
 
 Route::get("test3", function (Request $request) {
