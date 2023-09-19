@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class AuthIVAOController extends Controller
 {
-    public function sso(Request $request, $url="home")
+    public function sso(Request $request, $url = "home")
 
     {
         // Now we can take care of the actual authentication
@@ -60,7 +60,7 @@ class AuthIVAOController extends Controller
             $token_options = [
                 "http" => [
                     "header" =>
-                        "Content-type: application/x-www-form-urlencoded\r\n",
+                    "Content-type: application/x-www-form-urlencoded\r\n",
                     "method" => "POST",
                     "content" => http_build_query($token_req_data),
                 ],
@@ -113,16 +113,18 @@ class AuthIVAOController extends Controller
                 $user_context
             );
             $user_res_data = json_decode($user_result, true);
-            $request->merge([
-                "id" => $user_res_data["id"],
-            ]);
-            $users = new usersController();
-            $users->connect_via_ivao($request, $user_res_data);
+            if (isset($user_res_data)) {
+                $request->merge([
+                    "id" => $user_res_data["id"],
+                ]);
+                $users = new usersController();
+                $users->connect_via_ivao($request, $user_res_data);
+            }
             if (
                 isset($user_res_data["description"]) &&
                 ($user_res_data["description"] ===
                     "This auth token has been revoked or expired" or
-                $user_res_data["description"] ===
+                    $user_res_data["description"] ===
                     "Couldn't decode auth token")
             ) {
                 // Access token expired, using refresh token to get a new one
@@ -137,7 +139,7 @@ class AuthIVAOController extends Controller
                 $token_options = [
                     "http" => [
                         "header" =>
-                            "Content-type: application/x-www-form-urlencoded\r\n",
+                        "Content-type: application/x-www-form-urlencoded\r\n",
                         "method" => "POST",
                         "content" => http_build_query($token_req_data),
                         "ignore_errors" => true,
@@ -186,7 +188,7 @@ class AuthIVAOController extends Controller
             foreach ($data as $key => $value) {
                 $staff[] = $value["id"];
             }
-        
+
             $staff = implode(",", $staff);
             return $staff;
         }
@@ -234,8 +236,8 @@ class AuthIVAOController extends Controller
         return redirect()->route("welcome");
     }
 
-    public function revoke_token(){
-        
+    public function revoke_token()
+    {
     }
 
 
@@ -243,10 +245,4 @@ class AuthIVAOController extends Controller
     {
         return view("callback");
     }
-
-    
-
-   
 }
-
-
