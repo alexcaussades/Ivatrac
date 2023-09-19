@@ -113,7 +113,7 @@ class AuthIVAOController extends Controller
                 $user_context
             );
             $user_res_data = json_decode($user_result, true);
-            if ($user_res_data["id"] != null) {
+            if ($user_res_data != null) {
                 $request->merge([
                     "id" => $user_res_data["id"],
                 ]);
