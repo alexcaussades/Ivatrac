@@ -590,23 +590,21 @@ Route::prefix("friends")->group(function () {
         return view("friends.add");
     })->name("friends.add")->middleware(["auth:web"]);
 
-    Route::get("destroy/{id}", function (Request $request) {
+    Route::get("destroy", function (Request $request) {
         $request->merge([
-            "id" => $request->id,
+            "id" => $request->vid,
         ]);
         $validator = Validator::make($request->all(), [
             'id' => 'required|numeric',
         ]);
-
         if ($validator->fails()) {
             return redirect()->route("auth.register")
                 ->withErrors("Erreur for authentification is not valid")
                 ->withInput();
         }
-        $st = new frendly_userController(Auth::user()->id, $request->id);
-        $remenber = $st->get_friends_via_id($request->id);
-        $st->deleteFrendlyUser($request->id);
-        return to_route("friends.all")->with("success", "le VID " . $remenber["vid_friend"] . " à été supprimé dans la liste !");
+        $whazzup = new whazzupController();
+        $whazzup->delete_friends($request->id);
+        return to_route("friends.all")->with("success", "Friends remove in your list");
     })->name("friends.destroy")->middleware(["auth:web"]);
 })->middleware(["auth:web"]);
 

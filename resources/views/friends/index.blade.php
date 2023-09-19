@@ -51,7 +51,7 @@
                 <td>{{$value["session"]["callsign"]}}</td>
                 @endif
                 <td class="d-flex inline-flex">
-                    <form action="#" method="get">
+                    <form action="{{route("friends.destroy")}}" method="get">
                         <input type="hidden" name="vid" value="{{$value["vid_friend"]}}">
                         <button type="submit" class="btn btn-danger btn-sm">DELETE</button>
                     </form>

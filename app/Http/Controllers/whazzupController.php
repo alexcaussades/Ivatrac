@@ -170,7 +170,7 @@ class whazzupController extends Controller
             'grant_type' => 'client_credentials',
             'client_id' => $idclient,
             'client_secret' => $secret,
-            'scope' => "friends:read"
+            'scope' => "friends friends:read friends:write"
         );
 
         // use key 'http' even if you send the request to https://...
@@ -200,6 +200,28 @@ class whazzupController extends Controller
             'Accept'        => 'application/json',
         ];
         $response = Http::withHeaders($headers)->get($url);
+        return $response;
+    }
+
+    public function API_Delect_session($path = null, $method = 'GET', $data = null, $headers = null)
+    {
+        $url = 'https://api.ivao.aero/' . $path;
+        if (session("ivao_tokens")) {
+            
+            $json = session("ivao_tokens");
+            $json = json_decode($json);
+            $json = $json->access_token;
+            $headers = [
+                'Authorization' => 'Bearer ' . $json,
+                'Accept'        => 'application/json',
+            ];
+        } else {
+            $headers = [
+                'Authorization' => 'Bearer ' . $this->get_token(),
+                'Accept'        => 'application/json',
+            ];
+        }
+        $response = Http::withHeaders($headers)->delete($url);
         return $response;
     }
 
@@ -339,6 +361,13 @@ class whazzupController extends Controller
         return $whazzup;
     }
 
+    public function delete_friends($vid)
+    {
+        $whazzup = $this->API_Delect_session("v2/webeye/friends/" . $vid);
+        $whazzup = $whazzup->json();
+        return $whazzup;
+    }
+
     public function position_search($icao = null)
     {
         $metar = $this->API_request("v2/positions/search?startsWith=" . $icao);
@@ -448,7 +477,7 @@ class whazzupController extends Controller
     }
 
     public function get_fp($id){
-        $fp = $this->API_request("/v2/users/me/flightPlans/".$id);
+        $fp = $this->API_request("/v2/users/me/flightPlans/".$id);              
         $fp = $fp->json();
         return $fp;
     }
