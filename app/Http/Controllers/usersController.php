@@ -118,7 +118,7 @@ class usersController extends Controller
             return redirect()->intended('serveur');
         } else {
             $request->merge([
-                'vid' => $request->id,
+                'vid' => $data["id"],
                 'name_first' => $data["firstName"],
                 'name_last' => $data["lastName"],
                 'email' => $data["email"],

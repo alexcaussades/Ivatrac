@@ -80,7 +80,7 @@ Route::get('/', function (Request $request, usersController $usersController) {
     $bddid = new whazzupController();
     $idlast = $bddid->bddid();
     $heurechange = $bddid->heurechange();
-    if(Session::get("ivao_tokens")){
+    if(Session::get("ivao_tokens") != null){
         $authivao = new AuthIVAOController();
         $authivao->sso($request, "home");
         $whaz = new whazzupController();
