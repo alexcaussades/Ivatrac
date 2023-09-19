@@ -115,9 +115,7 @@ Route::prefix("auth/")->group(function () {
         if (Auth::user() != null) {
             return redirect()->route("serveur");
         }
-        $authuser = new usersController();
-        $authuser->autentification_via_cookie();
-        return view("auth.login");
+        return redirect()->route("ivao.connect");
     })->name("auth.login");
 
     Route::post("login", [\App\Http\Controllers\usersController::class, "autentification"]);
