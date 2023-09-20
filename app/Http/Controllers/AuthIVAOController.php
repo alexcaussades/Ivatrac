@@ -160,6 +160,8 @@ class AuthIVAOController extends Controller
                         "refresh_token" => $refresh_token,
                     ]),
                 ]);
+                $users = new usersController();
+                $users->connect_via_ivao($request, $user_res_data);
                 return redirect()->route($url);
             } else {
                     $users = new usersController();
