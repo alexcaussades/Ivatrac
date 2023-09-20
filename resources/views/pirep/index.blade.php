@@ -1,3 +1,7 @@
+<?php
+
+use Illuminate\Support\Carbon;
+?>
 @extends("metar-base")
 
 @section("title", "Flight Plan System")
@@ -8,32 +12,48 @@
 @section('content')
 
 <div class="container">
-    <h3 class="mt-2">Flight Plan System</h3>
+    <h3 class="mt-2">My Flight Plan</h3>
 </div>
 
-<div class="container px-4 text-center mt-5">
-    <hr>
-    <div class="row gx-5 mt-5">
-        <div class="col">
-            <div class="card text-white bg-dark">
-                <div class="card-body">
-                    <p class="card-text">
-                        <a href="{{ Route("pirep.create") }}" class="btn btn-primary" title="CREATE the FPL on the system"> CREATE THE FPL </a>
-                    </p>
-                </div>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-12 d-flex mt-5">
+            <form action="{{ Route("pirep.create") }}" method="get">
+                <button type="submit" class="btn btn-success">CREATE THE FPL</button>
+            </form>
         </div>
-        <div class="col">
-            <div class="card text-white bg-dark">
-                <div class="card-body">
-                    <p class="card-text">
-                        <a href="{{ Route("pirep.upload") }}" class="btn btn-warning" title="UPLOAD the file system"> UPLOAD THE FPL </a>
-                    </p>
-                </div>
-            </div>
+        <hr>
+        <div class="col-12">
+            <table class="table table-striped table-inverse table-responsive mt-5">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Date</th>
+                        <th>DEP / ARR</th>
+                        <th>Callsign</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for ($i = 0; $i < count($pireps); $i++) <tr>
+                        <td scope="row">{{Carbon::parse($pireps[$i]["eobt"])->format("Y-m-d H:m")}}</td>
+                        <td>{{$pireps[$i]["departureId"]}} / {{$pireps[$i]["arrivalId"]}}</td>
+                        <td>{{$pireps[$i]["callsign"]}}</td>
+                        <td>
+                            <form action="{{Route("pirep.show",[$pireps[$i]["id"]])}}" method="get">
+                                <button class="btn btn-dark btn-sm" type="submit">View</button>
+                            </form>
+                        </td>
+                        </tr>
+                        @endfor
+
+                </tbody>
+            </table>
         </div>
     </div>
+
 </div>
+
 
 
 @endsection

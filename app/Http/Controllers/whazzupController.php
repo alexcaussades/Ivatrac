@@ -482,4 +482,10 @@ class whazzupController extends Controller
         return $fp;
     }
 
+    public function creator(){
+        $creator = $this->API_request_session("/v2/creators/665306");
+        $creator = $creator->json();
+        return $creator;
+    }
+
 }

@@ -47,6 +47,7 @@ use Illuminate\Support\Carbon;
                     <h4 class="card-title text-center">No Friend online </h4>
                     <p class="card-text">
                         <span class="mt-2"> Add Friends ? </span>
+                        <!-- <img class="youtube" alt=""><img class="twitch ms-2" alt=""><img class="tiktok ms-2" alt=""> -->
                     <form action="{{ Route("friends.add.post.webeye") }}" method="get">
                         @csrf
                         <div class="mb-3">
