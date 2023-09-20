@@ -37,3 +37,21 @@
    @keyframes blinker-two {  
      100% { opacity: 0; }
    }
+
+
+   .tiktok {
+    content: url('https://api.iconify.design/logos/tiktok-icon.svg');
+    width: 3vw;
+    height: 3vw;  
+  }
+
+  .twitch {
+    content: url('https://api.iconify.design/logos/twitch.svg');
+    width: 3vw;
+    height: 3vw;  
+  }
+  .youtube {
+    content: url('https://api.iconify.design/logos/youtube-icon.svg');
+    width: 3vw;
+    height: 3vw;  
+  }

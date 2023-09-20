@@ -80,9 +80,9 @@ Route::get('/', function (Request $request, usersController $usersController) {
     $bddid = new whazzupController();
     $idlast = $bddid->bddid();
     $heurechange = $bddid->heurechange();
-    if(Session::get("ivao_tokens") != null){
+    if (Session::get("ivao_tokens") != null) {
         $authivao = new AuthIVAOController();
-        //$authivao->sso($request, "home");
+        $authivao->sso($request, "home");
         $whaz = new whazzupController();
         $online = $whaz->online_me();
         $online = json_decode($online, true);
@@ -436,16 +436,19 @@ Route::prefix("ivao")->group(function () {
         return view("ivao.bookings", ["bookings" => $bookings, "date" => $date]);
     })->name("ivao.bookings")->middleware(["auth:web"]);
 
-  Route::get("connect", function (Request $request) {
+    Route::get("connect", function (Request $request) {
         $authivao = new AuthIVAOController();
         $oo = $authivao->sso($request);
         return $oo;
     })->name("ivao.connect");
 });
 
-Route::prefix("pirep")->group(function () {
+Route::prefix("fpl")->group(function () {
     Route::get("/", function (Request $request) {
-        return view("pirep.index");
+        $whazzup = new whazzupController();
+        $pirep = $whazzup->get_fp_me();
+        $pirep = $pirep["items"];
+        return view("pirep.index", ["pireps" => $pirep]);
     })->name("pirep.index");
 
     Route::get("/create", function (Request $request) {
@@ -501,9 +504,9 @@ Route::prefix("pirep")->group(function () {
         if (!Auth::user()) {
             return redirect()->route("auth.login");
         } else {
-            $pirep = new PirepController();
-            $oo = $pirep->show_fpl_user(auth()->user()->id);
-            $json = json_decode($oo);
+            $whazzup = new whazzupController();
+            $json = $whazzup->get_fp_me();
+            dd($json);
             return view("fpl.index", ["json" => $json]);
         }
     })->name("pirep.all");
@@ -546,7 +549,7 @@ Route::prefix("friends")->group(function () {
     })->name("friends.all")->middleware(["auth:web"]);
 
     Route::get("verify", function (Request $request) {
-        if(empty(Session::get("ivao_tokens"))){
+        if (empty(Session::get("ivao_tokens"))) {
             return redirect()->route("ivao.connect");
         }
         $authivao = new AuthIVAOController();
@@ -666,6 +669,6 @@ Route::get("test2", function (Request $request) {
 
 Route::get("test3", function (Request $request) {
     $whazzup = new whazzupController();
-    $get_all_atc = $whazzup->revoke_token();
+    $get_all_atc = $whazzup->creator();
     return $get_all_atc;
 })->name("test3");
