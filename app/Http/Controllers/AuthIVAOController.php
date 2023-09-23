@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\users;
 use PharIo\Manifest\Url;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -16,6 +18,7 @@ class AuthIVAOController extends Controller
     public function sso(Request $request, $url = "home")
 
     {
+
         // Now we can take care of the actual authentication
         $client_id = env("ivao_api_client_id");
         $client_secret = env("ivao_api_client_secret");
@@ -80,20 +83,27 @@ class AuthIVAOController extends Controller
 
             $access_token = $token_res_data["access_token"]; // Here is the access token
             $refresh_token = $token_res_data["refresh_token"]; // Here is the refresh token
+            $expires_in = $token_res_data["expires_in"]; // Here is the access token expiration time
+            $expires_in = now()->addSeconds($expires_in);
+            $expires_in = Carbon::parse($expires_in)->format("Y-m-d H:i:s");
+
+
 
             session([
-                "ivao_tokens" => json_encode([
+                "ivao_tokens" => [
                     "access_token" => $access_token,
                     "refresh_token" => $refresh_token,
-                ]),
+                    "expires_in" => $expires_in,
+                ],
             ]);
-            return redirect()->route($url);
+            
+            return redirect()->route("callback");
 
             // header("Location: user.php"); // Remove the code and state from URL since they aren't valid anymore
         } elseif (session()->has("ivao_tokens")) {
             // User has already logged in
 
-            $tokens = json_decode(session("ivao_tokens"), true);
+            $tokens = session("ivao_tokens");
             $access_token = $tokens["access_token"];
             $refresh_token = $tokens["refresh_token"];
 
@@ -153,25 +163,31 @@ class AuthIVAOController extends Controller
 
                 $access_token = $token_res_data["access_token"]; // Here is the new access token
                 $refresh_token = $token_res_data["refresh_token"]; // Here is the new refresh token
+                $expires_in = $token_res_data["expires_in"]; // Here is the new access token expiration time
+                $expires_in = now()->addSeconds($expires_in);
+                $expires_in = Carbon::parse($expires_in)->format("Y-m-d H:i:s");
+
+
+
 
                 session([
-                    "ivao_tokens" => json_encode([
+                    "ivao_tokens" => [
                         "access_token" => $access_token,
                         "refresh_token" => $refresh_token,
-                    ]),
+                        "expires_in" => $expires_in,
+                    ],
                 ]);
+                return redirect()->route($url);
+            } else {
+                // Access token is still valid, we can use it to get the user data
                 $users = new usersController();
                 $users->connect_via_ivao($request, $user_res_data);
                 return redirect()->route($url);
-            } else {
-                    $users = new usersController();
-                    $users->connect_via_ivao($request, $user_res_data);
-                
-                return redirect()->route($url);
                 //return $this->handlerLogin($user_res_data);
             }
+            $users = new usersController();
+            $users->connect_via_ivao($request, $user_res_data);
         } else {
-            // First visit : Unauthenticated user
             return redirect($full_url);
         }
     }
@@ -233,13 +249,66 @@ class AuthIVAOController extends Controller
         return redirect()->route("welcome");
     }
 
-    public function revoke_token()
+    public function token_refresh_ivao($request)
     {
-    }
+        $client_id = env("ivao_api_client_id");
+        $client_secret = env("ivao_api_client_secret");
+        $redirect_uri = route("callback");
+        // Get all URLs we need from the server
+        $openid_url = "https://api.ivao.aero/.well-known/openid-configuration";
+        $openid_result = file_get_contents($openid_url, false);
+        if ($openid_result === false) {
+            /* Handle error */
+            die("Error while getting openid data");
+        }
+        $openid_data = json_decode($openid_result, true);
 
+        $base_url = $openid_data["authorization_endpoint"];
+        $reponse_type = "code";
+        $scopes = "profile configuration email bookings:write friends friends:read friends:write flight_plans:read flight_plans:write tracker";
+        $state = rand(100000, 999999); // Random string to prevent CSRF attacks
 
-    public function callback()
-    {
-        return view("callback");
+        $query = [
+            "response_type" => $reponse_type,
+            "client_id" => $client_id,
+            "scope" => $scopes,
+            "redirect_uri" => $redirect_uri,
+            "state" => $state,
+        ];
+        $full_url = "$base_url?" . http_build_query($query);
+
+        if (isset($request->code) && isset($request->state)) {
+            // User has been redirected back from the login page
+
+            $code = $request->code; // Valid only 5 minutes
+
+            $token_req_data = [
+                "grant_type" => "authorization_code",
+                "code" => $code,
+                "client_id" => $client_id,
+                "client_secret" => $client_secret,
+                "redirect_uri" => $redirect_uri,
+            ];
+
+            // use key 'http' even if you send the request to https://...
+            $token_options = [
+                "http" => [
+                    "header" =>
+                    "Content-type: application/x-www-form-urlencoded\r\n",
+                    "method" => "POST",
+                    "content" => http_build_query($token_req_data),
+                ],
+            ];
+            $token_context = stream_context_create($token_options);
+            $token_result = file_get_contents(
+                $openid_data["token_endpoint"],
+                false,
+                $token_context
+            );
+            if ($token_result === false) {
+                /* Handle error */
+                die("Error while getting token");
+            }
+        }
     }
 }

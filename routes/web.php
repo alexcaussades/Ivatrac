@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Sleep;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -30,10 +31,10 @@ use App\Http\Controllers\logginController;
 use App\Http\Controllers\testingContolleur;
 use App\Http\Controllers\whazzupController;
 use App\Http\Controllers\AutAdminController;
+use App\Http\Controllers\AuthIVAOController;
 use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
-use App\Http\Controllers\AuthIVAOController;
 use App\Http\Controllers\chartIvaoFRcontroller;
 use App\Http\Controllers\frendly_userController;
 use App\Http\Controllers\MailRegisterController;
@@ -71,25 +72,25 @@ Route::get('/logout', function (Request $request) {
     return to_route("auth.logout");
 })->name("logout");
 
-Route::get('/', function (Request $request, usersController $usersController) {
+Route::get('/', function (Request $request) {
     /** creation d'un cookie sur laravel */
-    $users = $usersController->autentification_via_cookie();
     $whazzup = new whazzupController();
-    $whazzup->getwhazzup();
     $whazzup = $whazzup->connexion();
-    $bddid = new whazzupController();
-    $idlast = $bddid->bddid();
-    $heurechange = $bddid->heurechange();
     if (Session::get("ivao_tokens") != null) {
-        $authivao = new AuthIVAOController();
-        $authivao->sso($request, "home");
+        $date = new DateTime();
+        $date->setTimezone(new DateTimeZone('UTC'));
+        $date = $date->format('Y-m-d H:i:s');
+        if(Session::get("ivao_tokens")["expires_in"] < $date){
+            Session::forget("ivao_tokens");
+            $whazzup->sso($request, "home");
+        } 
         $whaz = new whazzupController();
         $online = $whaz->online_me();
         $online = json_decode($online, true);
-        return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange, "online" => $online]);
+        return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
     }
     $online = null;
-    return response()->view('welcome', ["whazzup" => $whazzup, "idlast" => $idlast, "heurechange" => $heurechange, "online" => $online]);
+    return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
 })->where('client', '[0-9]+')->name("home");
 
 Route::get("callback", function (Request $request) {
@@ -429,7 +430,8 @@ Route::prefix("ivao")->group(function () {
     });
 
     Route::get("/bookings", function (Request $request) {
-
+        $authivao = new AuthIVAOController();
+        $authivao->sso($request, "ivao.bookings");
         $whazzup = new whazzupController();
         $bookings = $whazzup->Bookings();
         $date = date("d/m/Y");
@@ -553,30 +555,12 @@ Route::prefix("friends")->group(function () {
             return redirect()->route("ivao.connect");
         }
         $authivao = new AuthIVAOController();
-        $authivao->sso($request, "friends.verify");
+        $authivao->sso($request, "friends.verify");         
         $whazzup = new whazzupController();
         $friends = $whazzup->get_friends_online();
         return view("friends.verify", ["friends" => $friends]);
     })->name("friends.verify")->middleware(["auth:web"]);
 
-    Route::get("/add", function (Request $request) {
-        $request->merge([
-            "vid_friend" => $request->vid_friend,
-            "name_friend" => $request->name_friend
-        ]);
-        $validator = Validator::make($request->all(), [
-            'vid_friend' => 'required|numeric',
-            'name_friend' => 'required|string',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->route("auth.register")
-                ->withErrors("Erreur for authentification is not valid")
-                ->withInput();
-        }
-        $st = new frendly_userController(Auth::user()->id, $request->vid_friend, $request->name_friend);
-        $st->addFrendlyUser();
-        return to_route("friends.all");
-    })->name("friends.add")->middleware(["auth:web"]);
 
     Route::get("post-webeye", function (Request $request) {
         $request->merge([
@@ -662,9 +646,15 @@ Route::get("test", function (Request $request) {
 })->name("test");
 
 Route::get("test2", function (Request $request) {
-    $w = new whazzupController();
-    $w = $w->get_fp(8942817);
-    return $w;
+    $date = new DateTime();
+    $date->setTimezone(new DateTimeZone('UTC'));
+    $date = $date->format('Y-m-d H:i:s');
+    //add 5 minutes to the current time
+    $date = strtotime($date . ' + 3 minutes');
+    $date = date('Y-m-d H:i:s', $date);
+    //formatig the date to the required format for session
+    $date = date('Y-m-d\TH:i:s\Z', strtotime($date));    
+    return $date;
 })->name("test2");
 
 Route::get("test3", function (Request $request) {

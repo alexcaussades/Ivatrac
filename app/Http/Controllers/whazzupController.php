@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\AuthIVAOController;
 use PHPUnit\TestRunner\TestResult\Collector;
 
 class whazzupController extends Controller
@@ -204,6 +205,7 @@ class whazzupController extends Controller
     }
 
     public function API_Delect_session($path = null, $method = 'GET', $data = null, $headers = null)
+
     {
         $url = 'https://api.ivao.aero/' . $path;
         if (session("ivao_tokens")) {
@@ -229,10 +231,30 @@ class whazzupController extends Controller
     {
         $url = 'https://api.ivao.aero/' . $path;
         if (session("ivao_tokens")) {
-            
+
             $json = session("ivao_tokens");
             $json = json_decode($json);
             $json = $json->access_token;
+            $headers = [
+                'Authorization' => 'Bearer ' . $json,
+                'Accept'        => 'application/json',
+            ];
+        } else {
+            $headers = [
+                'Authorization' => 'Bearer ' . $this->get_token(),
+                'Accept'        => 'application/json',
+            ];
+        }
+        $response = Http::withHeaders($headers)->delete($url);
+        return $response;
+    }
+
+    public function API_request($path = null, $method = 'GET', $data = null, $headers = null)
+    {
+        $url = 'https://api.ivao.aero/' . $path;
+        if (session("ivao_tokens")) {
+            $json = session("ivao_tokens");
+            $json = $json["access_token"];
             $headers = [
                 'Authorization' => 'Bearer ' . $json,
                 'Accept'        => 'application/json',
@@ -248,8 +270,13 @@ class whazzupController extends Controller
         return $response;
     }
 
-    public function refresh_token_api_ivao(){
-
+    public function refresh_token_api_ivao(Request $request)
+    {
+        $auth = new AuthIVAOController();
+        $json = $auth->sso($request);
+        $json = json_decode($json);
+        $json = $json->access_token;
+        return $json;
     }
 
     public function API_POST($path = null, $method = 'POST', $data = null, $headers = null)
@@ -290,6 +317,11 @@ class whazzupController extends Controller
         return $metar;
     }
 
+    public function track_session($idsession = null)
+    {
+        $metar = $this->API_request("/v2/airports/LFBL/squawks");
+        return $metar;
+    }
     public function online_me()
     {
         $online = $this->API_request("/v2/users/me/sessions/now");
@@ -470,22 +502,27 @@ class whazzupController extends Controller
         return $book;
     }
 
-    public function get_fp_me(){
+    public function get_fp_me()
+    {
         $fp = $this->API_request("/v2/users/me/flightPlans");
         $fp = $fp->json();
         return $fp;
     }
 
-    public function get_fp($id){
-        $fp = $this->API_request("/v2/users/me/flightPlans/".$id);              
+
+    public function get_fp($id)
+    {
+        $fp = $this->API_request("/v2/users/me/flightPlans/" . $id);
+
         $fp = $fp->json();
         return $fp;
     }
 
-    public function creator(){
+
+    public function creator()
+    {
         $creator = $this->API_request_session("/v2/creators/665306");
         $creator = $creator->json();
         return $creator;
     }
-
 }
