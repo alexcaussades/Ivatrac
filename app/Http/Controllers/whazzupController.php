@@ -227,8 +227,6 @@ class whazzupController extends Controller
         return $response;
     }
 
- 
-
     public function API_request($path = null, $method = 'GET', $data = null, $headers = null)
     {
         $url = 'https://api.ivao.aero/' . $path;
