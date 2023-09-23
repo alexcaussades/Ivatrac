@@ -99,9 +99,8 @@ class usersController extends Controller
         //** generate session users */
         if ($user) {
             Auth::login($user);
-            $request->session()->regenerate();
+            //$request->session()->regenerate();
             $user = users::where("id", auth()->user()->id)->first();
-            Cookie::queue('email-Users', $user->email, time() + 60 * 60 * 24 * 30);
             //** Check if user is admin */
             $admin = new Admin();
             $check = $admin::where('email', $user->email)->first();
@@ -114,8 +113,8 @@ class usersController extends Controller
                 Auth::guard('modo')->login($user);
             }
             $logginController = new logginController();
-            $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
-            return redirect()->intended('serveur');
+            $logginController->infoLog("Connexion de " . $user->name . "", $user->id, $request->ip(), null);
+            return redirect()->intended('home');
         } else {
             $request->merge([
                 'vid' => $data["id"],
@@ -132,17 +131,17 @@ class usersController extends Controller
                 'name' => $data["firstName"] . " " . $data["lastName"],
             ]);
             $this->create($request);
-            $user = users::where("vid", $request->id)->first();
+            $user = users::where("vid", $data["id"])->first();
             Auth::login($user);
             $request->session()->regenerate();
             $user = users::where("id", auth()->user()->id)->first();
-            Cookie::queue('email-Users', $user->email, time() + 60 * 60 * 24 * 30);
-            $lastId = DB::getPdo()->lastInsertId();
-            $mail = new MailRegisterController();
-            $mail->MailRegister($lastId);
+            //envoie mail for amdin
+            $mailController = new MailRegisterController();
+            $mailController->MailRegister($user->id);
+            // return log for admin
             $logginController = new logginController();
-            $logginController->infoLog("Connexion de " . $user->name . " (" . $user->email . ")", $user->id, $request->ip(), null);
-            return redirect()->intended('serveur');
+            $logginController->infoLog("Connexion de " . $user->name . " ", $user->id, $request->ip(), null);
+            return redirect()->intended('home');
         }
     }
     public function autentification_via_cookie()
