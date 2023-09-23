@@ -205,6 +205,29 @@ class whazzupController extends Controller
     }
 
     public function API_Delect_session($path = null, $method = 'GET', $data = null, $headers = null)
+
+    {
+        $url = 'https://api.ivao.aero/' . $path;
+        if (session("ivao_tokens")) {
+            
+            $json = session("ivao_tokens");
+            $json = json_decode($json);
+            $json = $json->access_token;
+            $headers = [
+                'Authorization' => 'Bearer ' . $json,
+                'Accept'        => 'application/json',
+            ];
+        } else {
+            $headers = [
+                'Authorization' => 'Bearer ' . $this->get_token(),
+                'Accept'        => 'application/json',
+            ];
+        }
+        $response = Http::withHeaders($headers)->delete($url);
+        return $response;
+    }
+
+    public function API_request($path = null, $method = 'GET', $data = null, $headers = null)
     {
         $url = 'https://api.ivao.aero/' . $path;
         if (session("ivao_tokens")) {
@@ -486,12 +509,15 @@ class whazzupController extends Controller
         return $fp;
     }
 
+
     public function get_fp($id)
     {
         $fp = $this->API_request("/v2/users/me/flightPlans/" . $id);
+
         $fp = $fp->json();
         return $fp;
     }
+
 
     public function creator()
     {

@@ -83,7 +83,7 @@ Route::get('/', function (Request $request) {
         if(Session::get("ivao_tokens")["expires_in"] < $date){
             Session::forget("ivao_tokens");
             $whazzup->sso($request, "home");
-        }
+        } 
         $whaz = new whazzupController();
         $online = $whaz->online_me();
         $online = json_decode($online, true);

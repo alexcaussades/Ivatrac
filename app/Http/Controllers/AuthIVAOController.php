@@ -177,13 +177,11 @@ class AuthIVAOController extends Controller
                         "expires_in" => $expires_in,
                     ],
                 ]);
-
                 return redirect()->route($url);
             } else {
                 // Access token is still valid, we can use it to get the user data
                 $users = new usersController();
                 $users->connect_via_ivao($request, $user_res_data);
-
                 return redirect()->route($url);
                 //return $this->handlerLogin($user_res_data);
             }
