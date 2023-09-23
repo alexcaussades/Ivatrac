@@ -76,20 +76,21 @@ Route::get('/', function (Request $request) {
     /** creation d'un cookie sur laravel */
     $whazzup = new whazzupController();
     $whazzup = $whazzup->connexion();
-    if (Session::get("ivao_tokens") != null) {
-        $date = new DateTime();
-        $date->setTimezone(new DateTimeZone('UTC'));
-        $date = $date->format('Y-m-d H:i:s');
-        if(Session::get("ivao_tokens")["expires_in"] < $date){
-            Session::forget("ivao_tokens");
-            $whazzup->sso($request, "home");
-        } 
-        $whaz = new whazzupController();
-        $online = $whaz->online_me();
-        $online = json_decode($online, true);
-        return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
-    }
+    // if (Session::get("ivao_tokens") != null) {
+    //     $date = new DateTime();
+    //     $date->setTimezone(new DateTimeZone('UTC'));
+    //     $date = $date->format('Y-m-d H:i:s');
+    //     if(Session::get("ivao_tokens")["expires_in"] < $date){
+    //         Session::forget("ivao_tokens");
+    //         $whazzup->sso($request, "home");
+    //     } 
+    //     $whaz = new whazzupController();
+    //     $online = $whaz->online_me();
+    //     $online = json_decode($online, true);
+    //     return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
+    // }
     $online = null;
+    return response()->view("maintenance");
     return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
 })->where('client', '[0-9]+')->name("home");
 
