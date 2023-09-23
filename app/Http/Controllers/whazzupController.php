@@ -231,28 +231,6 @@ class whazzupController extends Controller
     {
         $url = 'https://api.ivao.aero/' . $path;
         if (session("ivao_tokens")) {
-
-            $json = session("ivao_tokens");
-            $json = json_decode($json);
-            $json = $json->access_token;
-            $headers = [
-                'Authorization' => 'Bearer ' . $json,
-                'Accept'        => 'application/json',
-            ];
-        } else {
-            $headers = [
-                'Authorization' => 'Bearer ' . $this->get_token(),
-                'Accept'        => 'application/json',
-            ];
-        }
-        $response = Http::withHeaders($headers)->delete($url);
-        return $response;
-    }
-
-    public function API_request($path = null, $method = 'GET', $data = null, $headers = null)
-    {
-        $url = 'https://api.ivao.aero/' . $path;
-        if (session("ivao_tokens")) {
             $json = session("ivao_tokens");
             $json = $json["access_token"];
             $headers = [
