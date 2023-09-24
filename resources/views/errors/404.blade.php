@@ -2,7 +2,11 @@
 
 @section("title", "Metar")
 
+@if (env("maintenance_mode") == true)
+
+@else
 @include("navbar")
+@endif
 
 @section('content')
 
@@ -16,7 +20,11 @@
                     <h1 class="display-1 mt-8">404</h1>
                     <h2 class="display-4">Page not found</h2>
                     <p class="lead">The page you are looking for was not found.</p>
+                    @if (env("maintenance_mode") == true)
+
+                    @else
                     <a href="{{ Route('home') }}" class="btn btn-primary">Go back to home</a> <a href="{{ Route('feedback.index') }}" class="btn btn-dark ms-2">Feedback</a>
+                    @endif
                 </div>
             </div>
             </p>

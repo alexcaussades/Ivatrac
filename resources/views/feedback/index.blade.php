@@ -33,7 +33,7 @@
                     <div class="text-muted"> Please be as precise as possible </div>
                     <textarea class="form-control" name="body" id="" rows="5" minlength="25" maxlength="255"></textarea>
                 </div>
-                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                <input type="hidden" name="user_id" value="{{ Auth::user()->id ?? null }}">
                 <input type="hidden" name="old" value="{{ old('url') }}">
             </div>
         </div>

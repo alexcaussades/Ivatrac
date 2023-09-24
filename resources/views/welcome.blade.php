@@ -34,7 +34,7 @@
                     <h4 class="card-title text-center text-info">FPL</h4>
                     <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined ms-2">description</span> <span class="ms-2"> Register and store the FPL</span></p>
                     @auth
-                    <p class="card-footer text-center"><a href="{{ Route("pirep.index")}}" class="btn btn-success">View my FPL</a></p>
+                    <p class="card-footer text-center"><a href="#" class="btn btn-success">Comming soon</a></p>
                     @endauth
                     @guest
                     <p class="card-footer text-center"><a href="{{ Route("auth.login")}}" title="register on the platform only" class="btn btn-secondary">Register Only</a></p>
@@ -64,11 +64,20 @@
                     <p class="card-text text-center"><span class="ms-2">{{$online["callsign"]}}</span></p>
                     <p class="card-footer text-center"><a href="{{Route("vid", [$online["user"]["id"]])}}" class="btn btn-success">See my online</a></p>
                 </div>
-                @else
+                @elseif (Session::get("ivao_tokens"))
                 <div class="card-body bg-dark border-dark text-white text-opacity-75">
                     <h4 class="card-title text-center">OFFLINE</h4>
-                    <p class="card-text text-center"><span class="ms-2">No connection to the remote server </span></p>
-                    <p class="card-footer text-center"><a href="{{ Route("ivao.connect")}}" title="register on the platform only" class="btn btn-success">SSO IVAO</a></p>
+                    <p class="card-text text-center"><span class="ms-2">Are you not online on IVAO to start a pilot or controller session? </span></p>
+                    <p class="card-footer text-center">
+                        <a href="https://www.ivao.aero/" target="_blank" title="ivao world website" class="btn btn-primary">IVAO</a>
+                        <a href="https://wiki.ivao.aero/en/home" target="_blank" title="ivao wiki website" class="btn btn-primary">Wiki IVAO</a>
+                    </p>
+                </div>
+                @else
+                <div class="card-body bg-dark border-dark text-white text-opacity-75">
+                    <h4 class="card-title text-center">My IVAO account</h4>
+                    <p class="card-text text-center"><span class="ms-2">Login to your ivao account is required for several actions on this website.</span></p>
+                    <p class="card-footer text-center"><a href="{{ Route("ivao.connect")}}" title="register on the platform only" class="btn btn-primary">SSO IVAO</a></p>
                 </div>
                 @endif
             </div>
