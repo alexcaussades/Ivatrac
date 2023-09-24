@@ -87,6 +87,7 @@ Route::get('/', function (Request $request) {
         return view('maintenance');
     }
     $online = null;
+    return response()->view("maintenance");
     return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
 })->where('client', '[0-9]+')->name("home");
 

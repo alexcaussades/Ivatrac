@@ -1,6 +1,5 @@
 @extends("index-maint")
 
-
 @section('content')
 
 
