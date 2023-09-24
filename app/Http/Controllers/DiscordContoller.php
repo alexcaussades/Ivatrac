@@ -58,6 +58,12 @@ class DiscordContoller extends Controller
         ]);
         $usersController = new UsersController();
         $user = $usersController->get_info_user($request->user_id);
+        if(!$user){
+           $user = [
+               "name" => "Anonymous",
+               "vid" => "0000000",
+           ];
+        }
         $push = Http::post($this->url_webhooks(), [
             "avatar_url" => "https://i.pinimg.com/originals/99/1e/53/991e534b8f6038f4bdf67a97a7984822.jpg",
             "embeds" => [

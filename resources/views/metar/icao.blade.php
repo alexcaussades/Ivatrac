@@ -21,14 +21,19 @@
             @endauth
             @guest
             <form action="#" method="get">
-                <a href="{{ Route("auth.login") }}">
+                <a href="{{ Route("ivao.connect") }}">
                     <p class="btn btn-primary btn-sm ms-2"> Login / Register</p>
                 </a>
             </form>
             @endguest
+            @if ($pilot["outbound"]>=1 || $pilot["inbound"]>=1)
+            <form action="{{ Route('ivao.plateforme', ["icao" => $metar["station"], false]) }}" method="get">
+                <button type="submit" class="btn btn-success btn-sm ms-2"><span class="d-flex align-items-center"><span class="material-symbols-outlined">info</span> &nbsp IVAO</span></button>
+            </form>
+            @endif
             <form action="{{ Route('metars.icao') }}" method="get">
                 <input type="hidden" name="icao" value="{{$metar["station"]}}">
-                <button type="submit" class="btn btn-success btn-sm"> <span class="d-flex align-items-center"><span class="material-symbols-outlined">sync</span> Refresh</span></button>
+                <button type="submit" class="btn btn-dark btn-sm"> <span class="d-flex align-items-center"><span class="material-symbols-outlined">sync</span> Refresh</span></button>
             </form>
         </div>
         <div class="mt-2">
@@ -109,6 +114,8 @@
                 @endforeach
                 @endif
             </div>
+            
+                
             <div class="col-md-4">
                 <div class="card text-white bg-dark mb-3">
                     <div class="card-header text-center text-warning">
@@ -116,7 +123,7 @@
                     </div>
                     <div class="card-body text-center">
                         <a href="{{ Route("ivao.plateforme", ["icao" => $metar["station"], false] ) }}"> <button type="submit" class="btn btn-primary align-content-center justify-center no-link">
-                                <h1><strong>{{$pilot["departure"]["count"]}}</strong></h1>
+                                <h1><strong>{{$pilot["outbound"]}}</strong></h1>
                             </button></a>
                     </div>
                 </div>
@@ -128,7 +135,7 @@
                     </div>
                     <div class="card-body text-center">
                         <a href="{{ Route("ivao.plateforme", ["icao" => $metar["station"], false] ) }}"> <button type="submit" class="btn btn-primary align-content-center justify-center no-link">
-                                <h1><strong>{{$pilot["arrivals"]["count"]}}</strong></h1>
+                                <h1><strong>{{$pilot["inbound"]}}</strong></h1>
                             </button></a>
                     </div>
                 </div>
@@ -138,4 +145,11 @@
 </div>
 </div>
 
+@if (ENV('APP_ENV') == 'local')
+<script src="{{ asset("asset/js/update_friend.js") }}"></script>
+@else
+<script src="{{ asset("public/asset/js/update_friend.js") }}"></script>
+@endif
+
 @endsection
+

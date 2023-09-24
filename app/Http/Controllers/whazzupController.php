@@ -231,10 +231,8 @@ class whazzupController extends Controller
     {
         $url = 'https://api.ivao.aero/' . $path;
         if (session("ivao_tokens")) {
-            $json = session("ivao_tokens");
-            $json = $json["access_token"];
             $headers = [
-                'Authorization' => 'Bearer ' . $json,
+                'Authorization' => 'Bearer ' . session("ivao_tokens")["access_token"],
                 'Accept'        => 'application/json',
             ];
         } else {
@@ -306,6 +304,46 @@ class whazzupController extends Controller
         return $online;
     }
 
+    public function user_me()
+    {
+        $users_me = $this->API_request("/v2/users/me");
+        $users_me = $users_me->json();
+        $users_me = collect($users_me);
+        $users_me = $users_me->toArray();
+        /** convertir timestant uniquement en heure en addition des jours */
+        $heure = Carbon::createFromTimestamp(0)->format('Y-m-d H:i:s');
+        $atc = Carbon::createFromTimestamp($users_me["hours"][0]["hours"])->format('Y-m-d H:i:s');
+        /** diff entre heure et minutes $atc */
+        $atc1 = Carbon::parse($atc);
+        $heure = Carbon::parse($heure);
+        $atc = $atc1->diffInHours($heure);
+        $atc = $atc1->diffInMinutes($heure)/60;
+        $heure = Carbon::createFromTimestamp($users_me["hours"][1]["hours"])->format('Y-m-d H:i:s');
+        $heure = Carbon::parse($heure);
+        $heure = $heure->diffInHours($heure);
+
+
+
+        
+        $users_me = [
+            "Grade"=> [
+                "AtcRating" => $users_me["rating"]["atcRating"]["shortName"],
+                "PilotRating" => $users_me["rating"]["pilotRating"]["shortName"],   
+            ],
+            "Hours" => [
+                /** conversion value timestamp en heure */
+
+                "AtcHours" => Carbon::createFromTimestamp($users_me["hours"][0]["hours"]),
+                "PilotHours" => $users_me["hours"][1]["hours"],
+                "StaffHours" => $users_me["hours"][2]["hours"],
+                "TotalHours" => null,
+                
+
+            ],
+        ];
+        return $users_me;
+    }
+
     public function revoke_token()
     {
         $token = $this->API_POST("v2/oauth/token/revoke");
@@ -327,7 +365,13 @@ class whazzupController extends Controller
     public function get_traffics($icao = null)
     {
         $metar = $this->API_request("v2/airports/" . $icao . "/traffics");
-        return $metar;
+        return $metar->json();
+    }
+
+    public function get_traffics_count($icao = null)
+    {
+        $metar = $this->API_request("v2/airports/" . $icao . "/traffics/count");
+        return $metar->json();
     }
 
     public function get_atis_latest($icao = null)

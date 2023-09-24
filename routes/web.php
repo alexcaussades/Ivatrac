@@ -54,45 +54,46 @@ use Symfony\Component\HttpKernel\Controller\ErrorController;
 |
 */
 
-Route::get('/welcome', function (usersController $usersController, Request $request, Session $session) {
-    $users = $usersController->get_info_user(session()->get("id"));
-    $whazzup = new whazzupController();
-    $whazzup = $whazzup->connexion();
-    dd($whazzup);
-    return view('welcome', ["users" => $users, "whazzup" => $whazzup]);
-})->name("welcome");
-
-Route::get('/login', function (Request $request) {
-    $authuser = new usersController();
-    $authuser->autentification_via_cookie();
-    return to_route("auth.login");
-})->name("login");
-
-Route::get('/logout', function (Request $request) {
-    return to_route("auth.logout");
-})->name("logout");
+if (env("maintenance_mode") == true) {
+    Route::get('/', function () {
+        return view('maintenance');
+    });
+    route::get('/{any}', function () {
+        return view('maintenance');
+    })->where('any', '.*');
+   
+} 
 
 Route::get('/', function (Request $request) {
     /** creation d'un cookie sur laravel */
     $whazzup = new whazzupController();
     $whazzup = $whazzup->connexion();
-    // if (Session::get("ivao_tokens") != null) {
-    //     $date = new DateTime();
-    //     $date->setTimezone(new DateTimeZone('UTC'));
-    //     $date = $date->format('Y-m-d H:i:s');
-    //     if(Session::get("ivao_tokens")["expires_in"] < $date){
-    //         Session::forget("ivao_tokens");
-    //         $whazzup->sso($request, "home");
-    //     } 
-    //     $whaz = new whazzupController();
-    //     $online = $whaz->online_me();
-    //     $online = json_decode($online, true);
-    //     return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
-    // }
+    if (Session::get("ivao_tokens") != null) {
+        $date = new DateTime();
+        $date->setTimezone(new DateTimeZone('UTC'));
+        $date = $date->format('Y-m-d H:i:s');
+        if (Session::get("ivao_tokens")["expires_in"] < $date) {
+            Session::forget("ivao_tokens");
+            return to_route("ivao.connect");
+        }
+        $whaz = new whazzupController();
+        $online = $whaz->online_me();
+        $users_me = $whaz->user_me();
+       
+        $online = json_decode($online, true);
+        return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
+    }
+    if(env("maintenance_mode") == true){
+        return view('maintenance');
+    }
     $online = null;
     return response()->view("maintenance");
     return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
 })->where('client', '[0-9]+')->name("home");
+
+Route::get('/logout', function (Request $request) {
+    return to_route("auth.logout");
+})->name("logout");
 
 Route::get("callback", function (Request $request) {
     $request->merge([
@@ -106,13 +107,8 @@ Route::get("callback", function (Request $request) {
     return $oo;
 })->name("callback");
 
-
 Route::prefix("auth/")->group(function () {
-    Route::get("add", [CreatAuhUniqueUsersController::class, "creatAuthUniqueUses"]);
-    Route::get("verif/{id}", function (Request $request, CreatAuhUniqueUsersController $creatAuhUniqueUsersController) {
-        return $creatAuhUniqueUsersController->verifid($request);
-    });
-    Route::get("delete", [CreatAuhUniqueUsersController::class, "deleteUID"]);
+
     Route::get("login", function () {
         if (Auth::user() != null) {
             return redirect()->route("serveur");
@@ -121,55 +117,6 @@ Route::prefix("auth/")->group(function () {
     })->name("auth.login");
 
     Route::post("login", [\App\Http\Controllers\usersController::class, "autentification"]);
-
-    Route::get("forget-password", function () {
-        return view("auth.forget");
-    })->name("auth.forget");
-
-    Route::get("register", function () {
-
-        return view("auth.register");
-    })->name("auth.register");
-
-    Route::post("register", function (Request $request) {
-        if ($request->password == $request->password_confirmation) {
-            if ($request->condition == "1") {
-
-                $validator = Validator::make($request->all(), [
-                    'email' => 'required|email|unique:users',
-                ]);
-                if ($validator->fails()) {
-                    return redirect()->route("auth.register")
-                        ->withErrors("L'email est déjà utilisé ! ")
-                        ->withInput();
-                }
-                $password = Str::password();
-                $request->merge([
-                    "password" => $password,
-                ]);
-                $usersController = new usersController();
-                $usersController->create($request);
-                $lastId = DB::getPdo()->lastInsertId();
-                $mail = new MailRegisterController();
-                $mail->ConfirmRegister($lastId, $password);
-                $mail->MailRegister($lastId);
-                $mail->verrify_email($lastId);
-                return redirect()->route("auth.login");
-            } else {
-                return redirect()->route("auth.register")
-                    ->withErrors("Vous devez accepter la CGU")
-                    ->withInput();
-            }
-        }
-        return view("auth.login");
-    });
-
-    Route::post("forget-password", function (Request $request) {
-
-        $usersController = new usersController();
-        $usersController->forget_password($request);
-        return redirect()->route("auth.login");
-    })->name("auth.forget-password");
 
     Route::get('verif-email/{token}', function (Request $request, usersController $usersController) {
         $usersController->verif_email($request);
@@ -211,7 +158,7 @@ Route::prefix("serveur/")->group(function () {
             $information = $api->check_Informations(Auth::user()->id);
             return view("serveur.api", ["information" => $information]);
         }
-    })->name("serveur.api");
+    })->name("serveur.api")->middleware(["auth:admin"]);
 
     Route::post("api", function (Request $request) {
         if (!Auth::user()) {
@@ -356,9 +303,7 @@ Route::prefix("metar")->group(function () {
         $metar = $metarController->metar($icao);
         $taf = $metarController->taf($icao);
         $ATC = $wazzup->ckeck_online_atc($icao);
-        // Probleme de requete des cartes IFR et VFR    
-        $pilots = new PilotIvaoController();
-        $pilot = $pilots->getAirplaneToPilots($icao);
+        $pilot = $wazzup->get_traffics_count($icao);
 
         if ($metar == NULL || $taf == NULL || $ATC == NULL || $pilot == NULL) {
             return view("metar.reload", ["icao" => $icao]);
@@ -556,7 +501,7 @@ Route::prefix("friends")->group(function () {
             return redirect()->route("ivao.connect");
         }
         $authivao = new AuthIVAOController();
-        $authivao->sso($request, "friends.verify");         
+        $authivao->sso($request, "friends.verify");
         $whazzup = new whazzupController();
         $friends = $whazzup->get_friends_online();
         return view("friends.verify", ["friends" => $friends]);
@@ -654,12 +599,12 @@ Route::get("test2", function (Request $request) {
     $date = strtotime($date . ' + 3 minutes');
     $date = date('Y-m-d H:i:s', $date);
     //formatig the date to the required format for session
-    $date = date('Y-m-d\TH:i:s\Z', strtotime($date));    
+    $date = date('Y-m-d\TH:i:s\Z', strtotime($date));
     return $date;
 })->name("test2");
 
 Route::get("test3", function (Request $request) {
     $whazzup = new whazzupController();
-    $get_all_atc = $whazzup->creator();
+    $get_all_atc = $whazzup->get_traffics_count("LFPG");
     return $get_all_atc;
 })->name("test3");

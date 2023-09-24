@@ -50,7 +50,7 @@
             Projet
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="https://github.com/alexcaussades/L10">GitHub</a></li>
+            <li><a class="dropdown-item" href="#">GitHub</a></li>
             <li><a class="dropdown-item" href="https://discord.gg/CDntF5H">Discord</a></li>
           </ul>
         </li>

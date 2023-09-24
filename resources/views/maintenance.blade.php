@@ -1,4 +1,4 @@
-@extends("index-base")
+@extends("index-maint")
 
 @section('content')
 
