@@ -29,16 +29,16 @@ class myOnlineServeurController extends Controller
     public function get_whazzup()
     {
         $whazzup = new whazzupController();
-        $whazzup = $whazzup->get_whazzup();
-        return $whazzup;
+        $whazzup = $whazzup->whazzup_api_traker();
+        return $whazzup->json();
     }
 
     public function VerrifOnlineServeur()
     {
         $whazzup = new whazzupController();
-        $whazzup = $whazzup->getwhazzupbdd();
-        $review = Storage::get('public/whazzup/' . $whazzup['whazzup'] . '.json');
-        $json = json_decode($review, true);
+        $whazzup = $whazzup->whazzup_api_traker();
+        $review = $whazzup;
+        $json = collect($review);
         $atcs = collect($json['clients']['atcs']);
         $pilots = collect($json['clients']['pilots']);
         /** search the informations */
@@ -212,12 +212,12 @@ class myOnlineServeurController extends Controller
             ];
             $metar = [
                 "departure" => [
-                    "metar" => $metar_dep['metar'],
-                    "taf" => $taf_dep['taf']
+                    "metar" => $metar_dep['metar'] ?? null,
+                    "taf" => $taf_dep['taf'] ?? null
                 ],
                 "arrival" => [
-                    "metar" => $metar_arr['metar'],
-                    "taf" => $taf_arr['taf']
+                    "metar" => $metar_arr['metar'] ?? null,
+                    "taf" => $taf_arr['taf'] ?? null
                 ]
             ];
             $chart = [

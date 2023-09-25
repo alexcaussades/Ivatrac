@@ -171,7 +171,7 @@ class whazzupController extends Controller
             'grant_type' => 'client_credentials',
             'client_id' => $idclient,
             'client_secret' => $secret,
-            'scope' => "friends friends:read friends:write"
+            'scope' => "friends friends:read friends:write traker"
         );
 
         // use key 'http' even if you send the request to https://...
