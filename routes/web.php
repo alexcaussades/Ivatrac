@@ -94,6 +94,10 @@ Route::get('/logout', function (Request $request) {
     return to_route("auth.logout");
 })->name("logout");
 
+Route::get('/changelog', function (Request $request) {
+    return view("changelog");
+})->name("changelog");
+
 Route::get("callback", function (Request $request) {
     $request->merge([
         "code" => $request->code
@@ -583,6 +587,7 @@ Route::prefix("feedback")->group(function () {
         return to_route("feedback.index")->with("success", "Votre feedback à été envoyé !");
     })->name("feedback.post");
 })->middleware(["auth:web"]);
+
 
 Route::get("test", function (Request $request) {
     $online = new myOnlineServeurController("661650");
