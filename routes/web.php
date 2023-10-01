@@ -32,6 +32,7 @@ use App\Http\Controllers\testingContolleur;
 use App\Http\Controllers\whazzupController;
 use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\AuthIVAOController;
+use App\Http\Controllers\changelogController;
 use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
@@ -93,6 +94,12 @@ Route::get('/', function (Request $request) {
 Route::get('/logout', function (Request $request) {
     return to_route("auth.logout");
 })->name("logout");
+
+Route::get('/changelog', function (Request $request) {
+    $change = new changelogController();
+    $json = $change->localadress();
+    return view('changelog', ['data' => $json]);
+})->name("changelog");
 
 Route::get("callback", function (Request $request) {
     $request->merge([
@@ -584,26 +591,3 @@ Route::prefix("feedback")->group(function () {
     })->name("feedback.post");
 })->middleware(["auth:web"]);
 
-Route::get("test", function (Request $request) {
-    $online = new myOnlineServeurController("661650");
-    $online = $online->getVerrifOnlineServeur();
-    return $online;
-})->name("test");
-
-Route::get("test2", function (Request $request) {
-    $date = new DateTime();
-    $date->setTimezone(new DateTimeZone('UTC'));
-    $date = $date->format('Y-m-d H:i:s');
-    //add 5 minutes to the current time
-    $date = strtotime($date . ' + 3 minutes');
-    $date = date('Y-m-d H:i:s', $date);
-    //formatig the date to the required format for session
-    $date = date('Y-m-d\TH:i:s\Z', strtotime($date));
-    return $date;
-})->name("test2");
-
-Route::get("test3", function (Request $request) {
-    $whazzup = new whazzupController();
-    $get_all_atc = $whazzup->get_traffics_count("LFPG");
-    return $get_all_atc;
-})->name("test3");

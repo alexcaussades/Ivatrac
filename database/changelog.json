@@ -1,0 +1,74 @@
+{
+    "0": {
+        "id": 1,
+        "name": "2023 / 26",
+        "date": "2023-09-15",
+        "version": 26.1,
+        "option": [
+            {
+                "id": 0,
+                "type": "Feacture",
+                "btn": "success",
+                "description": "Connect SSO with the application on IVAO"
+            },
+            {
+                "id": 1,
+                "type": "Update",
+                "btn": "primary",
+                "description": "information on the home page remove(database information)"
+            }
+        ]
+    },
+    "1": {
+        "id": 2,
+        "name": "2023 / 27",
+        "date": "2023-09-22",
+        "version": null,
+        "option": [
+            {
+                "id": 0,
+                "type": "Change",
+                "btn": "warning",
+                "description": "Updated AIRAC 2309"
+            },
+            {
+                "id": 1,
+                "type": "Feacture",
+                "btn": "success",
+                "description": "Add Booking System (hors add on IVAO)"
+            },
+            {
+                "id": 2,
+                "type": "bug fix",
+                "btn": "danger",
+                "description": "Fixing the bug of the flight plan (departure and arrival)"
+            },
+            {
+                "id": 3,
+                "type": "bug fix",
+                "btn": "danger",
+                "description": "Fixing the bug of the online friends"
+            }
+        ]
+    },
+    "2": {
+        "id": 3,
+        "name": "2023 / 28",
+        "date": "2023-09-29",
+        "version": "26.2.0",
+        "option": [
+            {
+                "id": 0,
+                "type": "Change",
+                "btn": "warning",
+                "description": "Updated AIRAC 2310"
+            },
+            {
+                "id": 1,
+                "type": "Feacture",
+                "btn": "success",
+                "description": " Add Changelog page"
+            }
+        ]
+    }
+}
