@@ -52,6 +52,7 @@
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">GitHub</a></li>
             <li><a class="dropdown-item" href="https://discord.gg/CDntF5H">Discord</a></li>
+            <li><a class="dropdown-item" href="{{ Route("changelog")}}">System Changelog</a></li>
           </ul>
         </li>
         

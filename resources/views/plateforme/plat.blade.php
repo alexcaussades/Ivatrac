@@ -113,12 +113,10 @@ use Illuminate\Support\Carbon;
                     <td>{{ Carbon::parse($PilotData["lastTrack"]["time"])->format('H:i') }}</td>
                     <td>
                         <form action="{{Route("vid",[$PilotData["userId"]])}}" method="get">
-                            @csrf
                             <button class="btn btn-dark btn-sm" type="submit"> View</button>
                         </form>
                     </td>
                 </tr>
-
                 @endforeach
             </tbody>
         </table>

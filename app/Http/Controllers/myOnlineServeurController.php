@@ -149,11 +149,9 @@ class myOnlineServeurController extends Controller
             $ivao_session_decode = json_decode($ivao_session, true);
             $fp_session = $whazzupp->get_flightPlans($ivao_session_decode["id"]);
             $fp_session = $fp_session[0];
-            //dd($fp_session);
             $atc_online_departure = $whazzupp->ckeck_online_atc($fp_session['departureId']);
             $atc_online_arrival = $whazzupp->ckeck_online_atc($fp_session['arrivalId']);
             $q = $q['pilot'];
-
             $distance_arrival = $q[0]['lastTrack']['arrivalDistance'] ?? null;
             $distance_arrival = explode(".", $distance_arrival);
             $speed = $q[0]['lastTrack']['groundSpeed'] / 60 ?? 1;

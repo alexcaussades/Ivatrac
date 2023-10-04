@@ -70,5 +70,31 @@
                 "description": " Add Changelog page"
             }
         ]
+    },
+    "3":{
+        "id": 4,
+        "name": "2023 / 29",
+        "date": "2023-10-02",
+        "version": "26.2.1",
+        "option": [
+            {
+                "id": 0,
+                "type": "remove",
+                "btn": "dark",
+                "description": "Remove token system (not used) page Platform"
+            },
+            {
+                "id": 1,
+                "type": "Feacture",
+                "btn": "success",
+                "description": " Add Changelog page for menu"
+            },
+            {
+                "id": 2,
+                "type": "bug fix",
+                "btn": "danger",
+                "description": "Fixing the error 500 on the vid search"
+            }
+        ]
     }
 }
