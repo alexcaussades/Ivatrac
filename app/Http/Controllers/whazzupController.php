@@ -547,4 +547,10 @@ class whazzupController extends Controller
         $creator = $creator->json();
         return $creator;
     }
+
+    public function get_aircrafts($icao_code){
+        $aircrafts = $this->API_request("/v2/aircrafts/".$icao_code);
+        $aircrafts = $aircrafts->json();
+        return $aircrafts;
+    }
 }
