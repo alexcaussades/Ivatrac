@@ -64,6 +64,8 @@ Route::get('metar/{icao}', function (Request $request, $icao) {
 });
 
 Route::get("/whazzup", function(Request $request){
+    
     $whazzup = new whazzupController();
-    $whazzup = $whazzup->getwhazzup();
+    $r = $whazzup->whazzup_api_traker();
+    return $r;
 });
