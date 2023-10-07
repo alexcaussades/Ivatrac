@@ -566,8 +566,15 @@ Route::get("vid/{vid}", function (Request $request) {
 
 Route::prefix("event")->group(function () {
     Route::get("/ximea", function (Request $request) {
-        //dd("ok");
-        return view("event.ximea.index");
+        $airport = "LFMT";
+        $wazzup = new whazzupController();
+        $bookings = $wazzup->get_bookings_for_event($airport);
+        $event = new eventController($airport);
+        $metars = new metarController();
+        $metar = $metars->metar($airport);
+        $taf = $metars->taf($airport);
+        $r = $event->get_general();
+        return view("event.ximea.index", ["r" => $r, "bookings" => $bookings, "metar" => $metar["metar"], "taf" => $taf["taf"]]);
     })->name("event.ximea");
 
     Route::get("/{id}", function (Request $request) {
@@ -604,7 +611,7 @@ Route::prefix("feedback")->group(function () {
 })->middleware(["auth:web"]);
 
 Route::get("test", function (Request $request) {
-    $event = new eventController("SKCL");
+    $event = new eventController("LFMT");
     $r = $event->get_general();
     return $r;
 });

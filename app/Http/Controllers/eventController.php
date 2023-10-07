@@ -76,7 +76,7 @@ class eventController extends Controller
             $r = $this->get_fp($q[$i]["id"]);
             $r = $r[0];
             $sr[$i]["callsign"] = $q[$i]["callsign"];
-            $sr[$i]["star"] = $this->get_last_arrival($r["route"]);
+            $sr[$i]["star"] = $this->Star($r["route"]);
             $sr[$i]["eta"] = $this->ETA($q[$i]["lastTrack"]["arrivalDistance"], $q[$i]["lastTrack"]["groundSpeed"]);
             $sr[$i]["wakeTurbulence"] = $this->aircrafts($q[$i]["flightPlan"]["aircraftId"]);
         }
@@ -91,4 +91,43 @@ class eventController extends Controller
         
     }
 
+    public function Star($route){
+        $star_search = $this->get_last_arrival($route);
+
+        switch ($star_search) {
+            case 'MEN':
+                $star_search = "MEN 6T";
+                return $star_search;
+                break;
+            
+            case 'BRUSC':
+                $star_search = "BRUSC 6T";
+                return $star_search;
+                break;
+            
+            case 'KELAM':
+                $star_search = "KELAM 6T";
+                return $star_search;
+                break;
+
+            case 'PPG':
+                $star_search = "PPG 6T";
+                return $star_search;
+                break;
+
+            case 'MARRI':
+                $star_search = "MARRI 6T";
+                return $star_search;
+                break;
+            
+            case 'NG':
+                $star_search = "NG 6T";
+                return $star_search;
+                break;
+
+            default:
+                return $star_search;
+                break;
+        }
+    }
 }

@@ -209,7 +209,7 @@ class whazzupController extends Controller
     {
         $url = 'https://api.ivao.aero/' . $path;
         if (session("ivao_tokens")) {
-            
+
             $json = session("ivao_tokens");
             $json = json_decode($json);
             $json = $json->access_token;
@@ -317,18 +317,18 @@ class whazzupController extends Controller
         $atc1 = Carbon::parse($atc);
         $heure = Carbon::parse($heure);
         $atc = $atc1->diffInHours($heure);
-        $atc = $atc1->diffInMinutes($heure)/60;
+        $atc = $atc1->diffInMinutes($heure) / 60;
         $heure = Carbon::createFromTimestamp($users_me["hours"][1]["hours"])->format('Y-m-d H:i:s');
         $heure = Carbon::parse($heure);
         $heure = $heure->diffInHours($heure);
 
 
 
-        
+
         $users_me = [
-            "Grade"=> [
+            "Grade" => [
                 "AtcRating" => $users_me["rating"]["atcRating"]["shortName"],
-                "PilotRating" => $users_me["rating"]["pilotRating"]["shortName"],   
+                "PilotRating" => $users_me["rating"]["pilotRating"]["shortName"],
             ],
             "Hours" => [
                 /** conversion value timestamp en heure */
@@ -337,7 +337,7 @@ class whazzupController extends Controller
                 "PilotHours" => $users_me["hours"][1]["hours"],
                 "StaffHours" => $users_me["hours"][2]["hours"],
                 "TotalHours" => null,
-                
+
 
             ],
         ];
@@ -524,6 +524,29 @@ class whazzupController extends Controller
         return $book;
     }
 
+    public function get_bookings_for_event($airport = "LFBL")
+    {
+        $bookings = $this->API_request("/v2/atc/bookings/daily");
+        $bookings = $bookings->json();
+        $pattern = '/'.$airport.'(.*)/';
+        $book = [];
+        for ($i = 0; $i < count($bookings); $i++) {
+            if(preg_match($pattern, $bookings[$i]["atcPosition"])){
+                $book[$i]["id"] = $bookings[$i]["id"];
+                $book[$i]["Start_time"] = Carbon::parse($bookings[$i]["startDate"])->format('H:i') . " Z";
+                $book[$i]["End_time"] = Carbon::parse($bookings[$i]["endDate"])->format('H:i') . " Z";
+                $book[$i]["voice"] = $bookings[$i]["voice"];
+                $book[$i]["training"] = $bookings[$i]["training"];
+                $book[$i]["airport"] = $bookings[$i]["atcPosition"];
+                $book[$i]["user"] = [
+                    "vid" => $bookings[$i]["user"]["id"],
+                ];
+            }
+
+        }
+        return $book;
+    }
+
     public function get_fp_me()
     {
         $fp = $this->API_request("/v2/users/me/flightPlans");
@@ -548,8 +571,9 @@ class whazzupController extends Controller
         return $creator;
     }
 
-    public function get_aircrafts($icao_code){
-        $aircrafts = $this->API_request("/v2/aircrafts/".$icao_code);
+    public function get_aircrafts($icao_code)
+    {
+        $aircrafts = $this->API_request("/v2/aircrafts/" . $icao_code);
         $aircrafts = $aircrafts->json();
         return $aircrafts;
     }

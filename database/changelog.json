@@ -39,13 +39,13 @@
             },
             {
                 "id": 2,
-                "type": "bug fix",
+                "type": "Bug Fix",
                 "btn": "danger",
                 "description": "Fixing the bug of the flight plan (departure and arrival)"
             },
             {
                 "id": 3,
-                "type": "bug fix",
+                "type": "Bug Fix",
                 "btn": "danger",
                 "description": "Fixing the bug of the online friends"
             }
@@ -79,7 +79,7 @@
         "option": [
             {
                 "id": 0,
-                "type": "remove",
+                "type": "Remove",
                 "btn": "dark",
                 "description": "Remove token system (not used) page Platform"
             },
@@ -91,7 +91,7 @@
             },
             {
                 "id": 2,
-                "type": "bug fix",
+                "type": "Bug Fix",
                 "btn": "danger",
                 "description": "Fixing the error 500 on the vid search"
             }
@@ -114,7 +114,26 @@
                 "type": "Feacture",
                 "btn": "success",
                 "description": "Create Controller event Ximea"
+            },
+            {
+                "id": 2,
+                "type": "Feacture",
+                "btn": "success",
+                "description": "Create Model event Ximea"
+            },
+            {
+                "id": 3,
+                "type": "Feacture",
+                "btn": "success",
+                "description": "Create View event Ximea"
+            },
+            {
+                "id": 4,
+                "type": "Feacture",
+                "btn": "success",
+                "description": "Create CSS event Ximea"
             }
+            
         ]
     }
 }
