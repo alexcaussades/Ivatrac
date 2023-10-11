@@ -580,7 +580,7 @@ Route::prefix("feedback")->group(function () {
         $github = new GithubController();
         $github = $github->send_issue($request);
         $request->merge([
-            "user_id" => Auth::user()->id,
+            "user_id" => Auth::user()->id ?? null,
             "body" => $request->body,
             "link" => $github,
             "label" => $request->label
