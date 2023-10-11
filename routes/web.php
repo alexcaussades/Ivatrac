@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\ChartController;
+use App\Http\Controllers\eventController;
 use App\Http\Controllers\metarController;
 use App\Http\Controllers\PirepController;
 use App\Http\Controllers\temsiController;
@@ -62,8 +63,7 @@ if (env("maintenance_mode") == true) {
     route::get('/{any}', function () {
         return view('maintenance');
     })->where('any', '.*');
-   
-} 
+}
 
 Route::get('/', function (Request $request) {
     /** creation d'un cookie sur laravel */
@@ -80,11 +80,11 @@ Route::get('/', function (Request $request) {
         $whaz = new whazzupController();
         $online = $whaz->online_me();
         $users_me = $whaz->user_me();
-       
+
         $online = json_decode($online, true);
         return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
     }
-    if(env("maintenance_mode") == true){
+    if (env("maintenance_mode") == true) {
         return view('maintenance');
     }
     $online = null;
@@ -564,6 +564,25 @@ Route::get("vid/{vid}", function (Request $request) {
     return $online;
 })->name("vid");
 
+Route::prefix("event")->group(function () {
+    Route::get("/ximea", function (Request $request) {
+        $airport = "LFMT";
+        $wazzup = new whazzupController();
+        $bookings = $wazzup->get_bookings_for_event($airport);
+        $event = new eventController($airport);
+        $metars = new metarController();
+        $metar = $metars->metar($airport);
+        $taf = $metars->taf($airport);
+        $r = $event->get_general();
+        return view("event.ximea.index", ["r" => $r, "bookings" => $bookings, "metar" => $metar["metar"], "taf" => $taf["taf"]]);
+    })->name("event.ximea");
+
+    Route::get("/{id}", function (Request $request) {
+        $whazzup = new whazzupController();
+        $event = $whazzup->get_event_id($request->id);
+        return view("event.show", ["event" => $event]);
+    })->name("event.show");
+});
 
 Route::get("online", function (Request $request) {
     $online = new myOnlineServeurController(auth::user()->vid);
@@ -591,3 +610,8 @@ Route::prefix("feedback")->group(function () {
     })->name("feedback.post");
 })->middleware(["auth:web"]);
 
+Route::get("test", function (Request $request) {
+    $event = new eventController("LFMT");
+    $r = $event->get_general();
+    return $r;
+});
