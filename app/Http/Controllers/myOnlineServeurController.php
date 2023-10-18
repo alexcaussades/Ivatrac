@@ -51,12 +51,12 @@ class myOnlineServeurController extends Controller
         $whazzupp = new whazzupController();
         $chartIvaoFRcontroller = new chartIvaoFRcontroller();
         $chartController = new CarteSIAController();
-
         if ($q['atc'] != null) {
 
             if ($q['atc']['atcSession']['position'] == "CTR") {
 
                 $ivao_session = $whazzupp->track_session_id($q['atc']['id']);
+
                 $ivao_session_decode = json_decode($ivao_session, true);
                 $time = Carbon::parse($ivao_session_decode["time"])->format('H:i');
                 $metar = new metarController();
@@ -68,6 +68,7 @@ class myOnlineServeurController extends Controller
                 $chart_crr = $chartIvaoFRcontroller->chart_ccr($new_ccr);
                 $atis = $whazzupp->get_atis_latest_2($ivao_session_decode["callsign"]);
                 $atis = json_decode($atis, true);
+
                 $atc_online = [];
                 for ($i = 0; $i < count($metar); $i++) {
                     $atc_online[$i]["icao"] = $metar[$i][0]["callsign"];
@@ -233,4 +234,5 @@ class myOnlineServeurController extends Controller
             return redirect()->route("home");
         }
     }
+
 }

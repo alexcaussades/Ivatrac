@@ -282,6 +282,7 @@ class whazzupController extends Controller
     }
 
     public function Get_Position($vid)
+
     {
         $metar = $this->API_request("v2/tracker/now/atc");
         $p = json_decode($metar, true);
@@ -624,6 +625,7 @@ class whazzupController extends Controller
         return $airport;
     }
     
+
     public function get_aircrafts($icao_code)
     {
         $aircrafts = $this->API_request("/v2/aircrafts/" . $icao_code);

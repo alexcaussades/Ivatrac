@@ -37,6 +37,7 @@ class chartIvaoFRcontroller extends Controller
         $new_icao = strtolower($prepare_icao[0]["composePosition"]);
         $icaoUpper = strtoupper($prepare_icao[0]["composePosition"]);     
         $info = explode("_", $icaoUpper);
+
         $r =[
             "new_icao" => $new_icao,
             "ccr" => $info[0],
