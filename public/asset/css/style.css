@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "airport";
+  src: url("../font/tfb.ttf");
+}
+
 .no-link{
     text-decoration: none;
     background-color: transparent;
@@ -54,4 +59,9 @@
     content: url('https://api.iconify.design/logos/youtube-icon.svg');
     width: 3vw;
     height: 3vw;  
+  }
+
+  .areoport_font{
+    font-family: "airport";
+    font-size: 3.0vw;
   }

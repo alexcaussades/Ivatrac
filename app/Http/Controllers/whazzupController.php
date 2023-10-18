@@ -556,6 +556,29 @@ class whazzupController extends Controller
         return $book;
     }
 
+    public function get_bookings_for_event($airport = "LFBL")
+    {
+        $bookings = $this->API_request("/v2/atc/bookings/daily");
+        $bookings = $bookings->json();
+        $pattern = '/'.$airport.'(.*)/';
+        $book = [];
+        for ($i = 0; $i < count($bookings); $i++) {
+            if(preg_match($pattern, $bookings[$i]["atcPosition"])){
+                $book[$i]["id"] = $bookings[$i]["id"];
+                $book[$i]["Start_time"] = Carbon::parse($bookings[$i]["startDate"])->format('H:i') . " Z";
+                $book[$i]["End_time"] = Carbon::parse($bookings[$i]["endDate"])->format('H:i') . " Z";
+                $book[$i]["voice"] = $bookings[$i]["voice"];
+                $book[$i]["training"] = $bookings[$i]["training"];
+                $book[$i]["airport"] = $bookings[$i]["atcPosition"];
+                $book[$i]["user"] = [
+                    "vid" => $bookings[$i]["user"]["id"],
+                ];
+            }
+
+        }
+        return $book;
+    }
+
     public function get_fp_me()
     {
         $fp = $this->API_request("/v2/users/me/flightPlans");
@@ -599,5 +622,12 @@ class whazzupController extends Controller
         $airport = $this->API_request("/v2/centers/" . $icao . "/subcenters");
         $airport = $airport->json();
         return $airport;
+
+    public function get_aircrafts($icao_code)
+    {
+        $aircrafts = $this->API_request("/v2/aircrafts/" . $icao_code);
+        $aircrafts = $aircrafts->json();
+        return $aircrafts;
+
     }
 }

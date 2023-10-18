@@ -39,13 +39,13 @@
             },
             {
                 "id": 2,
-                "type": "bug fix",
+                "type": "Bug Fix",
                 "btn": "danger",
                 "description": "Fixing the bug of the flight plan (departure and arrival)"
             },
             {
                 "id": 3,
-                "type": "bug fix",
+                "type": "Bug Fix",
                 "btn": "danger",
                 "description": "Fixing the bug of the online friends"
             }
@@ -79,7 +79,7 @@
         "option": [
             {
                 "id": 0,
-                "type": "remove",
+                "type": "Remove",
                 "btn": "dark",
                 "description": "Remove token system (not used) page Platform"
             },
@@ -91,13 +91,13 @@
             },
             {
                 "id": 2,
-                "type": "bug fix",
+                "type": "Bug Fix",
                 "btn": "danger",
                 "description": "Fixing the error 500 on the vid search"
             }
         ]
     },
-      "4":{
+  "4":{
         "id": 5,
         "name": "2023 / 30",
         "date": "2023-10-04",
