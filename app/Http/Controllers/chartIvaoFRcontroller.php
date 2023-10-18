@@ -34,12 +34,13 @@ class chartIvaoFRcontroller extends Controller
     public function structure_CCR($ccr){
         $whazzup = new whazzupController();
         $prepare_icao = $whazzup->get_center($ccr);
-        $new_icao = strtolower($prepare_icao["id"]);
-        $icaoUpper = strtoupper($prepare_icao["id"]);     
-        
+        $new_icao = strtolower($prepare_icao[0]["composePosition"]);
+        $icaoUpper = strtoupper($prepare_icao[0]["composePosition"]);     
+        $info = explode("_", $icaoUpper);
+
         $r =[
             "new_icao" => $new_icao,
-            "ccr" => $icaoUpper,
+            "ccr" => $info[0],
         ];
         return $r;
     }
