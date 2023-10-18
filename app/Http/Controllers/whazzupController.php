@@ -16,8 +16,8 @@ class whazzupController extends Controller
 {
     public function getwhazzup()
     {
-        $api = $this->store_Whazzup();
-        $whazzup = json_decode($api[0], true);
+        $api = $this->donwload_whazzup();
+        $whazzup = $api;
         return $whazzup;
     }
 
@@ -281,7 +281,7 @@ class whazzupController extends Controller
         return $metar;
     }
 
-    public function Get_Position($vid = "191514")
+    public function Get_Position($vid)
     {
         $metar = $this->API_request("v2/tracker/now/atc");
         $p = json_decode($metar, true);
@@ -300,7 +300,7 @@ class whazzupController extends Controller
         return $metar;
     }
 
-    public function Get_Position_pilote($vid = "191514")
+    public function Get_Position_pilote($vid)
     {
         $metar = $this->API_request("v2/tracker/now/pilots");
         $p = json_decode($metar, true);
@@ -622,7 +622,8 @@ class whazzupController extends Controller
         $airport = $this->API_request("/v2/centers/" . $icao . "/subcenters");
         $airport = $airport->json();
         return $airport;
-
+    }
+    
     public function get_aircrafts($icao_code)
     {
         $aircrafts = $this->API_request("/v2/aircrafts/" . $icao_code);

@@ -51,27 +51,30 @@ class myOnlineServeurController extends Controller
         $whazzupp = new whazzupController();
         $chartIvaoFRcontroller = new chartIvaoFRcontroller();
         $chartController = new CarteSIAController();
-        //dd($q);
+
         if ($q['atc'] != null) {
 
             if ($q['atc']['atcSession']['position'] == "CTR") {
-                $ivao_session = $whazzupp->track_session_id($q['atc'][0]['id']);
+
+                $ivao_session = $whazzupp->track_session_id($q['atc']['id']);
                 $ivao_session_decode = json_decode($ivao_session, true);
                 $time = Carbon::parse($ivao_session_decode["time"])->format('H:i');
                 $metar = new metarController();
-                $ident = $q['atc'][0]['callsign'];
+                $ident = $q['atc']['callsign'];
                 $ident = explode("_", $ident);
                 $new_ccr = $ident[0];
                 $ident[0] = substr($ident[0], 0, -1);
                 $metar = $metar->getFirAtc($ident[0]);
                 $chart_crr = $chartIvaoFRcontroller->chart_ccr($new_ccr);
+                $atis = $whazzupp->get_atis_latest_2($ivao_session_decode["callsign"]);
+                $atis = json_decode($atis, true);
                 $atc_online = [];
                 for ($i = 0; $i < count($metar); $i++) {
                     $atc_online[$i]["icao"] = $metar[$i][0]["callsign"];
                     $atc_online[$i]["icao"] = explode("_", $atc_online[$i]["icao"]);
                     $atc_online[$i]["icao"] = $atc_online[$i]["icao"][0];
                     $atc_online[$i]["callsign"] = $metar[$i][0]["callsign"];
-                    $atc_online[$i]["chart_ivao"] = $chartIvaoFRcontroller->chart_ivao($atc_online[$i]["icao"]);
+                    $atc_online[$i]["chart_ivao"] = $chart_crr;
                     $atc_online[$i]["atis"] = $whazzupp->get_rwy($atc_online[$i]["icao"]);
                     $atc_online[$i]["frequency"] = $metar[$i][0]["atcSession"]["frequency"];
                     $atc_online[$i]["time"] = Carbon::parse($metar[$i][0]["time"])->format('H:i');
@@ -87,7 +90,7 @@ class myOnlineServeurController extends Controller
                     "frequency" => $ivao_session_decode["atcSession"]['frequency'],
                     "rating" => $ivao_session_decode["user"]['rating']["atcRating"]["shortName"],
                     "time" => $time,
-                    "revision" => $q['atc'][0]['atis']['revision'],
+                    "revision" => 0,
                 ];
                 return view("myoline.ccr", ["atc" => $atc, "atc_online" => $atc_online, "chart_crr" => $chart_crr]);
             }
@@ -230,6 +233,4 @@ class myOnlineServeurController extends Controller
             return redirect()->route("home");
         }
     }
-
-    
 }
