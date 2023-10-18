@@ -591,3 +591,32 @@ Route::prefix("feedback")->group(function () {
     })->name("feedback.post");
 })->middleware(["auth:web"]);
 
+Route::get("test", function (Request $request){
+    $whazzup = new whazzupController();
+    // $r = $whazzup->get_traffics("LFMT");
+    // $y = $whazzup->track_session_id("53483201");
+    // $p = $whazzup->get_flightPlans("53483201");
+    // $data = [
+    //     "traffics" => $r,
+    //     "track" => $y->json(),
+    //     "flightPlans" => $p
+    // ];
+    // if($data["track"]["pilotSession"] ){
+    //     $info = $data["track"]["pilotSession"];
+    // }
+    // if($data["track"]["atcSession"] ){
+    //     $info = $data["track"]["atcSession"];
+    // }
+    // return $info;
+    $p = $whazzup->Get_Position_pilote(107108);
+    $atc = $whazzup->Get_Position(107108);
+    $data = [
+        "pilote" => $p,
+        "atc" => $atc
+    ];
+    
+    
+
+
+    return $data;
+});

@@ -58,6 +58,6 @@
         
       </ul>
     </div>
-    <button class="btn btn-success my-2 my-lg-0 rounded">AIRAC 2309</button>
+    <button class="btn btn-success my-2 my-lg-0 rounded">AIRAC 2310</button>
   </div>
 </nav>
