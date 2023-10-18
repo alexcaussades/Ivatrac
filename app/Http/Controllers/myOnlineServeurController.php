@@ -33,35 +33,28 @@ class myOnlineServeurController extends Controller
         return $whazzup->json();
     }
 
-    public function VerrifOnlineServeur()
+    public function VerrifOnlineServeur($vid)
     {
         $whazzup = new whazzupController();
-        $whazzup = $whazzup->whazzup_api_traker();
-        $review = $whazzup;
-        $json = collect($review);
-        $atcs = collect($json['clients']['atcs']);
-        $pilots = collect($json['clients']['pilots']);
-        /** search the informations */
-        $atcs = $atcs->whereIn('userId', $this->vid);
-        $pilots = $pilots->whereIn('userId', $this->vid);
-        $atcs = $atcs->toArray();
-        $pilots = $pilots->toArray();
-        /** joker dans la recherhe index */
-        $atcs = array_values($atcs) ?? null;
-        $pilots = array_values($pilots) ?? null;
-        $u = collect(["atc" => $atcs, "pilot" => $pilots]);
+        $p = $whazzup->Get_Position_pilote($vid);
+        $atc = $whazzup->Get_Position($vid);
+        $u = [
+            "pilot" => $p,
+            "atc" => $atc
+        ];
         return $u;
     }
 
     public function getVerrifOnlineServeur()
     {
-        $q = $this->VerrifOnlineServeur();
+        $q = $this->VerrifOnlineServeur($this->vid);
         $whazzupp = new whazzupController();
         $chartIvaoFRcontroller = new chartIvaoFRcontroller();
         $chartController = new CarteSIAController();
+        //dd($q);
         if ($q['atc'] != null) {
 
-            if ($q['atc'][0]['atcSession']['position'] == "CTR") {
+            if ($q['atc']['atcSession']['position'] == "CTR") {
                 $ivao_session = $whazzupp->track_session_id($q['atc'][0]['id']);
                 $ivao_session_decode = json_decode($ivao_session, true);
                 $time = Carbon::parse($ivao_session_decode["time"])->format('H:i');
@@ -71,7 +64,7 @@ class myOnlineServeurController extends Controller
                 $new_ccr = $ident[0];
                 $ident[0] = substr($ident[0], 0, -1);
                 $metar = $metar->getFirAtc($ident[0]);
-                $chart_crr = $chartIvaoFRcontroller->chart_ccr($new_ccr);   
+                $chart_crr = $chartIvaoFRcontroller->chart_ccr($new_ccr);
                 $atc_online = [];
                 for ($i = 0; $i < count($metar); $i++) {
                     $atc_online[$i]["icao"] = $metar[$i][0]["callsign"];
@@ -97,21 +90,23 @@ class myOnlineServeurController extends Controller
                     "revision" => $q['atc'][0]['atis']['revision'],
                 ];
                 return view("myoline.ccr", ["atc" => $atc, "atc_online" => $atc_online, "chart_crr" => $chart_crr]);
-
             }
-            $ivao_session = $whazzupp->track_session_id($q['atc'][0]['id']);
+            $ivao_session = $whazzupp->track_session_id($q['atc']['id']);
             $ivao_session_decode = json_decode($ivao_session, true);
+            //dd($ivao_session_decode);
             $time = Carbon::parse($ivao_session_decode["time"])->format('H:i');
             $new_icao = $ivao_session_decode['callsign'];
             $new_icao = explode("_", $new_icao);
             $new_icao = $new_icao[0];
+
             $r = $whazzupp->get_rwy($new_icao);
             $metar = $whazzupp->Get_metar($new_icao);
             $taf = $whazzupp->Get_taf($new_icao);
             $atc_online = $whazzupp->ckeck_online_atc($new_icao);
             $chart_ivao = $chartIvaoFRcontroller->chart_ivao($new_icao);
-            $atis = $q['atc'][0]['atis']['lines'] ?? null;
-            $callsign = $q['atc'][0]['callsign'];
+            $atis = $whazzupp->get_atis_latest_2($ivao_session_decode["callsign"]);
+            $atis = json_decode($atis, true);
+            $callsign = $q['atc']['callsign'];
             $callsign = explode("_", $callsign);
             $callsign = $callsign[0];
             $atc = [
@@ -120,7 +115,7 @@ class myOnlineServeurController extends Controller
                 "frequency" => $ivao_session_decode["atcSession"]['frequency'],
                 "rating" => $ivao_session_decode["user"]['rating']["atcRating"]["shortName"],
                 "time" => $time,
-                "revision" => $q['atc'][0]['atis']['revision'],
+                "revision" => $atis['revision'],
                 "atis" => $r,
                 "metar" => $metar['metar'],
                 "taf" => $taf['taf'],
@@ -143,18 +138,19 @@ class myOnlineServeurController extends Controller
                 ]
             ];
             return view("myoline.atc", ["atc" => $atc, "atis" => $atis, "plateform" => $plateform, "fly" => $fly, "chart_ivao" => $chart_ivao]);
-        
         } elseif ($q['pilot'] != null) {
-            $ivao_session = $whazzupp->track_session_id($q['pilot'][0]['id']);
+            //dd($q);
+            $ivao_session = $whazzupp->track_session_id($q['pilot']['id']);
             $ivao_session_decode = json_decode($ivao_session, true);
             $fp_session = $whazzupp->get_flightPlans($ivao_session_decode["id"]);
             $fp_session = $fp_session[0];
+            //dd($fp_session);
             $atc_online_departure = $whazzupp->ckeck_online_atc($fp_session['departureId']);
             $atc_online_arrival = $whazzupp->ckeck_online_atc($fp_session['arrivalId']);
             $q = $q['pilot'];
-            $distance_arrival = $q[0]['lastTrack']['arrivalDistance'] ?? null;
+            $distance_arrival = $q['lastTrack']['arrivalDistance'] ?? null;
             $distance_arrival = explode(".", $distance_arrival);
-            $speed = $q[0]['lastTrack']['groundSpeed'] / 60 ?? 1;
+            $speed = $q['lastTrack']['groundSpeed'] / 60 ?? 1;
             $metar_dep = $whazzupp->Get_metar($fp_session["departureId"]);
             $metar_arr = $whazzupp->Get_metar($fp_session["arrivalId"]);
             $taf_dep = $whazzupp->Get_taf($fp_session["departureId"]);
@@ -174,10 +170,10 @@ class myOnlineServeurController extends Controller
                 "callsign" => $ivao_session_decode['callsign'],
                 "id_session" => $ivao_session_decode['id'],
                 "lastTrack" => [
-                    "altitude" => $q[0]['lastTrack']['altitude'],
-                    "transponder" => $q[0]['lastTrack']['transponder'],
+                    "altitude" => $q['lastTrack']['altitude'],
+                    "transponder" => $q['lastTrack']['transponder'],
                     "arrivalDistance" => $distance_arrival[0],
-                    "state" => $q[0]['lastTrack']['state'],
+                    "state" => $q['lastTrack']['state'],
                     "time" => Carbon::parse($ivao_session_decode["time"])->format('H:i'),
                 ],
                 "flightPlan" => [
@@ -192,13 +188,13 @@ class myOnlineServeurController extends Controller
                     "flightType" => $fp_session['flightType'],
                     "personsOnBoard" => $fp_session['peopleOnBoard'],
                     "departureTime" => Carbon::parse($fp_session['departureTime'])->format('H:i'),
-                    "aircraftEquipments" => $q[0]['flightPlan']['aircraftEquipments'],
-                    "aircraftTransponderTypes" => $q[0]['flightPlan']['aircraftTransponderTypes']
+                    "aircraftEquipments" => $fp_session['aircraftEquipments'][0]["id"],
+                    "aircraftTransponderTypes" => $fp_session['aircraftTransponderTypes'][0]["id"],
                 ],
                 "arrival_time" => $arrival_time,
                 "distance_arrival" => $distance_arrival[0],
-                "aircraft" => $q[0]['flightPlan']['aircraft']['model'],
-                "wakeTurbulence" => $q[0]['flightPlan']['aircraft']['wakeTurbulence']
+                "aircraft" => $q['flightPlan']['aircraft']['model'],
+                "wakeTurbulence" => $q['flightPlan']['aircraft']['wakeTurbulence']
             ];
             $atc = [
                 "depature" => [
@@ -235,17 +231,5 @@ class myOnlineServeurController extends Controller
         }
     }
 
-    public function check_online()
-    {
-        $q = $this->VerrifOnlineServeur();
-
-        if ($q["atc"] != null) {
-            return true;
-        } elseif ($q["pilot"] != null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+    
 }

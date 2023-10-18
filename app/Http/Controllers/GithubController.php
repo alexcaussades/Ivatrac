@@ -27,8 +27,14 @@ class GithubController extends Controller
         /**  Send issue to github on the repo alexcaussades/l10 is token is valid*/
 
         $users = new UsersController();
-        $user = $users->get_info_user($request->user_id);
         
+        $user = $users->get_info_user($request->user_id);
+        if(!$user){
+            $users = [
+                "name" => "Anonymous",
+                "vid" => "Anonymous"
+            ];
+        }
         $issue = Http::withToken($this->token())->post($this->url_issue(), [
             "title" => "Feedback from: " . $user->name . " (VID: ".$user->vid.")",
             "body" => $request->body,

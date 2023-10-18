@@ -281,10 +281,37 @@ class whazzupController extends Controller
         return $metar;
     }
 
-    public function Get_Position($icao = null)
+    public function Get_Position($vid = "191514")
+    {
+        $metar = $this->API_request("v2/tracker/now/atc");
+        $p = json_decode($metar, true);
+        //in list of pilot search userId 
+        foreach ($p as $pilot) {
+            if ($pilot["userId"] == $vid) {
+                $data = $pilot;
+                return $data;
+            }  
+        }
+    }
+
+    public function Get_Position_old()
     {
         $metar = $this->API_request("v2/tracker/now/atc");
         return $metar;
+    }
+
+    public function Get_Position_pilote($vid = "191514")
+    {
+        $metar = $this->API_request("v2/tracker/now/pilots");
+        $p = json_decode($metar, true);
+        //in list of pilot search userId 
+        foreach ($p as $pilot) {
+            if ($pilot["userId"] == $vid) {
+                $data = $pilot;
+                return $data;
+            }  
+        }
+        
     }
 
     public function track_session_id($idsession = null)
@@ -374,12 +401,17 @@ class whazzupController extends Controller
         return $metar->json();
     }
 
-    public function get_atis_latest($icao = null)
+    public function get_atis_latest_2($icao = null)
     {
-        $metar = $this->API_request("v2/ATCPositions/" . $icao . "/atis");
+        $metar = $this->API_request("v2/ATCPositions/" . $icao . "/atis/latest");
         return $metar;
     }
 
+    public function get_session_vid($vid = null)
+    {
+        $metar = $this->API_request("/v2/users/" . $vid);
+        return $metar->json();
+    }
 
     public function whazzup_api_traker()
     {
@@ -442,7 +474,7 @@ class whazzupController extends Controller
     public function ckeck_online_atc($icao)
     {
         $act_possition = $this->position_search($icao);
-        $position = $this->Get_Position();
+        $position = $this->Get_Position_old();
         $position = $position->json();
         $position = collect($position);
         $o = [];
@@ -571,10 +603,31 @@ class whazzupController extends Controller
         return $creator;
     }
 
+    public function get_airport_atc($icao)
+    {
+        $airport = $this->API_request("/v2/airports/" . $icao . "/ATCPositions");
+        $airport = $airport->json();
+        return $airport;
+    }
+
+    public function get_airport($icao)
+    {
+        $airport = $this->API_request("/v2/airports/" . $icao);
+        $airport = $airport->json();
+        return $airport;
+    }
+
+    public function get_center($icao)
+    {
+        $airport = $this->API_request("/v2/centers/" . $icao . "/subcenters");
+        $airport = $airport->json();
+        return $airport;
+
     public function get_aircrafts($icao_code)
     {
         $aircrafts = $this->API_request("/v2/aircrafts/" . $icao_code);
         $aircrafts = $aircrafts->json();
         return $aircrafts;
+
     }
 }

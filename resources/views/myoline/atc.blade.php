@@ -140,11 +140,11 @@
                                 @foreach ($fly["fly"]["arrivals"]["data"] as $PilotData)
 
                                 <tr>
-                                    <td class="text-white" scope="row">{{ $PilotData["callsign"] }}</td>
-                                    <td class="text-white">{{ $PilotData["lastTrack"]["state"] }}</td>
-                                    <td class="text-white">{{ $PilotData["flightPlan"]["route"] }}</td>
-                                    <td class="text-white">{{ $PilotData["flightPlan"]["flightRules"] }}</td>
-                                    <td class="text-white">{{ $PilotData["flightPlan"]["arrivalId"] }}</td>
+                                    <td class="text-white" scope="row">{{ $PilotData["callsign"] ?? NULL }}</td>
+                                    <td class="text-white">{{ $PilotData["lastTrack"]["state"] ?? NULL }}</td>
+                                    <td class="text-white">{{ $PilotData["flightPlan"]["route"] ?? NULL }}</td>
+                                    <td class="text-white">{{ $PilotData["flightPlan"]["flightRules"] ?? NULL }}</td>
+                                    <td class="text-white">{{ $PilotData["flightPlan"]["arrivalId"] ?? NULL }}</td>
                                 </tr>
 
                                 @endforeach

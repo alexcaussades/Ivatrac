@@ -97,7 +97,7 @@
             }
         ]
     },
-    "4":{
+  "4":{
         "id": 5,
         "name": "2023 / 30",
         "date": "2023-10-04",
@@ -135,5 +135,33 @@
             }
             
         ]
+    },
+    "5":{
+        "id": 6,
+        "name": "2023 / 31",
+        "date": "2023-10-18",
+        "version": "26.2.2",
+        "option": [
+            {
+                "id": 0,
+                "type": "Change",
+                "btn": "success",
+                "description": "Update AIRAC 2311"
+            },
+            {
+                "id": 1,
+                "type": "remove",
+                "btn": "dark",
+                "description": "Remove direct link whazzup file (not used) page Platform fixing via API IVAO"
+            },
+            {
+                "id": 2,
+                "type": "Change",
+                "btn": "warning",
+                "description": "Change Version VID search"
+            }
+            
+        ]
     }
+
 }

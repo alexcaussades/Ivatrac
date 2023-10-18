@@ -8,14 +8,14 @@ use Illuminate\Support\Facades\Http;
 class chartIvaoFRcontroller extends Controller
 {
     public function strcture($ivao){
-        $ccr = substr($ivao, 0, -1);
-        $ccr_search = str_split($ccr);
-        $new_icao = $ccr_search[0].$ccr_search[1].$ccr_search[2].$ccr_search[2];
-        $new_icao = strtolower($new_icao);      
+        $whazzup = new whazzupController();
+        $prepare_icao = $whazzup->get_airport($ivao);
+        $new_icao = strtolower($prepare_icao["centerId"]);      
         
         $r =[
             "new_icao" => $new_icao,
             "ivao" => $ivao,
+            "info" => $prepare_icao,
         ];
         return $r;
     }
@@ -32,10 +32,10 @@ class chartIvaoFRcontroller extends Controller
     }
 
     public function structure_CCR($ccr){
-        $ccr_search = str_split($ccr);
-        $new_icao = $ccr_search[0].$ccr_search[1].$ccr_search[2].$ccr_search[2];
-        $new_icao = strtolower($new_icao);
-        $icaoUpper = strtoupper($new_icao);     
+        $whazzup = new whazzupController();
+        $prepare_icao = $whazzup->get_center($ccr);
+        $new_icao = strtolower($prepare_icao["id"]);
+        $icaoUpper = strtoupper($prepare_icao["id"]);     
         
         $r =[
             "new_icao" => $new_icao,
