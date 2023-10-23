@@ -162,6 +162,21 @@
             }
             
         ]
-    }
+    }, 
+    "6":
+        {
+        "id": 7,
+        "name": "2023 / 32",
+        "date": "2023-10-23",
+        "version": "26.2.3",
+        "option":[
+            {
+                "id": 0,
+                "type": "Change",
+                "btn": "warning",
+                "description": "Modification API IVAO"
+            }
+        ]
+        }
 
 }
