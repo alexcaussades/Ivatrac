@@ -51,6 +51,16 @@
       f.parentNode.insertBefore(j, f);
     })(window, document, 'script', 'dataLayer', 'GTM-NGSXDXBN');
   </script>
+  
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NMZLE46MQ2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NMZLE46MQ2');
+</script>
   <!-- End Google Tag Manager -->
   <!-- CSS only -->
   @if (ENV('APP_ENV') == 'local')
