@@ -10,7 +10,7 @@
           <a class="nav-link active" aria-current="page" href={{ Route("home") }}>Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ Route("metars.index") }}">Metar</a>
+          <a class="nav-link" href="{{ Route("metars.index") }}">Metar / VID</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{{ Route("pirep.index") }}">FPL</a>
@@ -46,7 +46,7 @@
       </ul>
 
       <form class="d-flex" role="search" action="{{ route("metars.icao") }}" method="get">
-        <input class="form-control me-2" type="search" name="icao" placeholder="New Request ICAO " aria-label="Search">
+        <input class="form-control me-2" type="search" name="icao" placeholder="Request ICAO or VID " aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
     </div>

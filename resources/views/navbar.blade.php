@@ -11,7 +11,7 @@
           <a class="nav-link active" aria-current="page" href={{ Route("home") }}>Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ Route("metars.index") }}">Metar</a>
+          <a class="nav-link" href="{{ Route("metars.index") }}">Metar / VID</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{{ Route("pirep.index") }}">FPL</a>

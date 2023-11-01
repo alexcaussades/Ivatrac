@@ -300,6 +300,12 @@ Route::prefix("metar")->group(function () {
         $request->merge([
             "icao" => $request->icao
         ]);
+        
+        $regex_for_vid = "/^[0-9]{1,6}$/";
+        if (preg_match($regex_for_vid, $request->icao)) {
+            return redirect()->route("vid", ["vid" => $request->icao]);
+        }
+
         $request->validate([
             "icao" => "required|size:4"
         ]);
@@ -307,15 +313,16 @@ Route::prefix("metar")->group(function () {
         $metarController = new metarController();
         $wazzup = new whazzupController();
         $metar = $metarController->metar($icao);
+        $bookings = $wazzup->get_bookings_for_event($icao);
         $taf = $metarController->taf($icao);
         $ATC = $wazzup->ckeck_online_atc($icao);
         $pilot = $wazzup->get_traffics_count($icao);
 
         if ($metar == NULL || $taf == NULL || $ATC == NULL || $pilot == NULL) {
-            return view("metar.reload", ["icao" => $icao]);
+            return view("vid", ["icao" => $icao]);
         }
 
-        return view("metar.icao", ["metar" => $metar, "taf" => $taf, "atc" => $ATC, "pilot" => $pilot]);
+        return view("metar.icao", ["metar" => $metar, "taf" => $taf, "atc" => $ATC, "pilot" => $pilot, "bookings" => $bookings, "icao" => $icao]);
     })->name("metars.icao");
 
     Route::get("/{icao}", function () {
