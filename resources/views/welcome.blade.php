@@ -22,9 +22,9 @@
         <div class="col-6">
             <div class="card text-white bg-dark">
                 <div class="card-body bg-dark border-dark text-white text-opacity-75">
-                    <h4 class="card-title text-center text-info">Metar</h4>
-                    <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined ms-2">air</span> <span class="ms-2"> Search the metar at the plateform </span></p>
-                    <p class="card-footer text-center"><a href="{{ Route("metars.index")}}" class="btn btn-success">Search Metar</a></p>
+                    <h4 class="card-title text-center text-info">Request</h4>
+                    <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined ms-2">air</span> <span class="ms-2"> Search for metars or users </span></p>
+                    <p class="card-footer text-center"><a href="{{ Route("metars.index")}}" class="btn btn-success">Search IVAO</a></p>
                 </div>
             </div>
         </div>

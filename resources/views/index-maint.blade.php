@@ -5,14 +5,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title> @yield("title") IVATRAC</title>
-  <meta name="description" content="Find on this site, all metar, platform information, your friends, your flight plans save, then redownload them">
+  <meta name="description" content="On IVATRAC, your website for all IVAO services.  METAR - BOOKINGS - VID - FRIEND - VIEW ONLINE.">
   <meta name="keywords" content="ivao, information, website, unofficial, pirep, fpl, metar, plateform, friend, metar, follows, tracker">
     <meta name="author" content="Alexcaussades">
     <meta name="robots" content="index, follow">
     <meta name="googlebot" content="index, follow">
     <meta name="google" content="notranslate">
     <meta property="og:title" content="Alexcaussades - IVATRAC">
-    <meta property="og:description" content="Find on this site, all metar, platform information, your friends, your flight plans save, then redownload them">
+    <meta property="og:description" content="On IVATRAC, your website for all IVAO services.  METAR - BOOKINGS - VID - FRIEND - VIEW ONLINE.">
     <meta property="og:site_name" content="Alexcaussades - IVATRAC">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="en_EN">
@@ -31,7 +31,7 @@
     <meta property="og:locale:alternate" content="en_MC">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Alexcaussades - IVATRAC">
-    <meta name="twitter:description" content="Find on this site, all metar, platform information, your friends, your flight plans save, then redownload them">
+    <meta name="twitter:description" content="On IVATRAC, your website for all IVAO services.  METAR - BOOKINGS - VID - FRIEND - VIEW ONLINE.">
     <meta name="twitter:creator" content="alexcaussades">
     
   <!-- CSS only -->

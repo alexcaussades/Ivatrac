@@ -177,6 +177,32 @@
                 "description": "Modification API IVAO"
             }
         ]
+        },
+    "7":
+        {
+        "id": 8,
+        "name": "2023 / 33",
+        "date": "2023-11-02",
+        "version": "26.2.4",
+        "option":[
+            {
+                "id": 0,
+                "type": "Change",
+                "btn": "warning",
+                "description": "Modification wellcome page"
+            },
+            {
+                "id": 1,
+                "type": "Change",
+                "btn": "warning",
+                "description": "Modification search page (add search by VID)"
+            },
+            {
+                "id": 2,
+                "type": "Feacture",
+                "btn": "success",
+                "description": "Add Page users offline"
+            }
+        ]
         }
-
 }

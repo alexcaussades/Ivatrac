@@ -133,7 +133,7 @@
                                     <th>State</th>
                                     <th>Route</th>
                                     <th>FlightRules</th>
-                                    <th>TO</th>
+                                    <th>IN</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -144,7 +144,7 @@
                                     <td class="text-white">{{ $PilotData["lastTrack"]["state"] ?? NULL }}</td>
                                     <td class="text-white">{{ $PilotData["flightPlan"]["route"] ?? NULL }}</td>
                                     <td class="text-white">{{ $PilotData["flightPlan"]["flightRules"] ?? NULL }}</td>
-                                    <td class="text-white">{{ $PilotData["flightPlan"]["arrivalId"] ?? NULL }}</td>
+                                    <td class="text-white">{{ $PilotData["flightPlan"]["departureId"] ?? NULL }}</td>
                                 </tr>
 
                                 @endforeach

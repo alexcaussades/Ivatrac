@@ -11,20 +11,18 @@
 <div class="container">
 
     <div class="row">
-        <div class="col-12">
-            <h1>Metar and TAF</h1>
-            <div class="alert alert-warning" role="alert">
-                <strong>The information provided by the website is not to be used for flights ! </strong>
-            </div>
+        <div class="col-12 mt-2">
+            <h1>Search on IVAO</h1>
+            
         </div>
         <div class="container">
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 mt-2">
 
                     <form action="{{ route("metars.icao") }}" method="get">
                         <div class="form-group">
                             <label for=""><span class="d-flex align-items-center"><span class="material-symbols-outlined">search</span> Your Search</span></label>
-                            <input type="text" class="form-control" name="icao" placeholder="ICAO / LFBL">
+                            <input type="text" class="form-control" name="icao" placeholder="ICAO / LFBL | VID / 191514">
                             <button type="submit" class="btn btn-success mt-2"><span class="d-flex align-items-center"><span class="material-symbols-outlined">arrow_forward_ios</span>Search</span></button>
                         </div>
                 </div>
@@ -33,7 +31,8 @@
             </div>
         </div>
         <hr>
-        <div class="col-6">
+        <h3 class="mt-2">Weather map </h3>
+        <div class="col-6 mt-2">
             <div class="card text-white bg-dark" style="max-width: 520px;">
                 @if (ENV('APP_ENV') == 'local')
                 <img class="card-img-top" src="{{ asset("asset/img/webiste/temsi.png") }}" alt="">

@@ -231,7 +231,7 @@ class myOnlineServeurController extends Controller
 
             return view("myoline.pilot", ["pilot" => $p, "atc" => $atc, "chart" => $chart, "metar" => $metar]);
         } else {
-            return redirect()->route("home");
+            return view("myoline.no_online");
         }
     }
 
