@@ -6,6 +6,35 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title> @yield("title") | IVATRAC</title>
+  <meta name="description" content="On IVATRAC, your website for all IVAO services.  METAR - BOOKINGS - VID - FRIEND - VIEW ONLINE. ">
+  <meta name="keywords" content="ivao, information, website, unofficial, pirep, fpl, metar, plateform, friend, metar, follows, tracker">
+  <meta name="author" content="Alexcaussades">
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <meta name="google" content="notranslate">
+  <meta property="og:title" content="IVATRAC">
+  <meta property="og:description" content="On IVATRAC, your website for all IVAO services.  METAR - BOOKINGS - VID - FRIEND - VIEW ONLINE.">
+  <meta property="og:site_name" content="IVATRAC">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="en_GB">
+  <meta property="og:locale:alternate" content="fr_BE">
+  <meta property="og:locale:alternate" content="en_BE">
+  <meta property="og:locale:alternate" content="fr_LU">
+  <meta property="og:locale:alternate" content="en_LU">
+  <meta property="og:locale:alternate" content="fr_CH">
+  <meta property="og:locale:alternate" content="en_CH">
+  <meta property="og:locale:alternate" content="fr_CA">
+  <meta property="og:locale:alternate" content="en_CA">
+  <meta property="og:locale:alternate" content="fr_MC">
+  <meta property="og:locale:alternate" content="en_MC">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="IVATRAC">
+  <meta name="twitter:description" content="On IVATRAC, your website for all IVAO services.  METAR - BOOKINGS - VID - FRIEND - VIEW ONLINE.">
+  <meta name="twitter:creator" content="alexcaussades">
+  <meta name="twitter:site" content="@ivatrac">
   <!-- CSS only -->
   @if (ENV('APP_ENV') == 'local')
   <link rel="stylesheet" href="{{ asset("asset/css/bootstrap.min.css") }} " type="text/css">
