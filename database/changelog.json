@@ -7,7 +7,7 @@
         "option": [
             {
                 "id": 0,
-                "type": "Feacture",
+                "type": "Feature",
                 "btn": "success",
                 "description": "Connect SSO with the application on IVAO"
             },
@@ -33,7 +33,7 @@
             },
             {
                 "id": 1,
-                "type": "Feacture",
+                "type": "Feature",
                 "btn": "success",
                 "description": "Add Booking System (hors add on IVAO)"
             },
@@ -65,13 +65,13 @@
             },
             {
                 "id": 1,
-                "type": "Feacture",
+                "type": "Feature",
                 "btn": "success",
                 "description": " Add Changelog page"
             }
         ]
     },
-    "3":{
+    "3": {
         "id": 4,
         "name": "2023 / 29",
         "date": "2023-10-02",
@@ -85,7 +85,7 @@
             },
             {
                 "id": 1,
-                "type": "Feacture",
+                "type": "Feature",
                 "btn": "success",
                 "description": " Add Changelog page for menu"
             },
@@ -97,7 +97,7 @@
             }
         ]
     },
-  "4":{
+    "4": {
         "id": 5,
         "name": "2023 / 30",
         "date": "2023-10-04",
@@ -105,38 +105,37 @@
         "option": [
             {
                 "id": 0,
-                "type": "Feacture",
+                "type": "Feature",
                 "btn": "success",
                 "description": "Add Page Event Ximea"
             },
             {
                 "id": 1,
-                "type": "Feacture",
+                "type": "Feature",
                 "btn": "success",
                 "description": "Create Controller event Ximea"
             },
             {
                 "id": 2,
-                "type": "Feacture",
+                "type": "Feature",
                 "btn": "success",
                 "description": "Create Model event Ximea"
             },
             {
                 "id": 3,
-                "type": "Feacture",
+                "type": "Feature",
                 "btn": "success",
                 "description": "Create View event Ximea"
             },
             {
                 "id": 4,
-                "type": "Feacture",
+                "type": "Feature",
                 "btn": "success",
                 "description": "Create CSS event Ximea"
             }
-            
         ]
     },
-    "5":{
+    "5": {
         "id": 6,
         "name": "2023 / 31",
         "date": "2023-10-18",
@@ -160,16 +159,14 @@
                 "btn": "warning",
                 "description": "Change Version VID search"
             }
-            
         ]
-    }, 
-    "6":
-        {
+    },
+    "6": {
         "id": 7,
         "name": "2023 / 32",
         "date": "2023-10-23",
         "version": "26.2.3",
-        "option":[
+        "option": [
             {
                 "id": 0,
                 "type": "Change",
@@ -177,14 +174,13 @@
                 "description": "Modification API IVAO"
             }
         ]
-        },
-    "7":
-        {
+    },
+    "7": {
         "id": 8,
         "name": "2023 / 33",
         "date": "2023-11-02",
         "version": "26.2.4",
-        "option":[
+        "option": [
             {
                 "id": 0,
                 "type": "Change",
@@ -199,10 +195,36 @@
             },
             {
                 "id": 2,
-                "type": "Feacture",
+                "type": "Feature",
                 "btn": "success",
                 "description": "Add Page users offline"
             }
         ]
-        }
+    },
+    "8": {
+        "id": 9,
+        "name": "2023 / 34",
+        "date": "2023-11-11",
+        "version": "26.2.5",
+        "option": [
+            {
+                "id": 0,
+                "type": "Bug Fix",
+                "btn": "danger",
+                "description": "Fixed tracker infos pages welcome"
+            },
+            {
+                "id": 1,
+                "type": "Bug Fix",
+                "btn": "danger",
+                "description": "Correct parase data on the page welcome"
+            },
+            {
+                "id": 2,
+                "type": "Feature",
+                "btn": "success",
+                "description": "Prepare the favorites metar (not finished) | (V.0.0.2 in progress)"
+            }
+        ]
+    }
 }
