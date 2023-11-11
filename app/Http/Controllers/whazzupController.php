@@ -338,18 +338,34 @@ class whazzupController extends Controller
         $users_me = $users_me->json();
         $users_me = collect($users_me);
         $users_me = $users_me->toArray();
+
+
         /** convertir timestant uniquement en heure en addition des jours */
         $heure = Carbon::createFromTimestamp(0)->format('Y-m-d H:i:s');
-        $atc = Carbon::createFromTimestamp($users_me["hours"][0]["hours"])->format('Y-m-d H:i:s');
+        $atc = Carbon::createFromTimestamp($users_me["hours"][0]["hours"])->format('Y-m-d H:i');
         /** diff entre heure et minutes $atc */
         $atc1 = Carbon::parse($atc);
         $heure = Carbon::parse($heure);
         $atc = $atc1->diffInHours($heure);
         $atc = $atc1->diffInMinutes($heure) / 60;
-        $heure = Carbon::createFromTimestamp($users_me["hours"][1]["hours"])->format('Y-m-d H:i:s');
-        $heure = Carbon::parse($heure);
-        $heure = $heure->diffInHours($heure);
+        /** Rounded heure ATC */
+        $atc = round($atc, 2);
 
+        /** Pilot */
+        $pilot = Carbon::createFromTimestamp($users_me["hours"][1]["hours"])->format('Y-m-d H:i');
+        $pilot1 = Carbon::parse($pilot);
+        $pilot = $pilot1->diffInHours($heure);
+        $pilot = $pilot1->diffInMinutes($heure) / 60;
+        /** Rounded heure Pilot */
+        $pilot = round($pilot, 2);
+        
+        /** Staff */
+        $staff = Carbon::createFromTimestamp($users_me["hours"][2]["hours"])->format('Y-m-d H:i');
+        $staff1 = Carbon::parse($staff);
+        $staff = $staff1->diffInHours($heure);
+        $staff = $staff1->diffInMinutes($heure) / 60;
+        /** Rounded heure Staff */
+        $staff = round($staff, 2);
 
 
 
@@ -361,10 +377,10 @@ class whazzupController extends Controller
             "Hours" => [
                 /** conversion value timestamp en heure */
 
-                "AtcHours" => Carbon::createFromTimestamp($users_me["hours"][0]["hours"]),
-                "PilotHours" => $users_me["hours"][1]["hours"],
-                "StaffHours" => $users_me["hours"][2]["hours"],
-                "TotalHours" => null,
+                "AtcHours" => $atc,
+                "PilotHours" => $pilot,
+                "StaffHours" => $staff,
+                "TotalHours" => $atc + $pilot,
 
 
             ],
@@ -633,4 +649,12 @@ class whazzupController extends Controller
         return $aircrafts;
 
     }
+
+    public function event_ivao()
+    {
+        $event = $this->API_request("/v1/events");
+        $event = $event->json();
+        return $event;
+    }
+
 }

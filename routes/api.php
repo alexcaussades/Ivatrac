@@ -66,6 +66,26 @@ Route::get('metar/{icao}', function (Request $request, $icao) {
 Route::get("/whazzup", function(Request $request){
     
     $whazzup = new whazzupController();
+    $whazzup->get_session();
     $r = $whazzup->whazzup_api_traker();
     return $r;
+});
+
+
+Route::get("info_plateforme/{icao}", function(Request $request){
+    $whazzup = new whazzupController();
+    $ATC = $whazzup->ckeck_online_atc($request->icao);
+    $PILOT = $whazzup->get_traffics_count($request->icao);
+    $METAR = $whazzup->Get_metar($request->icao);
+    $METAR = json_decode($METAR, true);
+    $METAR = $METAR["metar"];
+    $info = [
+        "ATC" => $ATC,
+        "PILOT" => $PILOT,
+        "METAR" => $METAR
+    ];
+    $k = serialize($info);
+    $k = base64_encode($k);
+        
+    return $k;
 });
