@@ -34,7 +34,7 @@ class AuthIVAOController extends Controller
 
         $base_url = $openid_data["authorization_endpoint"];
         $reponse_type = "code";
-        $scopes = "profile friends:read friends:write flight_plans:read flight_plans:write";
+        $scopes = "profile friends:read friends:write flight_plans:read flight_plans:write tracker";
         $state = rand(100000, 999999); // Random string to prevent CSRF attacks
 
         $query = [
