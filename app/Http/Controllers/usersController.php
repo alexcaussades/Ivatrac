@@ -120,7 +120,7 @@ class usersController extends Controller
                 'vid' => $data["id"],
                 'name_first' => $data["firstName"],
                 'name_last' => $data["lastName"],
-                'email' => $data["email"],
+                'email' => $data["email"] ?? "null",
                 'password' => Hash::make("ivao"),
                 'email_verified_at' => now(),
                 'remember_token' => Str::random(10),
@@ -188,7 +188,6 @@ class usersController extends Controller
         $request->session()->forget('remember_token');
         $request->session()->forget('ivao_tokens');
         $request->session()->flush();
-        
     }
 
     public function get_info_user($id)
