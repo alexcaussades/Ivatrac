@@ -80,7 +80,7 @@ Route::get('/', function (Request $request) {
         $whaz = new whazzupController();
         $online = $whaz->online_me();
         $users_me = $whaz->user_me();
-
+        //dd($online->json(), $users_me);
         $online = json_decode($online, true);
         return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
     }
@@ -618,8 +618,31 @@ Route::prefix("feedback")->group(function () {
 })->middleware(["auth:web"]);
 
 Route::get("test", function (Request $request) {
-    $event = new eventController("LFMT");
-    $r = $event->get_general();
-    return $r;
+    $w = new whazzupController();
+    $u = $w->get_rwys("LFBO");
+    $g = json_decode($u, true);
+    $unit_pi = "ft";
+    $unit_km = "km";
+    $rwy = [];
+    for ($i = 0; $i < count($g); $i++) {
+        $rwy[$i]["runway"] = $g[$i]["runway"];
+        $rwy[$i]["length_pi"] = $g[$i]["length"];
+        $rwy[$i]["length_KM"] = $g[$i]["length"] / 3281;
+        $rwy[$i]["length_KM"] = round($rwy[$i]["length_KM"], 2);
+    }
+    $data = [
+        "rwy" => $rwy,
+        "unit_pi" => $unit_pi,
+        "unit_km" => $unit_km
+    ];
+    $data = json_encode($data);
+    return $data;
 });
 
+
+Route::get("test2", function (Request $request) {
+    $w = new whazzupController();
+    $u = $w->event_ivao();
+    $g = json_decode($u);
+    return $g;
+});
