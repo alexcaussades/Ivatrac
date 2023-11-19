@@ -37,10 +37,10 @@ class DiscordContoller extends Controller
     public function description(Request $request)
     {
         $text = $request->body;
-        if($request->link != null){
-          return "Type:".$request->labels." \n\n". $text .= "\n\n Link direct github: [Issue](" . $request->link . ")";
-        }else{
-          return "Type:".$request->labels." \n\n". $text;
+        if ($request->link != null) {
+            return "Type:" . $request->labels . " \n\n" . $text .= "\n\n Link direct github: [Issue](" . $request->link . ")";
+        } else {
+            return "Type:" . $request->labels . " \n\n" . $text;
         }
     }
 
@@ -54,37 +54,56 @@ class DiscordContoller extends Controller
             "body" => $request->body,
             "user_id" => $request->user_id,
             "labels" => $request->labels,
-            "link"=> $request->link,
+            "link" => $request->link,
         ]);
         $usersController = new UsersController();
         $user = $usersController->get_info_user($request->user_id);
-        if(!$user){
-           $user = [
-               "name" => "Anonymous",
-               "vid" => "0000000",
-           ];
-        }
-        $push = Http::post($this->url_webhooks(), [
-            "avatar_url" => "https://i.pinimg.com/originals/99/1e/53/991e534b8f6038f4bdf67a97a7984822.jpg",
-            "embeds" => [
-                [
-                    "title" => "Feedback from: " . $user->name . " (VID: " . $user->vid . ")",
-                    "description" => $this->description($request),
-                    "url" => $request->link ?? null,
-                    "color" => "16711680",
-                    "footer" => [
-                        "text" => "Feedback Form the website",
-                    ],
-                    "timestamp" => date("Y-m-d H:i:s")
+        if (!$user) {
+            $user = [
+                "name" => "Anonymous",
+                "vid" => "0000000",
+            ];
+            $push = Http::post($this->url_webhooks(), [
+                "avatar_url" => "https://i.pinimg.com/originals/99/1e/53/991e534b8f6038f4bdf67a97a7984822.jpg",
+                "embeds" => [
+                    [
+                        "title" => "Feedback from: " . $user["name"],
+                        "description" => $this->description($request),
+                        "url" => $request->link ?? null,
+                        "color" => "16711680",
+                        "footer" => [
+                            "text" => "Feedback Form the website",
+                        ],
+                        "timestamp" => date("Y-m-d H:i:s")
+                    ]
                 ]
-            ]
 
-        ]);
-        return $push;
+            ]);
+            return $push;
+        } else {
+            $push = Http::post($this->url_webhooks(), [
+                "avatar_url" => "https://i.pinimg.com/originals/99/1e/53/991e534b8f6038f4bdf67a97a7984822.jpg",
+                "embeds" => [
+                    [
+                        "title" => "Feedback from: " . $user->name . " (VID: " . $user->vid . ")",
+                        "description" => $this->description($request),
+                        "url" => $request->link ?? null,
+                        "color" => "16711680",
+                        "footer" => [
+                            "text" => "Feedback Form the website",
+                        ],
+                        "timestamp" => date("Y-m-d H:i:s")
+                    ]
+                ]
+
+            ]);
+            return $push;
+        }
     }
 
-    public function url_discord_for_code(Request $request){
-        $url = "https://discord.com/api/oauth2/authorize?client_id=".env("discord_client_id")."&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Ftest2&response_type=code&scope=identify";
+    public function url_discord_for_code(Request $request)
+    {
+        $url = "https://discord.com/api/oauth2/authorize?client_id=" . env("discord_client_id") . "&redirect_uri=http%3A%2F%2F127.0.0.1%3A8000%2Ftest2&response_type=code&scope=identify";
         $request->merge([
             "code" => $request->code,
         ]);
@@ -94,6 +113,4 @@ class DiscordContoller extends Controller
         ];
         return $url["code"];
     }
-
-    
 }
