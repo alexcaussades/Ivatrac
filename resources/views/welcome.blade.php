@@ -19,6 +19,11 @@
     @endauth
     @include('nav-wellcome')
     <div class="row mt-2">
+        <div class="col-12">
+            <div class="alert alert-info text-center" role="alert">
+               <strong> 12 Nov 2023 - Update 2023.75 </strong> view the full <a href="{{route("changelog")}}" class="text-reset">Changelog</a>.
+            </div>
+        </div>
         <div class="col-6">
             <div class="card text-white bg-dark">
                 <div class="card-body bg-dark border-dark text-white text-opacity-75">
@@ -111,6 +116,30 @@
         </div>
     </div>
 
+    @auth()
+    <hr>
+
+    <div class="container">
+        <h5>Last Metar</h5>
+        <div class="row">
+            <div class="col">
+                <div class="col-4 mt-2">
+                    <div class="card text-white bg-dark">
+                        <div class="card-body">
+                            <h4 class="card-title text-center text-info">Pilot</h4>
+                            <p class="card-text text-center text-info">{{ $whazzup["pilot"] }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    @endauth
 
 
     @endsection
