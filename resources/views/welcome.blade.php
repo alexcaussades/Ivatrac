@@ -20,8 +20,8 @@
     @include('nav-wellcome')
     <div class="row mt-2">
         <div class="col-12">
-            <div class="alert alert-info text-center" role="alert">
-               <strong> 12 Nov 2023 - Update 2023.75 </strong> view the full <a href="{{route("changelog")}}" class="text-reset">Changelog</a>.
+            <div class="alert alert-info update_font" role="alert">
+                <p class="update_txt"><strong> {{$update["date"]}} - Update {{$update["name"]}} </strong> view the full <a href="{{route("changelog")}}" class="text-reset">Changelog</a>.</p>
             </div>
         </div>
         <div class="col-6">
@@ -117,24 +117,41 @@
     </div>
 
     @auth()
-    <hr>
+    <!-- <hr>
 
     <div class="container">
-        <h5>Last Metar</h5>
+        <h5>My Favorites</h5>
         <div class="row">
-            <div class="col">
-                <div class="col-4 mt-2">
-                    <div class="card text-white bg-dark">
-                        <div class="card-body">
-                            <h4 class="card-title text-center text-info">Pilot</h4>
-                            <p class="card-text text-center text-info">{{ $whazzup["pilot"] }}</p>
-                        </div>
+            <div class="col-4 mt-2">
+                <div class="card text-white bg-dark">
+                    <div class="card-body">
+                        <h4 class="card-title text-center fs-5">LFBL</h4>
+                        <p class="card-text text-center text-info metar_font">LFBL 201930Z AUTO 25006KT 220V280 CAVOK 07/07 Q1017 TEMPO 3000 SHRA BKN004 BKN020TCU</p>
+                        <p class="card-text text-center departures_font"> DEP: 15 / ARR: 10 </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 mt-2">
+                <div class="card text-white bg-dark">
+                    <div class="card-body">
+                        <h4 class="card-title text-center fs-5">LFBL</h4>
+                        <p class="card-text text-center text-info metar_font">LFBL 201930Z AUTO 25006KT 220V280 CAVOK 07/07 Q1017 TEMPO 3000 SHRA BKN004 BKN020TCU</p>
+                        <p class="card-text text-center departures_font"> DEP: 15 / ARR: 10 </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 mt-2">
+                <div class="card text-white bg-dark">
+                    <div class="card-body">
+                        <h4 class="card-title text-center fs-5">LFBL</h4>
+                        <p class="card-text text-center text-info metar_font">LFBL 201930Z AUTO 25006KT 220V280 CAVOK 07/07 Q1017 TEMPO 3000 SHRA BKN004 BKN020TCU</p>
+                        <p class="card-text text-center departures_font"> DEP: 15 / ARR: 10 </p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+ -->
 
 
 

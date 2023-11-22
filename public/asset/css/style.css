@@ -65,3 +65,23 @@
     font-family: "airport";
     font-size: 3.0vw;
   }
+
+  .update_font{
+    height: 10px;
+  }
+
+  .update_txt{
+    font-size: 0.8vw;
+    margin-top: -0.5vw;
+    padding-left: 1vw;
+    color: #070707;
+    
+  }
+
+  .metar_font{
+    font-size: 0.7vw;
+  }
+
+  .departures_font{
+    font-size: 0.7vw;
+  }

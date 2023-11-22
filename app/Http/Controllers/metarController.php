@@ -228,7 +228,7 @@ class metarController extends Controller
 
     public function temp_qnh($metar)
     {
-        $regexTemparature = "/[0-9]{2}\/[0-9]{2}/";
+        $regexTemparature = "/M?[0-9]{2}\/M?[0-9]{2}/";
         $regexQNH = "/[Q][0-9]{4}/";
         preg_match($regexTemparature, $metar, $temparature);
         preg_match($regexQNH, $metar, $QNH);

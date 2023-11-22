@@ -44,6 +44,7 @@ use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\myOnlineServeurController;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
 use Symfony\Component\HttpKernel\Controller\ErrorController;
+use App\Http\Controllers\my_fav_plateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,6 +70,8 @@ Route::get('/', function (Request $request) {
     /** creation d'un cookie sur laravel */
     $whazzup = new whazzupController();
     $whazzup = $whazzup->connexion();
+    $w = new changelogController();
+    $u = $w->info_update();
     if (Session::get("ivao_tokens") != null) {
         $date = new DateTime();
         $date->setTimezone(new DateTimeZone('UTC'));
@@ -82,13 +85,13 @@ Route::get('/', function (Request $request) {
         $users_me = $whaz->user_me();
         //dd($online->json(), $users_me);
         $online = json_decode($online, true);
-        return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
+        return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online, "update" => $u ]);
     }
     if (env("maintenance_mode") == true) {
         return view('maintenance');
     }
     $online = null;
-    return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online]);
+    return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online, "update" => $u]);
 })->where('client', '[0-9]+')->name("home");
 
 Route::get('/logout', function (Request $request) {
@@ -645,4 +648,10 @@ Route::get("test2", function (Request $request) {
     $u = $w->event_ivao();
     $g = json_decode($u);
     return $g;
+});
+
+Route::get("test3", function (Request $request) {
+    $fav = new my_fav_plateController();
+    $fav = $fav->get();
+    return $fav;
 });
