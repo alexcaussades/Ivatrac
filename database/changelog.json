@@ -227,5 +227,25 @@
                 "description": "Prepare the favorites metar (not finished) | (V.0.0.2 in progress)"
             }
         ]
+    },
+    "9": {
+        "id": 10,
+        "name": "2023 / 35",
+        "date": "2023-11-25",
+        "version": "26.2.6",
+        "option": [
+            {
+                "id": 0,
+                "type": "Bug Fix",
+                "btn": "danger",
+                "description": "Fixed Account creat page"
+            },
+            {
+                "id": 1,
+                "type": "Change",
+                "btn": "warning",
+                "description": "change welcome page"
+            }
+        ]
     }
 }
