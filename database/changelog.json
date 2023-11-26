@@ -176,7 +176,6 @@
         ]
     },
     "7": {
-
         "id": 8,
         "name": "2023 / 33",
         "date": "2023-11-02",
@@ -245,6 +244,26 @@
                 "type": "Change",
                 "btn": "warning",
                 "description": "change welcome page"
+            }
+        ]
+    },
+    "10": {
+        "id": 11,
+        "name": "2023 / 36",
+        "date": "2023-11-26",
+        "version": "26.2.7",
+        "option": [
+            {
+                "id": 0,
+                "type": "Bug Fix",
+                "btn": "danger",
+                "description": "Change information POST and Delete for API IVAO"
+            },
+            {
+                "id": 1,
+                "type": "Feature",
+                "btn": "success",
+                "description": "View FPL"
             }
         ]
     }

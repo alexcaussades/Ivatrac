@@ -85,7 +85,7 @@ Route::get('/', function (Request $request) {
         $users_me = $whaz->user_me();
         //dd($online->json(), $users_me);
         $online = json_decode($online, true);
-        return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online, "update" => $u ]);
+        return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online, "update" => $u]);
     }
     if (env("maintenance_mode") == true) {
         return view('maintenance');
@@ -303,7 +303,7 @@ Route::prefix("metar")->group(function () {
         $request->merge([
             "icao" => $request->icao
         ]);
-        
+
         $regex_for_vid = "/^[0-9]{1,6}$/";
         if (preg_match($regex_for_vid, $request->icao)) {
             return redirect()->route("vid", ["vid" => $request->icao]);
@@ -451,16 +451,18 @@ Route::prefix("fpl")->group(function () {
         }
     })->name("pirep.upload");
 
-    Route::get("/show", function (Request $request) {
+    Route::get("/show/{id}", function (Request $request) {
+        $request->merge([
+            "id" => $request->id
+        ]);
         if (!Auth::user()) {
             return redirect()->route("auth.login");
         } else {
-            $pirep = new PirepController();
-            $oo = $pirep->show_fpl_id(4);
 
-            $json = json_decode($oo->fpl);
-            //dd($oo);
-            return view("pirep.show", ["json" => $json, "oo" => $oo]);
+            $pirep_ivao = new whazzupController();
+            $pirep = new PirepController();
+            $oo = $pirep_ivao->get_fp($request->id);
+            return view("pirep.show", ["json" => $oo]);
         }
     })->name("pirep.show");
 
@@ -526,12 +528,13 @@ Route::prefix("friends")->group(function () {
 
     Route::get("post-webeye", function (Request $request) {
         $request->merge([
-            "vid" => $request->vid
+            "vid" => $request->vid,
+            "myvid" => $request->myvid
         ]);
         $authivao = new AuthIVAOController();
         $authivao->sso($request, "home");
         $whazzup = new whazzupController();
-        $whazzup->post_friends($request->vid);
+        $whazzup->post_friends($request->myvid, $request->vid);
         return to_route("friends.all")->with("success", "Amis ajouté dans la liste");
     })->name("friends.add.post.webeye")->middleware(["auth:web"]);
 

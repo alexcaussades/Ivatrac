@@ -20,6 +20,7 @@
                         <div class="mb-3">
                             <label for="vid_friend" class="form-label">VID <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="vid" name="vid">
+                            <input type="hidden" name="myvid" value="{{Auth::user()->vid}}">
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
