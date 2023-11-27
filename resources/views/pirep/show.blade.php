@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
 
 <div class="container px-4 text-center mt-5">
     <h4 class="text-primary">INTERNATIONAL FLIGHT PLAN</h4>
+    <p class=" d-flex justify-content-start text-muted">Fligt Plan id: {{$json["id"]}}</p>
     <hr>
     <div class="form-group">
         <div class="row">
@@ -109,7 +110,6 @@ use Illuminate\Support\Carbon;
         <div class="row">
             <div class="col">
                 <label for="Route" class="text-primary d-flex justify-content-start">Other Information :<p class="text-dark ms-2">{{$json["remarks"]}}</p</label>
-                        >
             </div>
         </div>
         <hr>
@@ -120,10 +120,6 @@ use Illuminate\Support\Carbon;
             </div>
             <div class="col">
                 <label for="Route" class="text-primary d-flex justify-content-start">Persons on Board :<p class="text-dark ms-2"> {{$json["pob"]}}</p></label>
-
-            </div>
-            <div class="col">
-                <label for="Route" class="text-primary d-flex justify-content-start">Fuel on Board :<p class="text-dark ms-2">{{$json["fuel"] ?? ""}} Kg</p></label>
 
             </div>
         </div>
