@@ -1,7 +1,5 @@
 <?php
 
-
-
 use App\Mail\MailTest;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -45,6 +43,7 @@ use App\Http\Controllers\myOnlineServeurController;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
 use Symfony\Component\HttpKernel\Controller\ErrorController;
 use App\Http\Controllers\my_fav_plateController;
+use App\Http\Controllers\airac_info;
 
 /*
 |--------------------------------------------------------------------------
@@ -623,38 +622,12 @@ Route::prefix("feedback")->group(function () {
     })->name("feedback.post");
 })->middleware(["auth:web"]);
 
-Route::get("test", function (Request $request) {
-    $w = new whazzupController();
-    $u = $w->get_rwys("LFBO");
-    $g = json_decode($u, true);
-    $unit_pi = "ft";
-    $unit_km = "km";
-    $rwy = [];
-    for ($i = 0; $i < count($g); $i++) {
-        $rwy[$i]["runway"] = $g[$i]["runway"];
-        $rwy[$i]["length_pi"] = $g[$i]["length"];
-        $rwy[$i]["length_KM"] = $g[$i]["length"] / 3281;
-        $rwy[$i]["length_KM"] = round($rwy[$i]["length_KM"], 2);
-    }
-    $data = [
-        "rwy" => $rwy,
-        "unit_pi" => $unit_pi,
-        "unit_km" => $unit_km
-    ];
-    $data = json_encode($data);
-    return $data;
-});
 
+Route::prefix("devs")->group(function () {
 
-Route::get("test2", function (Request $request) {
-    $w = new whazzupController();
-    $u = $w->event_ivao();
-    $g = json_decode($u);
-    return $g;
-});
-
-Route::get("test3", function (Request $request) {
-    $fav = new my_fav_plateController();
-    $fav = $fav->get();
-    return $fav;
+    Route::get("/ils", function (Request $request) {
+        $airac = new airac_info();
+        $airac = $airac->Get_info_all_airac("LFBO");
+        return $airac;
+    });
 });
