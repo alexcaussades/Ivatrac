@@ -22,26 +22,26 @@ use Illuminate\Support\Carbon;
     <div class="form-group">
         <div class="row">
             <div class="col">
-                <label for="number" class="text-primary d-flex justify-content-start">Identification : <p class="text-dark ms-2"> {{$json["callsign"]?? ''}}</p></label>
+                <label for="number" class="text-primary d-flex justify-content-start">Identification : <p class="text-dark ms-2"> {{$json["callsign"] ?? "N.C"}}</p></label>
 
             </div>
             <div class="col">
-                <label for="flightRules" class="text-primary d-flex justify-content-start">Flight Rules :<p class="text-dark ms-2">{{$json["flightRules"]}}</p></label>
+                <label for="flightRules" class="text-primary d-flex justify-content-start">Flight Rules :<p class="text-dark ms-2">{{$json["flightRules"] ?? "N.C"}}</p></label>
 
             </div>
             <div class="col">
-                <label for="typeOfFlight" class="text-primary d-flex justify-content-start">Type of Flight :<p class="text-dark ms-2">{{$json["flightType"]}}</p></label>
+                <label for="typeOfFlight" class="text-primary d-flex justify-content-start">Type of Flight :<p class="text-dark ms-2">{{$json["flightType"] ?? "N.C"}}</p></label>
 
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col">
-                <label for="aircraftType" class="text-primary d-flex justify-content-start">Aircraft Type :<p class="text-dark ms-2">{{$json["aircraftId"]}}</p></label>
+                <label for="aircraftType" class="text-primary d-flex justify-content-start">Aircraft Type :<p class="text-dark ms-2">{{$json["aircraftId"] ?? "N.C"}}</p></label>
 
             </div>
             <div class="col">
-                <label for="wakeTurbulence" class="text-primary d-flex justify-content-start">Wake Turbulence :<p class="text-dark ms-2">{{$json["aircraftWakeTurbulence"]}}</p></label>
+                <label for="wakeTurbulence" class="text-primary d-flex justify-content-start">Wake Turbulence :<p class="text-dark ms-2">{{$json["aircraftWakeTurbulence"] ?? "N.C"}}</p></label>
 
             </div>
             <div class="col">
@@ -55,11 +55,11 @@ use Illuminate\Support\Carbon;
         <hr>
         <div class="row">
             <div class="col">
-                <label for="departureAerodrome" class="text-primary d-flex justify-content-start">Departure Aerodrome :<p class="text-dark ms-2">{{$json["departureId"]}}</p></label>
+                <label for="departureAerodrome" class="text-primary d-flex justify-content-start">Departure Aerodrome :<p class="text-dark ms-2">{{$json["departureId"] ?? "N.C"}}</p></label>
 
             </div>
             <div class="col">
-                <label for="departureTime" class="text-primary d-flex justify-content-start">Departure Time :<p class="text-dark ms-2"> {{Carbon::parse($json["departureTime"])->format('H:i') }}</p></label>
+                <label for="departureTime" class="text-primary d-flex justify-content-start">Departure Time :<p class="text-dark ms-2"> {{Carbon::parse($json["departureTime"])->format('H:i') ?? "N.C" }}</p></label>
 
             </div>
         </div>
@@ -68,14 +68,14 @@ use Illuminate\Support\Carbon;
             <div class="col">
                 <label for="departureTime" class="text-primary d-flex justify-content-start">Speed
                     <div class="input-group mb-3">
-                        <p class="text-dark ms-2">{{$json["cruisingSpeedType"] }} {{$json["cruisingSpeed"] }}</p>
+                        <p class="text-dark ms-2">{{$json["cruisingSpeedType"] }} {{$json["cruisingSpeed"] ?? "N.C"}}</p>
                     </div>
                 </label>
             </div>
             <div class="col">
                 <label for="departureTime" class="text-primary d-flex justify-content-start">Level
                     <div class="input-group mb-3">
-                        <p class="text-dark ms-2"> {{$json["altitudeType"]}} {{$json["cruisingSpeed"]}} </p>
+                        <p class="text-dark ms-2"> {{$json["altitudeType"]}} {{$json["cruisingSpeed"] ?? "N.C"}} </p>
                     </div>
                 </label>
             </div>
@@ -83,43 +83,43 @@ use Illuminate\Support\Carbon;
         <hr>
         <div class="row">
             <div class="col">
-                <label for="Route" class="text-primary d-flex justify-content-start">Route :<p class="text-dark ms-2">{{$json["route"]}}</p></label>
+                <label for="Route" class="text-primary d-flex justify-content-start">Route :<p class="text-dark ms-2">{{$json["route"] ?? "N.C"}}</p></label>
 
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col">
-                <label for="destinationAerodrome" class="text-primary d-flex justify-content-start">Destination Aerodrome :<p class="text-dark ms-2"> {{$json["arrivalId"]}}</p></label>
+                <label for="destinationAerodrome" class="text-primary d-flex justify-content-start">Destination Aerodrome :<p class="text-dark ms-2"> {{$json["arrivalId"] ?? "N.C"}}</p></label>
 
             </div>
             <div class="col">
-                <label for="destinationTime" class="text-primary d-flex justify-content-start">Total EET :<p class="text-dark ms-2">{{Carbon::parse($json["eet"])->format('H:i')}}</p></label>
+                <label for="destinationTime" class="text-primary d-flex justify-content-start">Total EET :<p class="text-dark ms-2">{{Carbon::parse($json["eet"])->format('H:i') ?? "N.C"}}</p></label>
 
             </div>
             <div class="col">
-                <label for="destinationTime" class="text-primary d-flex justify-content-start">Alternate Aerodrome :<p class="text-dark ms-2">{{$json["alternativeId"]}}</p></label>
+                <label for="destinationTime" class="text-primary d-flex justify-content-start">Alternate Aerodrome :<p class="text-dark ms-2">{{$json["alternativeId"] ?? "N.C"}}</p></label>
 
             </div>
             <div class="col">
-                <label for="destinationTime" class="text-primary d-flex justify-content-start">2nd Alternate Aerodrome :<p class="text-dark ms-2">{{$json["alternative2Id"]}}</p></label>
+                <label for="destinationTime" class="text-primary d-flex justify-content-start">2nd Alternate Aerodrome :<p class="text-dark ms-2">{{$json["alternative2Id"] ?? "N.C"}}</p></label>
 
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col">
-                <label for="Route" class="text-primary d-flex justify-content-start">Other Information :<p class="text-dark ms-2">{{$json["remarks"]}}</p</label>
+                <label for="Route" class="text-primary d-flex justify-content-start">Other Information :<p class="text-dark ms-2">{{$json["remarks"] ?? "N.C"}}</p</label>
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col">
-                <label for="Route" class="text-primary d-flex justify-content-start">Endurance :<p class="text-dark ms-2">{{Carbon::parse($json["endurance"])->format('H:i')}}</p></label>
+                <label for="Route" class="text-primary d-flex justify-content-start">Endurance :<p class="text-dark ms-2">{{Carbon::parse($json["endurance"])->format('H:i') ?? "N.C"}}</p></label>
 
             </div>
             <div class="col">
-                <label for="Route" class="text-primary d-flex justify-content-start">Persons on Board :<p class="text-dark ms-2"> {{$json["pob"]}}</p></label>
+                <label for="Route" class="text-primary d-flex justify-content-start">Persons on Board :<p class="text-dark ms-2"> {{$json["pob"] ?? "N.C"}}</p></label>
 
             </div>
         </div>

@@ -32,7 +32,7 @@ use Illuminate\Support\Carbon;
 
                     @for ($i = 0; $i < count($pireps); $i++) <tr>
                         <td scope="row">{{Carbon::parse($pireps[$i]["eobt"])->format("Y-m-d H:m")}}</td>
-                        <td>{{$pireps[$i]["departureId"]}} / {{$pireps[$i]["arrivalId"]}}</td>
+                        <td>{{$pireps[$i]["departureId"] ?? "N.C"}} / {{$pireps[$i]["arrivalId"] ?? "N.C"}}</td>
                         <td>{{$pireps[$i]["callsign"]}}</td>
                         <td>
                             <form action="{{Route("pirep.show", ["id" => $pireps[$i]["id"]])}}" method="get">
