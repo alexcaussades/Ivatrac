@@ -55,6 +55,7 @@ use Illuminate\Support\Carbon;
         <hr>
         <div class="row">
             <div class="col">
+
                 <label for="departureAerodrome" class="text-primary d-flex justify-content-start">Departure Aerodrome :<p class="text-dark ms-2">{{$json["departureId"] ?? "N.C"}}</p></label>
 
             </div>
@@ -69,6 +70,7 @@ use Illuminate\Support\Carbon;
                 <label for="departureTime" class="text-primary d-flex justify-content-start">Speed
                     <div class="input-group mb-3">
                         <p class="text-dark ms-2">{{$json["cruisingSpeedType"] }} {{$json["cruisingSpeed"] ?? "N.C"}}</p>
+
                     </div>
                 </label>
             </div>
@@ -76,6 +78,7 @@ use Illuminate\Support\Carbon;
                 <label for="departureTime" class="text-primary d-flex justify-content-start">Level
                     <div class="input-group mb-3">
                         <p class="text-dark ms-2"> {{$json["altitudeType"]}} {{$json["cruisingSpeed"] ?? "N.C"}} </p>
+
                     </div>
                 </label>
             </div>
@@ -84,6 +87,7 @@ use Illuminate\Support\Carbon;
         <div class="row">
             <div class="col">
                 <label for="Route" class="text-primary d-flex justify-content-start">Route :<p class="text-dark ms-2">{{$json["route"] ?? "N.C"}}</p></label>
+
 
             </div>
         </div>
@@ -110,6 +114,7 @@ use Illuminate\Support\Carbon;
         <div class="row">
             <div class="col">
                 <label for="Route" class="text-primary d-flex justify-content-start">Other Information :<p class="text-dark ms-2">{{$json["remarks"] ?? "N.C"}}</p</label>
+
             </div>
         </div>
         <hr>
@@ -120,6 +125,7 @@ use Illuminate\Support\Carbon;
             </div>
             <div class="col">
                 <label for="Route" class="text-primary d-flex justify-content-start">Persons on Board :<p class="text-dark ms-2"> {{$json["pob"] ?? "N.C"}}</p></label>
+
 
             </div>
         </div>
