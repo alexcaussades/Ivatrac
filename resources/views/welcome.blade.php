@@ -13,7 +13,6 @@
 </div>
 </div>
 <div class="container">
-
     @auth
     <h4 class="mt-3"> Welcome {{ auth()->user()->name }} ({{auth()->user()->vid}})</h4>
     @endauth
@@ -27,7 +26,7 @@
         <div class="col-6">
             <div class="card text-white bg-dark">
                 <div class="card-body bg-dark border-dark text-white text-opacity-75">
-                    <h4 class="card-title text-center text-info">Request</h4>
+                    <h4 class="card-title text-center text-info">Request information</h4>
                     <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined ms-2">air</span> <span class="ms-2"> Search for metars or users </span></p>
                     <p class="card-footer text-center"><a href="{{ Route("metars.index")}}" class="btn btn-success">Search IVAO</a></p>
                 </div>
@@ -36,10 +35,10 @@
         <div class="col-6">
             <div class="card text-white bg-dark">
                 <div class="card-body bg-dark border-dark text-white text-opacity-75">
-                    <h4 class="card-title text-center text-info">FPL</h4>
-                    <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined ms-2">description</span> <span class="ms-2"> Register and store the FPL</span></p>
+                    <h4 class="card-title text-center text-info">Fligth Plan</h4>
+                    <p class="card-text d-flex align-items-center"><span class="material-symbols-outlined ms-2">description</span> <span class="ms-2"> View the FPL submit on IVAO</span></p>
                     @auth
-                    <p class="card-footer text-center"><a href="#" class="btn btn-success">Comming soon</a></p>
+                    <p class="card-footer text-center"><a href="{{ Route("pirep.index")}}" class="btn btn-success">See My Fligth Plan</a></p>
                     @endauth
                     @guest
                     <p class="card-footer text-center"><a href="{{ Route("auth.login")}}" title="register on the platform only" class="btn btn-secondary">Register Only</a></p>

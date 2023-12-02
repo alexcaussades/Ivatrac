@@ -211,10 +211,9 @@ class whazzupController extends Controller
         if (session("ivao_tokens")) {
 
             $json = session("ivao_tokens");
-            $json = json_decode($json);
-            $json = $json->access_token;
+            $access_token = $json["access_token"];
             $headers = [
-                'Authorization' => 'Bearer ' . $json,
+                'Authorization' => 'Bearer ' . $access_token,
                 'Accept'        => 'application/json',
             ];
         } else {
@@ -258,14 +257,14 @@ class whazzupController extends Controller
     public function API_POST($path = null, $method = 'POST', $data = null, $headers = null)
     {
         $json = session("ivao_tokens");
-        $json = json_decode($json);
-        $json = $json->access_token;
+        $access_token = $json["access_token"];
         $url = 'https://api.ivao.aero/' . $path;
         $headers = [
-            'Authorization' => 'Bearer ' . $json,
+            'Authorization' => 'Bearer ' . $access_token,
             'Accept'        => 'application/json',
         ];
         $response = Http::withHeaders($headers)->post($url, $data);
+        dd($response);
         return $response;
     }
 
@@ -291,7 +290,7 @@ class whazzupController extends Controller
             if ($pilot["userId"] == $vid) {
                 $data = $pilot;
                 return $data;
-            }  
+            }
         }
     }
 
@@ -310,9 +309,8 @@ class whazzupController extends Controller
             if ($pilot["userId"] == $vid) {
                 $data = $pilot;
                 return $data;
-            }  
+            }
         }
-        
     }
 
     public function track_session_id($idsession = null)
@@ -358,7 +356,7 @@ class whazzupController extends Controller
         $pilot = $pilot1->diffInMinutes($heure) / 60;
         /** Rounded heure Pilot */
         $pilot = round($pilot, 2);
-        
+
         /** Staff */
         $staff = Carbon::createFromTimestamp($users_me["hours"][2]["hours"])->format('Y-m-d H:i');
         $staff1 = Carbon::parse($staff);
@@ -457,7 +455,7 @@ class whazzupController extends Controller
         $whazzup = $whazzup->json();
         return $whazzup;
     }
-    public function post_friends($vid)
+    public function post_friends($myvid, $vid)
     {
         $whazzup = $this->API_POST("v2/webeye/friends/" . $vid);
         $whazzup = $whazzup->json();
@@ -577,10 +575,10 @@ class whazzupController extends Controller
     {
         $bookings = $this->API_request("/v2/atc/bookings/daily");
         $bookings = $bookings->json();
-        $pattern = '/'.$airport.'(.*)/';
+        $pattern = '/' . $airport . '(.*)/';
         $book = [];
         for ($i = 0; $i < count($bookings); $i++) {
-            if(preg_match($pattern, $bookings[$i]["atcPosition"])){
+            if (preg_match($pattern, $bookings[$i]["atcPosition"])) {
                 $book[$i]["id"] = $bookings[$i]["id"];
                 $book[$i]["Start_time"] = Carbon::parse($bookings[$i]["startDate"])->format('H:i') . " Z";
                 $book[$i]["End_time"] = Carbon::parse($bookings[$i]["endDate"])->format('H:i') . " Z";
@@ -591,7 +589,6 @@ class whazzupController extends Controller
                     "vid" => $bookings[$i]["user"]["id"],
                 ];
             }
-
         }
         return $book;
     }
@@ -607,7 +604,6 @@ class whazzupController extends Controller
     public function get_fp($id)
     {
         $fp = $this->API_request("/v2/users/me/flightPlans/" . $id);
-
         $fp = $fp->json();
         return $fp;
     }
@@ -640,14 +636,13 @@ class whazzupController extends Controller
         $airport = $airport->json();
         return $airport;
     }
-    
+
 
     public function get_aircrafts($icao_code)
     {
         $aircrafts = $this->API_request("/v2/aircrafts/" . $icao_code);
         $aircrafts = $aircrafts->json();
         return $aircrafts;
-
     }
 
     public function event_ivao()
@@ -656,5 +651,4 @@ class whazzupController extends Controller
         $event = $event->json();
         return $event;
     }
-
 }

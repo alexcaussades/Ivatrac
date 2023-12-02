@@ -17,11 +17,6 @@ use Illuminate\Support\Carbon;
 
 <div class="container">
     <div class="row">
-        <div class="col-12 d-flex mt-5">
-            <form action="{{ Route("pirep.create") }}" method="get">
-                <button type="submit" class="btn btn-success">CREATE THE FPL</button>
-            </form>
-        </div>
         <hr>
         <div class="col-12">
             <table class="table table-striped table-inverse table-responsive mt-5">
@@ -40,7 +35,7 @@ use Illuminate\Support\Carbon;
                         <td>{{$pireps[$i]["departureId"]}} / {{$pireps[$i]["arrivalId"]}}</td>
                         <td>{{$pireps[$i]["callsign"]}}</td>
                         <td>
-                            <form action="{{Route("pirep.show",[$pireps[$i]["id"]])}}" method="get">
+                            <form action="{{Route("pirep.show", ["id" => $pireps[$i]["id"]])}}" method="get">
                                 <button class="btn btn-dark btn-sm" type="submit">View</button>
                             </form>
                         </td>
