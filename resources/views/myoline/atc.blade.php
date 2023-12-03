@@ -40,9 +40,12 @@
                     <span class="">{{$atc["atis"]}}</span>
                     @endif
                 </div>
-                <div> <span class="text-info">ILS ({{$atc["airac_airport"]["ils"]["loc_runway_name"]}}) :</span>
-                    @if ($atc["airac_airport"]["ils"] != null)
+                <div> 
+                    @if ($atc["airac_airport"]["ils"]["ident"] != null)
+                    <span class="text-info">ILS ({{$atc["airac_airport"]["ils"]["loc_runway_name"]}}) :</span>
                     <span class="text-whyte"> CAT : {{$atc["airac_airport"]["ils"]["type"]}} | FRQ : {{$atc["airac_airport"]["ils"]["frequency"]}} | HDG : {{$atc["airac_airport"]["ils"]["loc_heading"]}}</span>
+                    @else
+                    <span class="text-info">{{$atc["airac_airport"]["ils"]["Approch"]}} :</span> <span class="text-whyte"> Runway {{$atc["airac_airport"]["ils"]["runway"]}}</span>
                     @endif
                 </div>
             </div>

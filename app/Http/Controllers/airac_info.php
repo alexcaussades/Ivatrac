@@ -95,18 +95,27 @@ class airac_info extends Controller
         } else if ($runway != NULL) {
             $ils = $connection->table('ils')->where('loc_airport_ident', $icao)->where("loc_runway_name", $runway)->whereNot("type", "T")->get();
             $frequency = $ils->pluck("frequency")->toArray();
+            $new_ils = [];
             if (count($frequency) != null) {
                 $reformattedNumber = substr_replace($frequency[0], ".", 3, 0) . " Mhz" ?? NULL;
                 $ils[0]->frequency = $reformattedNumber;
+                $new_ils = [];
+                $new_ils["ident"] = $ils[0]->ident;
+                $new_ils["type"] = $ils[0]->type;
+                $new_ils["frequency"] = $ils[0]->frequency;
+                $new_ils["loc_runway_name"] = $ils[0]->loc_runway_name;
+                $new_ils["loc_heading"] = $ils[0]->loc_heading;
+            }else{
+                $new_ils["ident"] = NULL;
+                $new_ils["type"] = NULL;
+                $new_ils["frequency"] = NULL;
+                $new_ils["loc_runway_name"] = NULL;
+                $new_ils["loc_heading"] = NULL;
+                $new_ils["runway"] = $runway;
+                $new_ils["Approch"] = "RNAV";
             }
 
-            $new_ils = [];
 
-            $new_ils["ident"] = $ils[0]->ident;
-            $new_ils["type"] = $ils[0]->type;
-            $new_ils["frequency"] = $ils[0]->frequency;
-            $new_ils["loc_runway_name"] = $ils[0]->loc_runway_name;
-            $new_ils["loc_heading"] = $ils[0]->loc_heading;
 
             $ils = collect($new_ils);
         }
