@@ -627,7 +627,15 @@ Route::prefix("devs")->group(function () {
 
     Route::get("/ils", function (Request $request) {
         $airac = new airac_info();
-        $airac = $airac->Get_info_all_airac("LFBO");
-        return $airac;
+        $airport = "LFMT";
+        $Rwy = "30R";
+        $airac2 = $airac->get_approach($airport );
+        $airac1 = $airac->get_departure($airport);
+        $ils = $airac->get_ils_information($airport, $Rwy);
+
+        $airac3 = collect(["departure" => $airac1, "arrival" => $airac2, "ils" => $ils]);
+
+        return $airac3;
+        
     });
 });

@@ -12,6 +12,7 @@ use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whazzupController;
 use App\Http\Controllers\chartIvaoFRcontroller;
 use App\Http\Controllers\CarteSIAController;
+use App\Http\Controllers\airac_info;
 
 
 
@@ -51,6 +52,7 @@ class myOnlineServeurController extends Controller
         $whazzupp = new whazzupController();
         $chartIvaoFRcontroller = new chartIvaoFRcontroller();
         $chartController = new CarteSIAController();
+        $airac = new airac_info();
         if ($q['atc'] != null) {
 
             if ($q['atc']['atcSession']['position'] == "CTR") {
@@ -102,7 +104,6 @@ class myOnlineServeurController extends Controller
             $new_icao = $ivao_session_decode['callsign'];
             $new_icao = explode("_", $new_icao);
             $new_icao = $new_icao[0];
-
             $r = $whazzupp->get_rwy($new_icao);
             $metar = $whazzupp->Get_metar($new_icao);
             $taf = $whazzupp->Get_taf($new_icao);
@@ -113,6 +114,10 @@ class myOnlineServeurController extends Controller
             $callsign = $q['atc']['callsign'];
             $callsign = explode("_", $callsign);
             $callsign = $callsign[0];
+            $airac_airport_rwy = $airac->decode_rwy($r);
+            $airac_airport_approch = $airac->get_approach($callsign, $airac_airport_rwy["ARR"]);
+            $airac_airport_departure = $airac->get_departure($callsign, $airac_airport_rwy["DEP"]);
+            $airac_airport_ils = $airac->get_ils_information($callsign, $airac_airport_rwy["ARR"]);
             $atc = [
                 "callsign" => $ivao_session_decode['callsign'],
                 "id_session" => $ivao_session_decode['id'],
@@ -123,6 +128,12 @@ class myOnlineServeurController extends Controller
                 "atis" => $r,
                 "metar" => $metar['metar'],
                 "taf" => $taf['taf'],
+                "airac_airport" => [
+                    "rwy" => $airac_airport_rwy,
+                    "approch" => $airac_airport_approch,
+                    "departure" => $airac_airport_departure,
+                    "ils" => $airac_airport_ils
+                ]
             ];
             $metarController = new metarController();
             $plateform = $atc_online;
