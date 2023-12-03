@@ -33,11 +33,11 @@
             <div class="card text-white bg-dark">
                 <div class="card-body">
                     <p class="card-text">
-                    <span class="text-info"> Departure : </span> {{ $pilot["flightPlan"]['departureId'] }}
-                    <hr>
-                    <span class="text-info"> METAR : </span> {{ $metar["departure"]["metar"] }}
-                    <hr>
-                    <span class="text-info"> TAF : </span>{{ $metar["departure"]["taf"] }}
+                        <span class="text-info"> Departure : </span> {{ $pilot["flightPlan"]['departureId'] }}
+                        <hr>
+                        <span class="text-info"> METAR : </span> {{ $metar["departure"]["metar"] }}
+                        <hr>
+                        <span class="text-info"> TAF : </span>{{ $metar["departure"]["taf"] }}
                     </p>
                 </div>
             </div>
@@ -47,11 +47,26 @@
                 <div class="card-body">
                     <p class="card-text">
 
-                    <span class="text-info"> Arrival : </span> {{ $pilot["flightPlan"]['arrivalId'] }}
-                    <hr>
-                    <span class="text-info"> METAR : </span>{{ $metar["arrival"]["metar"] }}
-                    <hr>
-                    <span class="text-info"> TAF : </span>{{ $metar["arrival"]["taf"] }}
+                        <span class="text-info"> Arrival : </span> {{ $pilot["flightPlan"]['arrivalId'] }}
+                        <hr>
+                        <span class="text-info"> METAR : </span>{{ $metar["arrival"]["metar"] }}
+                        <hr>
+                        <span class="text-info"> TAF : </span>{{ $metar["arrival"]["taf"] }}
+                        <hr>
+
+
+                        <span class="text-info"> ILS : </span>
+                        @foreach ($chart["arrival"]["airac"]["ils"] as $ils)
+                        @if ($ils["type"] != "T")
+                    <div><span class="text-whyte">RWY: {{$ils["loc_runway_name"]}} | CAT: {{$ils["type"]}} | FRQ: {{$ils["frequency"]}} | HDG: {{$ils["loc_heading"]}} </span></div>
+                    @endif
+                    @endforeach
+                    <span class="text-info"> RNAV : </span>
+                    @foreach ($chart["arrival"]["airac"]["ils"] as $ils)
+                    @if ($ils["type"] == "T")
+                    <div><span class="text-whyte">RWY: {{$ils["loc_runway_name"]}} | FRQ: {{$ils["frequency"]}} | HDG: {{$ils["loc_heading"]}} </span></div>
+                    @endif
+                    @endforeach
                     </p>
                 </div>
             </div>
@@ -66,9 +81,49 @@
             <div class="row">
                 <div class="col">
                     <span class="text-info">Departure :</span><br>
+                    <div class="row">
+                        <div class="col-6">
+                            <table class="table table-striped table-inverse table-responsive text-info">
+                                <thead class="thead-inverse">
+                                    <tr>
+                                        <th class="text-center">SID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach ($chart["departure"]["airac"]["departure"] as $airrac_departure)
+                                    <tr>
+                                        <td class="text-white">{{ $airrac_departure }}</td>
+                                    </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 <div class="col">
                     <span class="text-info">Arrival :</span><br>
+                    <div class="row">
+                        <div class="col-6">
+                            <table class="table table-striped table-inverse table-responsive text-info">
+                                <thead class="thead-inverse">
+                                    <tr>
+                                        <th class="text-center">SID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach ($chart["arrival"]["airac"]["arrival"] as $airrac_departure)
+                                    <tr>
+                                        <td class="text-white">{{ $airrac_departure }}</td>
+                                    </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -118,82 +173,81 @@
                     <label for="" class="text-primary">Departure :</label>
                     <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['departureId'] }}" disabled>
                 </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    <label for="" class="text-primary">Arrival :</label>
-                    <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['arrivalId'] }}" disabled>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="" class="text-primary">Arrival :</label>
+                        <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['arrivalId'] }}" disabled>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="" class="text-primary">Alternate :</label>
+                        <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['alternateId'] }}" disabled>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="" class="text-primary">flight Rules : </label>
+                        <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['flightRules'] }}" disabled>
+                    </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="form-group">
-                    <label for="" class="text-primary">Alternate :</label>
-                    <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['alternateId'] }}" disabled>
+
+            <div class="row mt-2">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="" class="text-primary">Speed :</label>
+                        <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['speed'] }}" disabled>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="" class="text-primary">Level (FL) :</label>
+                        <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['level'] }}" disabled>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="" class="text-primary">POB : </label>
+                        <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['personsOnBoard'] }}" disabled>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="" class="text-primary">Depature Time : (UTC) </label>
+                        <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['departureTime'] }}" disabled>
+                    </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="form-group">
-                    <label for="" class="text-primary">flight Rules : </label>
-                    <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['flightRules'] }}" disabled>
+            <div class="row mt-2">
+                <div class="col-2">
+                    <div class="form-group">
+                        <label for="" class="text-primary">Aircraft :</label>
+                        <input type="text" class="form-control" value="{{ $pilot["aircraft"]}}" disabled>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="" class="text-primary">Aircraft Equipments :</label>
+                        <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['aircraftEquipments'] }}" disabled>
+                    </div>
+                </div>
+                <div class="col">
+
                 </div>
             </div>
+
+            <div class="row mt-2">
+                <div class="col">
+                    <label for="Route" class="text-primary">Route : </label>
+                    <textarea class="form-control" rows="3" disabled>{{ $pilot["flightPlan"]["route"] }}</textarea>
+                </div>
+            </div>
+            <hr>
         </div>
 
-        <div class="row mt-2">
-            <div class="col">
-                <div class="form-group">
-                    <label for="" class="text-primary">Speed :</label>
-                    <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['speed'] }}" disabled>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    <label for="" class="text-primary">Level (FL) :</label>
-                    <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['level'] }}" disabled>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    <label for="" class="text-primary">POB : </label>
-                    <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['personsOnBoard'] }}" disabled>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    <label for="" class="text-primary">Depature Time : (UTC) </label>
-                    <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['departureTime'] }}" disabled>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-2">
-            <div class="col-2">
-                <div class="form-group">
-                    <label for="" class="text-primary">Aircraft :</label>
-                    <input type="text" class="form-control" value="{{ $pilot["aircraft"]}}" disabled>
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="form-group">
-                    <label for="" class="text-primary">Aircraft Equipments :</label>
-                    <input type="text" class="form-control" value="{{ $pilot["flightPlan"]['aircraftEquipments'] }}" disabled>
-                </div>
-            </div>
-            <div class="col">
-
-            </div>
-        </div>
-
-        <div class="row mt-2">
-            <div class="col">
-                <label for="Route" class="text-primary">Route : </label>
-                <textarea class="form-control" rows="3" disabled>{{ $pilot["flightPlan"]["route"] }}</textarea>
-            </div>
-        </div>
-        <hr>
-    </div>
-
-    @if (ENV('APP_ENV') == 'local')
-    <script src="{{ asset("asset/js/update_friend.js") }}"></script>
-    @else
-    <script src="{{ asset("public/asset/js/update_friend.js") }}"></script>
-    @endif
+        @if (ENV('APP_ENV') == 'local')
+        <script src="{{ asset("asset/js/update_friend.js") }}"></script>
+        @else
+        <script src="{{ asset("public/asset/js/update_friend.js") }}"></script>
+        @endif
