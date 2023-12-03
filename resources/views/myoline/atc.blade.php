@@ -40,6 +40,14 @@
                     <span class="">{{$atc["atis"]}}</span>
                     @endif
                 </div>
+                <div> 
+                    @if ($atc["airac_airport"]["ils"]["ident"] != null)
+                    <span class="text-info">ILS ({{$atc["airac_airport"]["ils"]["loc_runway_name"]}}) :</span>
+                    <span class="text-whyte"> CAT : {{$atc["airac_airport"]["ils"]["type"]}} | FRQ : {{$atc["airac_airport"]["ils"]["frequency"]}} | HDG : {{$atc["airac_airport"]["ils"]["loc_heading"]}}</span>
+                    @else
+                    <span class="text-info">{{$atc["airac_airport"]["ils"]["Approch"]}} :</span> <span class="text-whyte"> Runway {{$atc["airac_airport"]["ils"]["runway"]}}</span>
+                    @endif
+                </div>
             </div>
             </p>
         </div>
@@ -50,17 +58,56 @@
             <h4 class="card-title">Services ATC</h4>
             <p class="card-text">
                 @if ($chart_ivao != null)
-                   <div class="mt-2"><a href="{{$chart_ivao}}" target="_blank"><button class="btn btn-info btn-sm text-black"><span class=" d-flex d-inline"><span class="material-symbols-outlined">description</span>Memo IVAO</span></button></a></div>
-                @endif
+            <div class="mt-2"><a href="{{$chart_ivao}}" target="_blank"><button class="btn btn-info btn-sm text-black"><span class=" d-flex d-inline"><span class="material-symbols-outlined">description</span>Memo IVAO</span></button></a></div>
+            @endif
             <div class="row">
                 <!-- Information des ATCs sur le depart -->
                 <div class="col-12 mt-2">
                     @if ($plateform["atc_open"]!= null)
-                        @foreach ($plateform["atc_open"] as $openatc)
-                            @if ($openatc["composePosition"] != $atc["callsign"])
-                                <li class="mt-2"><button class="btn btn-success btn-sm">{{ $openatc["composePosition"] }} - {{ $openatc["frequency"] }} Mhz</button></li>
-                            @endif
-                        @endforeach
+                    @foreach ($plateform["atc_open"] as $openatc)
+                    @if ($openatc["composePosition"] != $atc["callsign"])
+                    <p class="mt-2"><button class="btn btn-success btn-sm">{{ $openatc["composePosition"] }} - {{ $openatc["frequency"] }} Mhz</button></p>
+                    @endif
+                    @endforeach
+                    <hr>
+                    <div class="row">
+                        <div class="col-6">
+                            <table class="table table-striped table-inverse table-responsive text-info">
+                                <thead class="thead-inverse">
+                                    <tr>
+                                        <th class="text-center">SID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach ($atc["airac_airport"]["departure"] as $airrac_departure)
+                                    <tr>
+                                        <td class="text-white">{{ $airrac_departure }}</td>
+                                    </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-6">
+                            <table class="table table-striped table-inverse table-responsive text-info">
+                                <thead class="thead-inverse">
+                                    <tr>
+                                        <th class="text-center">STAR</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach ($atc["airac_airport"]["approch"] as $approch)
+                                    <tr>
+                                        <td class="text-white">{{ $approch }}</td>
+                                    </tr>
+                                    @endforeach
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     @endif
                 </div>
             </div>

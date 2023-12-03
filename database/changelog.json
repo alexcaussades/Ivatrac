@@ -266,5 +266,19 @@
                 "description": "View FPL"
             }
         ]
+    },
+    "11": {
+        "id": 12,
+        "name": "2023 / 37",
+        "date": "2023-12-03",
+        "version": "26.2.8",
+        "option": [
+            {
+                "id": 0,
+                "type": "Feature",
+                "btn": "success",
+                "description": "Add Database Airac for page online ATC and online pilot"
+            }
+        ]
     }
 }
