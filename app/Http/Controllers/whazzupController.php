@@ -264,7 +264,6 @@ class whazzupController extends Controller
             'Accept'        => 'application/json',
         ];
         $response = Http::withHeaders($headers)->post($url, $data);
-        dd($response);
         return $response;
     }
 
