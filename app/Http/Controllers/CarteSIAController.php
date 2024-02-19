@@ -13,9 +13,26 @@ class CarteSIAController extends Controller
         $date = $this->Airac_date($date);
         return $date;
     }
+
+    public function checkdate(){
+        $date = new DateTime();
+        $date = $date->format('Y-m-d');
+        if($date <= $this->config_Date()){
+            $date = date("m")-1;
+            if($date < 10){
+                $date = "0".$date;
+            }
+            $date = $this->Airac_date($date);
+        }else{
+            $date = date("m");
+        }
+        return $date;
+        
+    }
+
     public function DateAirac()
     {
-        $date = $this->config_Date();
+        $date = $this->checkdate();
         $date = new DateTime($date);
         $date = $date->format('d_M_Y');
         $date = strtoupper($date);

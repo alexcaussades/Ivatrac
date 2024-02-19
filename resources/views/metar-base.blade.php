@@ -44,6 +44,7 @@
   <link rel="stylesheet" href="{{ asset("public/asset/css/bootstrap.min.css") }} " type="text/css">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
   <link rel="stylesheet" href="{{ asset("public/asset/css/style.css") }} " type="text/css">
+  
   @endif
   <!-- Google Tag Manager -->
   <script>

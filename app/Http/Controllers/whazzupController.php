@@ -121,15 +121,18 @@ class whazzupController extends Controller
         }
 
         $openid_data = json_decode($openid_result, true);
+        //dd($openid_data);
 
         $idclient = env("ivao_api_client_id");
         $secret = env("ivao_api_client_secret");
+        $state = rand(100000, 999999);
 
         $token_req_data = array(
             'grant_type' => 'client_credentials',
             'client_id' => $idclient,
             'client_secret' => $secret,
-            'scope' => 'tracker'
+            'scope' => 'tracker',
+            'state' => $state
         );
 
         // use key 'http' even if you send the request to https://...
@@ -144,10 +147,10 @@ class whazzupController extends Controller
         $token_context  = stream_context_create($token_options);
         $token_result = file_get_contents($openid_data['token_endpoint'], false, $token_context);
 
-        if ($token_result === FALSE) {
-            /* Handle error */
-            die('Error while getting token');
-        }
+        // if ($token_result === FALSE) {
+        //     /* Handle error */
+        //     die('Error while getting token');
+        // }
 
         $token_res_data = json_decode($token_result, true);
         $access_token = $token_res_data['access_token']; // Here is the access token

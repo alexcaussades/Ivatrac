@@ -44,6 +44,7 @@ use App\Http\Controllers\CreatAuhUniqueUsersController;
 use Symfony\Component\HttpKernel\Controller\ErrorController;
 use App\Http\Controllers\my_fav_plateController;
 use App\Http\Controllers\airac_info;
+use App\Http\Controllers\CarteSIAController;
 
 /*
 |--------------------------------------------------------------------------
@@ -422,20 +423,7 @@ Route::prefix("fpl")->group(function () {
         }
     })->name("pirep.create");
 
-    Route::post("/create", function (Request $request) {
-        $value = $request->all();
-        $pirep = new PirepController();
-        $pirep->create_for_website($value);
-        return redirect()->route("pirep.index");
-    })->name("pirep.create");
 
-    Route::get("/upload", function (Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            return view("pirep.upload-fpl");
-        }
-    })->name("pirep.upload");
 
     Route::post("/upload", function (Request $request) {
         $request->validate([
@@ -629,13 +617,45 @@ Route::prefix("devs")->group(function () {
         $airac = new airac_info();
         $airport = "LFMT";
         $Rwy = "30R";
-        $airac2 = $airac->get_approach($airport );
+        $airac2 = $airac->get_approach($airport);
         $airac1 = $airac->get_departure($airport);
         $ils = $airac->get_ils_information($airport, $Rwy);
 
         $airac3 = collect(["departure" => $airac1, "arrival" => $airac2, "ils" => $ils]);
 
         return $airac3;
-        
     });
+
+    Route::get("vac", function (Request $request) {
+        return view("vac.index");
+    })->name("vac.index");
+
+    Route::get("vac/{icao}", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $icao = strtoupper($request->icao);
+        $regex_for_icao = "/[A-Za-z]{2}(?:\d{4}|[A-Za-z]{2})/";
+        if (!preg_match($regex_for_icao, $icao)) {
+            return response()->json(["error" => "Icao not valid"], 400);
+        }
+        if (strlen($icao) == 4) {
+            $chart_sia = new CarteSIAController();
+            $chart = $chart_sia->chartVFR($icao);
+            if ($chart == null) {
+                return response()->json(["error" => "Icao not valid"], 400);
+            }
+            $req = http::get($chart);
+            if ($req->status() != 200) {
+                return response()->json(["error" => "Icao not valid2"], 400);
+            }
+            return response($req->body(), 200)->header('Content-Type', 'application/pdf');
+        }
+        $req = http::get("https://basulm.ffplum.fr/PDF/" . $icao . ".pdf");
+        if ($req->status() != 200) {
+            return response()->json(["error" => "Icao not valid2"], 400);
+        }
+        return response($req->body(), 200)->header('Content-Type', 'application/pdf');
+        //return $airac;
+    })->name("vac.icao");
 });
