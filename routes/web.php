@@ -223,7 +223,7 @@ Route::prefix("serveur/")->group(function () {
             return view("serveur.security.administrator-moderator", ["users" => $all]);
         }
     })->name("serveur.secrity.add");
-});
+})->middleware(["auth:web"]);
 
 Route::prefix("logs")->group(function () {
     Route::get("/", function (logginController $logginController) {
@@ -463,7 +463,7 @@ Route::prefix("fpl")->group(function () {
             return view("fpl.index", ["json" => $json]);
         }
     })->name("pirep.all");
-});
+})->middleware(["auth:web"]);
 
 
 Route::prefix("donwloader")->group(function () {
@@ -582,7 +582,7 @@ Route::prefix("event")->group(function () {
         $event = $whazzup->get_event_id($request->id);
         return view("event.show", ["event" => $event]);
     })->name("event.show");
-});
+})->middleware(["auth:web"]);
 
 Route::get("online", function (Request $request) {
     $online = new myOnlineServeurController(auth::user()->vid);

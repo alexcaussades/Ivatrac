@@ -33,6 +33,7 @@ class CarteSIAController extends Controller
     public function DateAirac()
     {
         $date = $this->checkdate();
+        $date = $this->Airac_date($date);
         $date = new DateTime($date);
         $date = $date->format('d_M_Y');
         $date = strtoupper($date);

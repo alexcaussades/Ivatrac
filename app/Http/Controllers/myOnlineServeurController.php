@@ -138,21 +138,8 @@ class myOnlineServeurController extends Controller
             $metarController = new metarController();
             $plateform = $atc_online;
             $pilots = new PilotIvaoController();
-            $pilots = $pilots->getAirplaneToPilots($callsign);
-
-            $fly = [
-                "fly" => [
-                    "departure" => [
-                        "count" => $pilots["departure"]["count"],
-                        "data" => $pilots["departure"]["data"]
-                    ],
-                    "arrivals" => [
-                        "count" => $pilots["arrivals"]["count"],
-                        "data" => $pilots["arrivals"]["data"]
-                    ]
-                ]
-            ];
-            return view("myoline.atc", ["atc" => $atc, "atis" => $atis, "plateform" => $plateform, "fly" => $fly, "chart_ivao" => $chart_ivao]);
+            //$pilots = $pilots->getAirplaneToPilots($callsign);
+            return view("myoline.atc", ["atc" => $atc, "atis" => $atis, "plateform" => $plateform, "chart_ivao" => $chart_ivao]);
         } elseif ($q['pilot'] != null) {
             //dd($q);
             $ivao_session = $whazzupp->track_session_id($q['pilot']['id']);
