@@ -157,5 +157,39 @@
 
     @endauth
 
+    <hr>
+    <div class="container mt-2">
+        <h5>IVAO Event FR</h5>
+        
+        <div class="row">
+            @foreach($event_fr as $events)
+            
+            <div class="col-6 mt-2">
+                <div class="card text-white bg-dark">
+                    <div class="card-body">
+                        @if ($events[0]["type"] == "training")
+                            @if (ENV('APP_ENV') == 'local')
+                            <img class="card-img-top" src="{{ asset("asset/img/training/traning.webp") }}" alt="">
+                            @else
+                            <img class="card-img-top" src="{{ asset("public/asset/img/training/traning.webp") }}" alt="">
+                            @endif  
+                        @endif
+                        @if ($events[0]["type"] == "exam")
+                            @if (ENV('APP_ENV') == 'local')
+                            <img class="card-img-top" style="width: 18vw; center" src="{{ asset("asset/img/exam/logo_exam.jpeg") }}" alt="">
+                            @else
+                            <img class="card-img-top" style="width: 18vw; center" src="{{ asset("public/asset/img/exam/logo_exam.jpeg") }}" alt="">
+                            @endif  
+                        @endif
+                        <p class="card-text text-center text-info">{{$events[0]["name"]}}</p>
+                        <p class="card-text text-center ">{{$events[0]["description"]}}</p>
+                        <p class="card-text text-center "> {{$events[0]["started_at"]}} </p>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+
 
     @endsection

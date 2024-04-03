@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Sleep;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\airac_info;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -31,20 +32,20 @@ use App\Http\Controllers\testingContolleur;
 use App\Http\Controllers\whazzupController;
 use App\Http\Controllers\AutAdminController;
 use App\Http\Controllers\AuthIVAOController;
+use App\Http\Controllers\CarteSIAController;
 use App\Http\Controllers\changelogController;
+use App\Http\Controllers\EventIvaoController;
 use App\Http\Controllers\PilotIvaoController;
 use App\Http\Controllers\whitelistController;
 use App\Http\Controllers\ApiGestionController;
 use App\Http\Controllers\chartIvaoFRcontroller;
 use App\Http\Controllers\frendly_userController;
 use App\Http\Controllers\MailRegisterController;
+use App\Http\Controllers\my_fav_plateController;
 use App\Http\Requests\registerValidationRequest;
 use App\Http\Controllers\myOnlineServeurController;
 use App\Http\Controllers\CreatAuhUniqueUsersController;
 use Symfony\Component\HttpKernel\Controller\ErrorController;
-use App\Http\Controllers\my_fav_plateController;
-use App\Http\Controllers\airac_info;
-use App\Http\Controllers\CarteSIAController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,6 +73,10 @@ Route::get('/', function (Request $request) {
     $whazzup = $whazzup->connexion();
     $w = new changelogController();
     $u = $w->info_update();
+    $event_world = new EventIvaoController();
+    $event_world = $event_world->get_event_ivao_RFE_RFO();
+    $event_fr = new EventIvaoController();
+    $event_fr = $event_fr->get_event_ivao_FR();
     if (Session::get("ivao_tokens") != null) {
         $date = new DateTime();
         $date->setTimezone(new DateTimeZone('UTC'));
@@ -85,13 +90,13 @@ Route::get('/', function (Request $request) {
         $users_me = $whaz->user_me();
         //dd($online->json(), $users_me);
         $online = json_decode($online, true);
-        return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online, "update" => $u]);
+        return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online, "update" => $u, "event_worl" => $event_world, "event_fr" => $event_fr]);
     }
     if (env("maintenance_mode") == true) {
         return view('maintenance');
     }
     $online = null;
-    return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online, "update" => $u]);
+    return response()->view('welcome', ["whazzup" => $whazzup, "online" => $online, "update" => $u, "event_worl" => $event_world, "event_fr" => $event_fr]);
 })->where('client', '[0-9]+')->name("home");
 
 Route::get('/logout', function (Request $request) {
@@ -658,4 +663,11 @@ Route::prefix("devs")->group(function () {
         return response($req->body(), 200)->header('Content-Type', 'application/pdf');
         //return $airac;
     })->name("vac.icao");
+
+    Route::get("event", function (Request $request) {        
+        $event_world = new EventIvaoController();
+        $event_world = $event_world->get_event_ivao();
+        return $event_world;
+        
+    })->name("event.index");
 });
