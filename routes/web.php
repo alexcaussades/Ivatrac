@@ -666,7 +666,7 @@ Route::prefix("devs")->group(function () {
 
     Route::get("event", function (Request $request) {        
         $event_world = new EventIvaoController();
-        $event_world = $event_world->get_event_ivao();
+        $event_world = $event_world->get_event_ivao_RFE_RFO();
         return $event_world;
         
     })->name("event.index");
