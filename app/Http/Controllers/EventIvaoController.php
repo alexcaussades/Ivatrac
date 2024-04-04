@@ -71,12 +71,16 @@ class EventIvaoController extends Controller
         $envent_fr_search = Http::get("https://www.ivao.fr/fr/api/p/calendar/".$year."-".$mois.".json");
         $event_fr = $envent_fr_search->json();
         $event_day = [];
-        foreach ($event_fr[$date_day] as $key => $value) {
-            $envent_day["type"] = $value['type'];
-            $envent_day["name"] = $value['name'];
-            $envent_day["started_at"] = date('Y-m-d H:i:s', strtotime($value['started_at']));
-            $envent_day["description"] = $value['tooltip_fr'] ?? "Pas de description disponible";
-            array_push($event_day, $envent_day);
+            try {
+                foreach ($event_fr[$date_day] as $key => $value) {
+                $envent_day["type"] = $value['type'];
+                $envent_day["name"] = $value['name'];
+                $envent_day["started_at"] = date('Y-m-d H:i:s', strtotime($value['started_at']));
+                $envent_day["description"] = $value['tooltip_fr'] ?? "Pas de description disponible";
+                array_push($event_day, $envent_day);
+            }
+        } catch (\Throwable $th) {
+            $event_day = [];
         }
         return $event_day;       
     }
