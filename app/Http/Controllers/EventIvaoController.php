@@ -82,7 +82,6 @@ class EventIvaoController extends Controller
         } catch (\Throwable $th) {
             $event_day = [];
         }
-       
         return $event_day;       
     }
 

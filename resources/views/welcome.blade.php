@@ -191,7 +191,6 @@ use Illuminate\Support\Carbon;
                             </div>
                         </div>
                     @endif
-            
             @endforeach
         </div>
     </div>
