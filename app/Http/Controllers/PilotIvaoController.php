@@ -21,9 +21,10 @@ class PilotIvaoController extends Controller
         $api = $this->whazzup();
         $count = $api["connections"]["pilot"];
         $pilot = $api["clients"]["pilots"];
+        //dd($pilot[0]["flightPlan"]["departureId"]);
         $pilotDeparture = [];
         for ($i = 0; $i <= $count; $i++) {
-            foreach ($pilot as $key => $value) {
+            foreach ($pilot as $i => $value) {
                 if ($value["flightPlan"]["departureId"] == $icao) {
                     array_push($pilotDeparture, $value);
                 }
@@ -39,7 +40,7 @@ class PilotIvaoController extends Controller
         $pilot = $api["clients"]["pilots"];
         $PilotArrival = [];
         for ($i = 0; $i <= $count; $i++) {
-            foreach ($pilot as $key => $value) {
+            foreach ($pilot as $i => $value) {
                 if ($value["flightPlan"]["arrivalId"] == $icao) {
                     array_push($PilotArrival, $value);
                 }
