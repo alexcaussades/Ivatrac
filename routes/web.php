@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Monolog\Formatter\JsonFormatter;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AtcController;
 use Illuminate\Support\Facades\Session;
@@ -602,13 +603,14 @@ Route::prefix("feedback")->group(function () {
 
     Route::post("create", function (Request $request) {
         $github = new GithubController();
+        // dd($request);
+        // $request->merge([
+        //     "user_id" => Auth::user()->id ?? null,
+        //     "body" => $request->body,
+        //     "link" => $github,
+        //     "label" => $request->label
+        // ]); 
         $github = $github->send_issue($request);
-        $request->merge([
-            "user_id" => Auth::user()->id ?? null,
-            "body" => $request->body,
-            "link" => $github,
-            "label" => $request->label
-        ]);
         $discord = new DiscordContoller();
         $discord->send_feedback($request);
         return to_route("feedback.index")->with("success", "Votre feedback à été envoyé !");
@@ -670,4 +672,10 @@ Route::prefix("devs")->group(function () {
         return $event_world;
         
     })->name("event.index");
+
+    Route::get("crypt", function (Request $request) {
+        $encrypted = Crypt::encryptString('la vie de devs est cool.');
+        $decrypted = Crypt::decryptString("eyJpdiI6Ik94UDRsMlR4NGRSWHVjazljTXJhQVE9PSIsInZhbHVlIjoiWlZWdGNNdXZabDFlTGQrLzRTVytwejFtV25MRGVibk1IUXB2bDZwVEF2ST0iLCJtYWMiOiJkZmVkOTNhZWM2NmY2MTEyNjhjYjYyMDZiN2FjM2I3MmMwZjY3ZGNiNTJjOTVmOGZiMjRlM2Q3ODE3NTU2ZDQ1IiwidGFnIjoiIn0=");
+        dd($decrypted);
+    })->name("crypto");
 });
