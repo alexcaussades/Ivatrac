@@ -162,60 +162,13 @@ use Illuminate\Support\Carbon;
 
     <hr>
     <div class="container mt-2">
-        <h5 class="fw-bold">IVAO Event FR</h5>
-        
-        <div class="row">
-            @foreach($event_fr as $events)
-                    @if (isset($events[0]["type"]) == "training" || isset($events[0]["type"]) == "exam")
-                        <div class="col-6 mt-2">
-                        <div class="card text-white bg-dark">
-                            <div class="card-body">
-                                @if ($events[0]["type"] == "training")
-                                    @if (ENV('APP_ENV') == 'local')
-                                    <img class="card-img-top" src="{{ asset("asset/img/training/training.png") }}" alt="">
-                                    @else
-                                    <img class="card-img-top" src="{{ asset("public/asset/img/training/training.png") }}" alt="">
-                                    @endif  
-                                @endif
-                                @if ($events[0]["type"] == "exam")
-                                    @if (ENV('APP_ENV') == 'local')
-                                    <img class="card-img-top" src="{{ asset("asset/img/exam/exam.png") }}" alt="">
-                                    @else
-                                    <img class="card-img-top" src="{{ asset("public/asset/img/exam/exam.png") }}" alt="">
-                                    @endif  
-                                @endif
-                                <p class="card-text text-center text-info mt-2">{{$events[0]["name"]}}</p>
-                                <p class="card-text text-center ">{{$events[0]["description"]}}</p>
-                                <p class="card-text text-center "><button class="btn btn-outline-success">{{Carbon::parse($events[0]["started_at"])->format('d-m H:i') }}Z</button> </p>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-            @endforeach
-        </div>
-    </div>
+    @if (isset($event_fr) == null )
+        @include('event_fr')
+    @endif
+    
+    @if (isset($event_en) == null )
+        @include('event_world')
+    @endif
 
-    <hr>
-    <div class="container mt-2">
-        <h5 class="fw-bold">IVAO Event World</h5>
-        <div class="row">
-            @foreach($event_worl as $events)
-            <div class="col-6 mt-2">
-                <div class="card text-white bg-dark">
-                    <div class="card-body">
-                       <img src="{{$events['imageUrl']}}" style="width: 100%; height: 80%;" alt="" srcset="">
-                        <h5 class="card-text text-center text-info mt-2">{{$events["title"]}} / {{$events["airports"][0]}} </h5>
-                        <div class=" d-flex  justify-content-center">
-                            @for ($i = 0 ; $i < count($events["divisions"]) ; $i++ )
-                                <span class="badge bg-secondary fs-6 ms-2"> {{$events["divisions"][$i]}}</span>
-                            @endfor
-                        </div>
-                        <p class="card-text text-center ">{{$events["description"]}}</p>
-                        <a href="{{$events["infoUrl"]}}" class="float-end"><button class="btn btn-outline-primary">More Information</button></a>                        
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
 
     @endsection
