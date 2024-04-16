@@ -677,8 +677,7 @@ Route::prefix("devs")->group(function () {
         $encrypted = Crypt::encryptString('la vie de devs est cool.');
         $decrypted = Crypt::decryptString($encrypted);
         dd($encrypted, $decrypted);
-    })->name("crypto");
+    })->name("crypto");  
 
-    
 });
 
