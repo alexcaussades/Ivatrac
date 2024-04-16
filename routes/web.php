@@ -675,7 +675,9 @@ Route::prefix("devs")->group(function () {
 
     Route::get("crypt", function (Request $request) {
         $encrypted = Crypt::encryptString('la vie de devs est cool.');
-        $decrypted = Crypt::decryptString("eyJpdiI6Ik94UDRsMlR4NGRSWHVjazljTXJhQVE9PSIsInZhbHVlIjoiWlZWdGNNdXZabDFlTGQrLzRTVytwejFtV25MRGVibk1IUXB2bDZwVEF2ST0iLCJtYWMiOiJkZmVkOTNhZWM2NmY2MTEyNjhjYjYyMDZiN2FjM2I3MmMwZjY3ZGNiNTJjOTVmOGZiMjRlM2Q3ODE3NTU2ZDQ1IiwidGFnIjoiIn0=");
-        dd($decrypted);
-    })->name("crypto");
+        $decrypted = Crypt::decryptString($encrypted);
+        dd($encrypted, $decrypted);
+    })->name("crypto");  
+
 });
+
