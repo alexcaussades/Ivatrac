@@ -280,5 +280,25 @@
                 "description": "Add Database Airac for page online ATC and online pilot"
             }
         ]
+    },
+    "12": {
+        "id": 13,
+        "name": "2024 / 01",
+        "date": "2024-07-15",
+        "version": "26.3.0",
+        "option": [
+            {
+                "id": 0,
+                "type": "Bug Fix",
+                "btn": "danger",
+                "description": "Fixing the bug of the online friends"
+            },
+            {
+                "id": 1,
+                "type": "Update",
+                "btn": "primary",
+                "description": "Update AIRAC 2407"
+            }
+        ]
     }
 }

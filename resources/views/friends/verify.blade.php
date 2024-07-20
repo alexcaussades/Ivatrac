@@ -32,8 +32,8 @@ use Illuminate\Support\Carbon;
                         <button class="btn btn-dark btn-sm" type="submit">{{$friends[$i]["friendId"]}}</button>
                     </form>
                 </td>
-                <td>{{$friends[$i]["session"]["callsign"]}}</td>
-                <td>{{Carbon::parse($friends[$i]["session"]["time"])->format('H:i')}}</td>
+                <td>{{$friends[$i]["sessions"][0]["callsign"]}}</td>
+                <td>{{Carbon::parse($friends[$i]["sessions"][0]["time"])->format('H:i')}}</td>
                 </tr>
                 @endfor
         </tbody>

@@ -229,13 +229,14 @@ class whazzupController extends Controller
         return $response;
     }
 
-    public function API_request($path = null, $method = 'GET', $data = null, $headers = null)
+    public function API_request($path = null, $method = 'GET', $data = null, $headers = null, $verify = true)
     {
         $url = 'https://api.ivao.aero/' . $path;
         if (session("ivao_tokens")) {
             $headers = [
                 'Authorization' => 'Bearer ' . session("ivao_tokens")["access_token"],
                 'Accept'        => 'application/json',
+
             ];
         } else {
             $headers = [
