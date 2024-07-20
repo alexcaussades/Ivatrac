@@ -66,6 +66,7 @@ class AuthIVAOController extends Controller
                     "Content-type: application/x-www-form-urlencoded\r\n",
                     "method" => "POST",
                     "content" => http_build_query($token_req_data),
+                    "verify_peer" => false,
                 ],
             ];
             $token_context = stream_context_create($token_options);

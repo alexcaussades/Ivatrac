@@ -31,7 +31,7 @@ class frendly_userController extends Controller
         for ($i = 0; $i < count($frendly_user); $i++) {
             $frendly_user_array[$i]["vid_friend"] = $frendly_user[$i]["friendId"];
             $frendly_user_array[$i]["name_friend"] = $frendly_user[$i]["friend"]["firstName"]. " ". $frendly_user[$i]["friend"]["lastName"];
-            $frendly_user_array[$i]["session"] = $frendly_user[$i]["session"];
+            $frendly_user_array[$i]["session"] = $frendly_user[$i]["sessions"];
         }
         //dd($frendly_user_array);
         return $frendly_user_array;
