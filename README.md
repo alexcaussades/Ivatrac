@@ -1,30 +1,49 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Biogaz Pers'o
 
 <p align="center">
 <a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Application
+## Navigateur supporté
+![image](https://img.shields.io/badge/Firefox_Browser-FF7139?style=for-the-badge&logo=Firefox-Browser&logoColor=white)
+![image](https://img.shields.io/badge/Google_Chrome-4285F4?style=for-the-badge&logo=Google-Chrome&logoColor=white)
+![image](https://img.shields.io/badge/Opera-FF1B2D?style=for-the-badge&logo=Opera&logoColor=white)
+![image](https://img.shields.io/badge/Microsoft_Edge-0078D7?style=for-the-badge&logo=Microsoft-Edge&logoColor=white)
 
-This is a simple application that allows you to create, edit, delete and view whitelist. It also allows you to register and login to the application. The application is built using Laravel 10 and Bootstrap 5.
+## Technologies utilisées
+![image](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=PHP&logoColor=white)
+![image](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=Laravel&logoColor=white)
+![image](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML5&logoColor=white)
+![image](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=CSS3&logoColor=white)
+![image](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=black)
+![image](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=Bootstrap&logoColor=white)
+![image](https://img.shields.io/badge/Sqlite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+
+> [!NOTE]
+> Gestion de la documentation du projet sera faite avec le [Wiki GitHub](https://github.com/alexcaussades/Ivatrac/wiki)
 
 
-## Security Vulnerabilities
+## Description
+Ce projet a pour but de gérer le suivit du biogaz des sites de production. :hotsprings:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to alexcaussades via [alexcaussades@gmail.com](mailto:alexcaussades@gmail.com). All security vulnerabilities will be promptly addressed.
+## Prérequis
+- [Git](https://git-scm.com/downloads)
+- [PHP](https://windows.php.net/download/)
+- [Composer](https://getcomposer.org/Composer-Setup.exe)
 
-## Contributing
+Vous voulez suivre les étapes d'[installation pas à pas](https://github.com/alexcaussades/Gestion_Biogaz/wiki/%5BTech%5D-Installation) 
 
-Thank you for considering contributing to application.
+# Installation
+Pour installer le projet, il suffit de suivre les étapes suivantes :
 
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-## Wiki Documentation
-
-[API Documentation](https://github.com/alexcaussades/L10/wiki/API)
+```bash
+git clone https://github.com/alexcaussades/Gestion_Biogaz.git
+cd Gestion_biogaz
+composer install
+php -r "file_exists('.env') || copy('.env.example', '.env');"
+php artisan key:generate
+php artisan migrate
+php artisan serve
+````
