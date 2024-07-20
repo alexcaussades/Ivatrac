@@ -48,7 +48,7 @@
                 @if ($value["session"] == null)
                     <td></td>
                 @else
-                <td>{{$value["session"]["callsign"]}}</td>
+                <td>{{$value["session"][0]["callsign"]}}</td>
                 @endif
                 <td class="d-flex inline-flex">
                     <form action="{{route("friends.destroy")}}" method="get">
