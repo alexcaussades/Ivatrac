@@ -109,7 +109,7 @@
                             <table class="table table-striped table-inverse table-responsive text-info">
                                 <thead class="thead-inverse">
                                     <tr>
-                                        <th class="text-center">SID</th>
+                                        <th class="text-center">STAR</th>
                                     </tr>
                                 </thead>
                                 <tbody>
