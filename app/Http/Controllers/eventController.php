@@ -162,7 +162,38 @@ class eventController extends Controller
         return $query;
     }
 
+    public function get_atc_online(){
+        $whazzup = new whazzupController();
+        $atc = $whazzup->position_search($this->icao);
+        $sy = [];
+        for ($i = 0; $i < count($atc); $i++) {
+            $sy[$i] = $atc[$i];
+        }
+        $sy = collect($sy)->toArray();
+        $r = new whazzupController();
+        $r = $r->atc_tracking();
+        $sr = [];
+        for ($i = 0; $i < count($r); $i++) {
+            if ($r[$i]["callsign"]) {
+                $sr[$i]["callsign"] = $r[$i]["callsign"];
+                $sr[$i]["time"] = Carbon::parse($r[$i]["time"])->format('H:i');
+                $sr[$i]["frequency"] = $r[$i]["atcSession"]["frequency"];
+                $sr[$i]["id"] = $r[$i]["id"];
+            }
+        }
+        $sr = collect($sr)->toArray();
+        // rechercher dans la liste sr les callsigns qui sont dans la liste sy et les mettre dans une liste
+        $online = [];
+        foreach ($sr as $key => $value) {
+            if (in_array($value["callsign"], $sy)) {
+                array_push($online, $value);
+            }
+        }
+        dd($online[0]["id"]);
+    }
+
     public function get_arrival_departure(){
+
         $arrival = $this->get_general();
         $departure = $this->Departure();
         $query = [

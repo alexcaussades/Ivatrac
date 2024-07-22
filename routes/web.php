@@ -687,8 +687,9 @@ Route::prefix("devs")->group(function () {
             "icao" => "required|size:4"
         ]);
         $atconline = new eventController($request->icao);
-        $atc = $atconline->get_arrival_departure();
-        dd($atc);
+        $atc = $atconline->get_atc_online();
+        
+        
     })->name("devs.atc");
 
 });

@@ -654,4 +654,11 @@ class whazzupController extends Controller
         $event = $event->json();
         return $event;
     }
+
+    public function atc_tracking()
+    {
+        $atc = $this->API_request("v2/tracker/now/atc");
+        $atc = $atc->json();
+        return $atc;
+    }
 }
