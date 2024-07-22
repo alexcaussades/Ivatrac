@@ -152,6 +152,7 @@ class eventController extends Controller
                 $sr[$i]["departureTime"] = Carbon::parse($sr[$i]["departureTime"])->format('H:i');
                 $sr[$i]["peopleOnBoard"] = $this->get_fp($r[$i]["id"])[0]["peopleOnBoard"];
                 $sr[$i]["rule"] = $this->get_fp($r[$i]["id"])[0]["flightRules"];
+                $sr[$i]["fp"] = null;
             }
         }
         $sr = array_values($sr);
@@ -196,9 +197,11 @@ class eventController extends Controller
 
         $arrival = $this->get_general();
         $departure = $this->Departure();
+        $atc = $this->get_atc_online();
         $query = [
             "arrival" => $arrival,
-            "departure" => $departure
+            "departure" => $departure,
+            "atc" => $atc
         ];
         return $query;
     }

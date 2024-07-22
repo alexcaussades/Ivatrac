@@ -679,7 +679,7 @@ Route::prefix("devs")->group(function () {
         dd($encrypted, $decrypted);
     })->name("crypto");
     
-    Route::get("ATC/{icao}", function (Request $request) {
+    Route::get("atc/{icao}", function (Request $request) {
         $request->merge([
             "icao" => $request->icao
         ]);
@@ -687,7 +687,11 @@ Route::prefix("devs")->group(function () {
             "icao" => "required|size:4"
         ]);
         $atconline = new eventController($request->icao);
-        $atc = $atconline->get_atc_online();
+        $atc = $atconline->get_arrival_departure();
+        $metar = new metarController();
+        $metar = $metar->metar($request->icao);
+        $info_atc = null;
+        return view("plateforme.atc", ["atc" => $atc, "icao" => $request->icao, "metar" => $metar]);
         
         
     })->name("devs.atc");
