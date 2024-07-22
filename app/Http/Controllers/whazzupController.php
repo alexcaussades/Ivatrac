@@ -661,4 +661,12 @@ class whazzupController extends Controller
         $atc = $atc->json();
         return $atc;
     }
+
+    public function session_atc($id_session)
+    {
+        $atc = $this->API_request("v2/tracker/sessions/" . $id_session . "/atc");
+        $atc = $atc->json();
+        return $atc;
+    }
+    
 }

@@ -189,7 +189,7 @@ class eventController extends Controller
                 array_push($online, $value);
             }
         }
-        dd($online[0]["id"]);
+         return $online;
     }
 
     public function get_arrival_departure(){
