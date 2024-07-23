@@ -300,5 +300,49 @@
                 "description": "Update AIRAC 2407"
             }
         ]
+    },
+    "13": {
+        "id": 14,
+        "name": "2024 / 02",
+        "date": "2024-07-23",
+        "version": "26.3.1",
+        "option": [
+            {
+                "id": 0,
+                "type": "Delect",
+                "btn": "dark",
+                "description": "Remove Pages Event Ximea"
+            },
+            {
+                "id": 1,
+                "type": "Delect",
+                "btn": "dark",
+                "description": "Remove Access to API IVATRAC"
+            },
+            {
+                "id": 2,
+                "type": "Feature",
+                "btn": "success",
+                "description": "Activation Chart VAC AND IFR"
+            },
+            {
+                "id": 3,
+                "type": "Feature",
+                "btn": "success",
+                "description": "Activation ATC pages from wold"
+            },
+            {
+                "id": 4,
+                "type": "Feature",
+                "btn": "success",
+                "description": "Activation link to the fpl on the page index"
+            },
+            {
+                "id": 5,
+                "type": "Feature",
+                "btn": "success",
+                "description": "Activation link to the github on the page index"
+            }
+        ]
     }
 }
