@@ -83,22 +83,7 @@
                     <span class="text-info">Departure :</span><br>
                     <div class="row">
                         <div class="col-6">
-                            <table class="table table-striped table-inverse table-responsive text-info">
-                                <thead class="thead-inverse">
-                                    <tr>
-                                        <th class="text-center">SID</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    @foreach ($chart["departure"]["airac"]["departure"] as $airrac_departure)
-                                    <tr>
-                                        <td class="text-white">{{ $airrac_departure }}</td>
-                                    </tr>
-                                    @endforeach
-
-                                </tbody>
-                            </table>
+                            
                         </div>
                     </div>
                 </div>
@@ -106,22 +91,6 @@
                     <span class="text-info">Arrival :</span><br>
                     <div class="row">
                         <div class="col-6">
-                            <table class="table table-striped table-inverse table-responsive text-info">
-                                <thead class="thead-inverse">
-                                    <tr>
-                                        <th class="text-center">SID</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    @foreach ($chart["arrival"]["airac"]["arrival"] as $airrac_departure)
-                                    <tr>
-                                        <td class="text-white">{{ $airrac_departure }}</td>
-                                    </tr>
-                                    @endforeach
-
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>

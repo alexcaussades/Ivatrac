@@ -622,8 +622,8 @@ Route::prefix("devs")->group(function () {
 
     Route::get("/ils", function (Request $request) {
         $airac = new airac_info();
-        $airport = "LFMT";
-        $Rwy = "30R";
+        $airport = "LFBL";
+        $Rwy = "21";
         $airac2 = $airac->get_approach($airport);
         $airac1 = $airac->get_departure($airport);
         $ils = $airac->get_ils_information($airport, $Rwy);
@@ -677,7 +677,24 @@ Route::prefix("devs")->group(function () {
         $encrypted = Crypt::encryptString('la vie de devs est cool.');
         $decrypted = Crypt::decryptString($encrypted);
         dd($encrypted, $decrypted);
-    })->name("crypto");  
+    })->name("crypto");
+    
+    Route::get("atc/{icao}", function (Request $request) {
+        $request->merge([
+            "icao" => $request->icao
+        ]);
+        $request->validate([
+            "icao" => "required|size:4"
+        ]);
+        $atconline = new eventController($request->icao);
+        $atc = $atconline->get_arrival_departure();
+        $metar = new metarController();
+        $metar = $metar->metar($request->icao);
+        $info_atc = null;
+        return view("plateforme.atc", ["icao" => $request->icao, "atc" => $atc, "metar" => $metar, "info_atc" => $info_atc]);
+        
+        
+    })->name("devs.atc");
 
 });
 

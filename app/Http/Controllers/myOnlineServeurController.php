@@ -157,8 +157,8 @@ class myOnlineServeurController extends Controller
             $metar_arr = $whazzupp->Get_metar($fp_session["arrivalId"]);
             $taf_dep = $whazzupp->Get_taf($fp_session["departureId"]);
             $taf_arr = $whazzupp->Get_taf($fp_session["arrivalId"]);
-            $airac_ARR = $airac->get_approach($fp_session["arrivalId"]);
-            $airac_DEP = $airac->get_departure($fp_session["departureId"]);
+            //$airac_ARR = $airac->get_approach($fp_session["arrivalId"]);
+            //$airac_DEP = $airac->get_departure($fp_session["departureId"]);
             $airac_ils = $airac->get_ils_information($fp_session["arrivalId"]);
             if ($speed <= 0) {
                 $speed = 1;
@@ -222,15 +222,15 @@ class myOnlineServeurController extends Controller
                     "IFR" => $chartController->chartIFR($p["flightPlan"]["departureId"]),
                     "VFR" => $chartController->chartVFR($p["flightPlan"]["departureId"]),
                     "airac" => [
-                        "departure" => $airac_DEP,
+                        "departure" => $airac_DEP ?? null,
                     ],
                 ],
                 "arrival" => [
                     "IFR" => $chartController->chartIFR($p["flightPlan"]["arrivalId"]),
                     "VFR" => $chartController->chartVFR($p["flightPlan"]["arrivalId"]),
                     "airac" => [
-                        "arrival" => $airac_ARR,
-                        "ils" => $airac_ils
+                        "arrival" => $airac_ARR ?? null,
+                        "ils" => $airac_ils ?? null,
                     ],
                 ]
             ];

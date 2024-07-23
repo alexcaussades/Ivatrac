@@ -46,8 +46,13 @@ class eventController extends Controller
     public function aircrafts($icao_code){
         $whazzup = new whazzupController();
         $aircrafts = $whazzup->get_aircrafts($icao_code);
-        //dd($aircrafts);
         return $aircrafts["wakeTurbulence"];
+    }
+
+    public function aircrafts_model($icao_code){
+        $whazzup = new whazzupController();
+        $aircrafts = $whazzup->get_aircrafts($icao_code);
+        return $aircrafts["model"];
     }
 
     public function ETA($distance_arrival, $speed)
@@ -129,5 +134,75 @@ class eventController extends Controller
                 return $star_search;
                 break;
         }
+    }
+
+    public function Departure(){
+        $q = $this->get_arrival();
+        $r = $q["outbound"];
+        $sr = [];
+       // filter la liste avec les parametres dans la liste [lastTrack][altitude] avec [lastTrack][onGround]
+        for ($i = 0; $i < count($r); $i++) {
+            if ($r[$i]["lastTrack"]["onGround"] == true) {
+                $sr[$i]["callsign"] = $r[$i]["callsign"];
+                $sr[$i]["model"] = $this->aircrafts_model($r[$i]["flightPlan"]["aircraftId"]);
+                $sr[$i]["wakeTurbulence"] = $this->aircrafts($r[$i]["flightPlan"]["aircraftId"]);
+                $sr[$i]["arrival"] = $r[$i]["flightPlan"]["arrivalId"];
+                $sr[$i]["fp"] = $this->get_fp($r[$i]["id"]);
+                $sr[$i]["departureTime"] = $this->get_fp($r[$i]["id"])[0]["departureTime"];
+                $sr[$i]["departureTime"] = Carbon::parse($sr[$i]["departureTime"])->format('H:i');
+                $sr[$i]["peopleOnBoard"] = $this->get_fp($r[$i]["id"])[0]["peopleOnBoard"];
+                $sr[$i]["rule"] = $this->get_fp($r[$i]["id"])[0]["flightRules"];
+                $sr[$i]["fp"] = null;
+            }
+        }
+        $sr = array_values($sr);
+        $query = [
+            "count" => count($sr),
+            "data" => $sr
+        ];
+        return $query;
+    }
+
+    public function get_atc_online(){
+        $whazzup = new whazzupController();
+        $atc = $whazzup->position_search($this->icao);
+        $sy = [];
+        for ($i = 0; $i < count($atc); $i++) {
+            $sy[$i] = $atc[$i];
+        }
+        $sy = collect($sy)->toArray();
+        $r = new whazzupController();
+        $r = $r->atc_tracking();
+        $sr = [];
+        for ($i = 0; $i < count($r); $i++) {
+            if ($r[$i]["callsign"]) {
+                $sr[$i]["callsign"] = $r[$i]["callsign"];
+                $sr[$i]["time"] = Carbon::parse($r[$i]["time"])->format('H:i');
+                $sr[$i]["frequency"] = $r[$i]["atcSession"]["frequency"];
+                $sr[$i]["id"] = $r[$i]["id"];
+            }
+        }
+        $sr = collect($sr)->toArray();
+        // rechercher dans la liste sr les callsigns qui sont dans la liste sy et les mettre dans une liste
+        $online = [];
+        foreach ($sr as $key => $value) {
+            if (in_array($value["callsign"], $sy)) {
+                array_push($online, $value);
+            }
+        }
+         return $online;
+    }
+
+    public function get_arrival_departure(){
+
+        $arrival = $this->get_general();
+        $departure = $this->Departure();
+        $atc = $this->get_atc_online();
+        $query = [
+            "arrival" => $arrival,
+            "departure" => $departure,
+            "atc" => $atc
+        ];
+        return $query;
     }
 }

@@ -70,44 +70,6 @@
                     @endif
                     @endforeach
                     <hr>
-                    <div class="row">
-                        <div class="col-6">
-                            <table class="table table-striped table-inverse table-responsive text-info">
-                                <thead class="thead-inverse">
-                                    <tr>
-                                        <th class="text-center">SID</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    @foreach ($atc["airac_airport"]["departure"] as $airrac_departure)
-                                    <tr>
-                                        <td class="text-white">{{ $airrac_departure }}</td>
-                                    </tr>
-                                    @endforeach
-
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-6">
-                            <table class="table table-striped table-inverse table-responsive text-info">
-                                <thead class="thead-inverse">
-                                    <tr>
-                                        <th class="text-center">STAR</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    @foreach ($atc["airac_airport"]["approch"] as $approch)
-                                    <tr>
-                                        <td class="text-white">{{ $approch }}</td>
-                                    </tr>
-                                    @endforeach
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                     @endif
                 </div>
             </div>
