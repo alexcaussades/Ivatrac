@@ -691,7 +691,7 @@ Route::prefix("devs")->group(function () {
         $metar = new metarController();
         $metar = $metar->metar($request->icao);
         $info_atc = null;
-        return view("plateforme.atc", ["atc" => $atc, "icao" => $request->icao, "metar" => $metar]);
+        return view("plateforme.atc", ["icao" => $request->icao, "atc" => $atc, "metar" => $metar, "info_atc" => $info_atc]);
         
         
     })->name("devs.atc");
