@@ -342,6 +342,18 @@
                 "type": "Feature",
                 "btn": "success",
                 "description": "Activation link to the github on the page index"
+            },
+            {
+                "id": 6,
+                "type": "Delect",
+                "btn": "dark",
+                "description": "Delect fav BTN on the page metar"
+            },
+            {
+                "id": 7,
+                "type": "Feature",
+                "btn": "success",
+                "description": "activation pages ATC on the metar plateforme page"
             }
         ]
     }

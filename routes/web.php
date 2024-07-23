@@ -424,6 +424,22 @@ Route::prefix("fpl")->group(function () {
     })->name("pirep.all");
 })->middleware(["auth:web"]);
 
+Route::get("atc/{icao}", function (Request $request) {
+    $request->merge([
+        "icao" => $request->icao
+    ]);
+    $request->validate([
+        "icao" => "required|size:4"
+    ]);
+    $atconline = new eventController($request->icao);
+    $atc = $atconline->get_arrival_departure();
+    $metar = new metarController();
+    $metar = $metar->metar($request->icao);
+    $info_atc = null;
+    return view("plateforme.atc", ["icao" => $request->icao, "atc" => $atc, "metar" => $metar, "info_atc" => $info_atc]);
+    
+    
+})->name("atc");
 
 Route::prefix("donwloader")->group(function () {
     Route::get("secure_auth", function (Request $request) {
@@ -612,22 +628,6 @@ Route::prefix("devs")->group(function () {
         dd($encrypted, $decrypted);
     })->name("crypto");
     
-    Route::get("atc/{icao}", function (Request $request) {
-        $request->merge([
-            "icao" => $request->icao
-        ]);
-        $request->validate([
-            "icao" => "required|size:4"
-        ]);
-        $atconline = new eventController($request->icao);
-        $atc = $atconline->get_arrival_departure();
-        $metar = new metarController();
-        $metar = $metar->metar($request->icao);
-        $info_atc = null;
-        return view("plateforme.atc", ["icao" => $request->icao, "atc" => $atc, "metar" => $metar, "info_atc" => $info_atc]);
-        
-        
-    })->name("devs.atc");
 
 });
 

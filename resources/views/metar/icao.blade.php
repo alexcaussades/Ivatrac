@@ -12,13 +12,6 @@
             <h1> {{$metar["station"]}}</h1>
         </div>
         <div class="d-flex flex-row-reverse text-warning">
-            @auth
-            <form action="#" method="post">
-                <input type="hidden" name="icao" value="{{$metar["station"]}}">
-                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                <button type="submit" class="btn btn-info btn-sm ms-2 disabled"><span class="d-flex align-items-center"><span class="material-symbols-outlined fill">star</span>Add to favorites</span></button>
-            </form>
-            @endauth
             @guest
             <form action="#" method="get">
                 <a href="{{ Route("ivao.connect") }}">
@@ -27,7 +20,7 @@
             </form>
             @endguest
             @if ($pilot["outbound"]>=1 || $pilot["inbound"]>=1)
-            <form action="{{ Route('ivao.plateforme', ["icao" => $metar["station"], false]) }}" method="get">
+            <form action="{{ Route('atc', ["icao" => $metar["station"], false]) }}" method="get">
                 <button type="submit" class="btn btn-success btn-sm ms-2"><span class="d-flex align-items-center"><span class="material-symbols-outlined">info</span> &nbsp IVAO</span></button>
             </form>
             @endif
