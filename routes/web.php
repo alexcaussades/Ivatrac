@@ -165,53 +165,6 @@ Route::prefix("serveur/")->group(function () {
         return view("serveur.index", ["users" => $users, "role" => $role]);
     })->name("serveur.index");
 
-    Route::get("api", function (Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $api = new ApiGestionController();
-            $information = $api->check_Informations(Auth::user()->id);
-            return view("serveur.api", ["information" => $information]);
-        }
-    })->name("serveur.api")->middleware(["auth:admin"]);
-
-    Route::post("api", function (Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $api = new ApiGestionController();
-            $information = $api->creat_keys_api();
-            /** Faire une function de masquage */
-
-            return view("serveur.api", ["information" => $information]);
-        }
-    })->name("serveur.api.post");
-
-    Route::post("api/create", function (Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $api = new ApiGestionController();
-            $api->creat_keys_api();
-            return to_route("serveur.api");
-        }
-    })->name("serveur.api.create");
-
-    Route::post("api/delete", function (Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $api = new ApiGestionController();
-            $api->delete_keys_api($request);
-            return to_route("serveur.api");
-        }
-    })->name("serveur.api.delete");
-
-    Route::get("api/documentation", function (Request $request) {
-        /** verification des buttons d'action serveur */
-        return url("https://github.com/alexcaussades/L10/wiki/API");
-    })->name("serveur.api.documentation");
-
     Route::get("security", function (Request $request) {
         if (!Auth::user()) {
             return redirect()->route("auth.login");
@@ -442,7 +395,7 @@ Route::prefix("fpl")->group(function () {
             $pirep->store_fpl($request);
             return redirect()->route("pirep.index");
         }
-    })->name("pirep.upload");
+    })->name("pirep.upload")->middleware(["auth:web"]);
 
     Route::get("/show/{id}", function (Request $request) {
         $request->merge([
