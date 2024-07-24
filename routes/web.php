@@ -629,5 +629,14 @@ Route::prefix("devs")->group(function () {
     })->name("crypto");
     
 
+    route::get("test/{id}", function (Request $request) {
+        $request->merge([
+            "id" => $request->id
+        ]);
+        $whazzup = new whazzupController();
+        $whazzup = $whazzup->position_search($request->id);
+        return $whazzup;
+
+    })->name("test");
 });
 

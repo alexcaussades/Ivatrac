@@ -73,6 +73,20 @@
                                 <h4 class="card-title fs-6 ">{{$atcs["callsign"]}}</h4>
                                 <p class="card-text">
                                 <div class="fs-6 text-center">{{$atcs["frequency"]}} Mhz</div>
+                                <div class="fs-6 text-center">Online: {{$atcs["time"]}}</div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                    @foreach ( $atc["fir"] as $atcs )
+                    <div class="row ms-2 ps-2">
+                        <div class="card text-white bg-primary ">
+                            <div class="card-body">
+                                <h4 class="card-title fs-6 ">{{$atcs["callsign"]}}</h4>
+                                <p class="card-text">
+                                <div class="fs-6 text-center">{{$atcs["frequency"]}} Mhz</div>
+                                <div class="fs-6 text-center">Online: {{$atcs["time"]}}</div>
                                 </p>
                             </div>
                         </div>
