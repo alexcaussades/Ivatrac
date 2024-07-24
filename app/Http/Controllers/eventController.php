@@ -43,13 +43,15 @@ class eventController extends Controller
         return $rr[$m];
     }
 
-    public function aircrafts($icao_code){
+    public function aircrafts($icao_code)
+    {
         $whazzup = new whazzupController();
         $aircrafts = $whazzup->get_aircrafts($icao_code);
         return $aircrafts["wakeTurbulence"];
     }
 
-    public function aircrafts_model($icao_code){
+    public function aircrafts_model($icao_code)
+    {
         $whazzup = new whazzupController();
         $aircrafts = $whazzup->get_aircrafts($icao_code);
         return $aircrafts["model"];
@@ -81,9 +83,13 @@ class eventController extends Controller
             $r = $this->get_fp($q[$i]["id"]);
             $r = $r[0];
             $sr[$i]["callsign"] = $q[$i]["callsign"];
-            $sr[$i]["star"] = $this->Star($r["route"]);
+            $sr[$i]["userId"] = $q[$i]["userId"];
+            $sr[$i]["pob"] = $r["peopleOnBoard"];
+            $sr[$i]["rule"] = $r["flightRules"];
+            $sr[$i]["model"] = $this->aircrafts_model($q[$i]["flightPlan"]["aircraftId"]);
             $sr[$i]["eta"] = $this->ETA($q[$i]["lastTrack"]["arrivalDistance"], $q[$i]["lastTrack"]["groundSpeed"]);
             $sr[$i]["wakeTurbulence"] = $this->aircrafts($q[$i]["flightPlan"]["aircraftId"]);
+
         }
         $sr = array_values($sr);
         //tri par ordre eta croissant
@@ -93,10 +99,10 @@ class eventController extends Controller
             "data" => $sr
         ];
         return $query;
-        
     }
 
-    public function Star($route){
+    public function Star($route)
+    {
         $star_search = $this->get_last_arrival($route);
 
         switch ($star_search) {
@@ -104,12 +110,12 @@ class eventController extends Controller
                 $star_search = "MEN 6T";
                 return $star_search;
                 break;
-            
+
             case 'BRUSC':
                 $star_search = "BRUSC 6T";
                 return $star_search;
                 break;
-            
+
             case 'KELAM':
                 $star_search = "KELAM 6T";
                 return $star_search;
@@ -124,7 +130,7 @@ class eventController extends Controller
                 $star_search = "MARRI 6T";
                 return $star_search;
                 break;
-            
+
             case 'NG':
                 $star_search = "NG 6T";
                 return $star_search;
@@ -136,14 +142,16 @@ class eventController extends Controller
         }
     }
 
-    public function Departure(){
+    public function Departure()
+    {
         $q = $this->get_arrival();
         $r = $q["outbound"];
         $sr = [];
-       // filter la liste avec les parametres dans la liste [lastTrack][altitude] avec [lastTrack][onGround]
+        // filter la liste avec les parametres dans la liste [lastTrack][altitude] avec [lastTrack][onGround]
         for ($i = 0; $i < count($r); $i++) {
             if ($r[$i]["lastTrack"]["onGround"] == true) {
                 $sr[$i]["callsign"] = $r[$i]["callsign"];
+                $sr[$i]["userId"] = $r[$i]["userId"];
                 $sr[$i]["model"] = $this->aircrafts_model($r[$i]["flightPlan"]["aircraftId"]);
                 $sr[$i]["wakeTurbulence"] = $this->aircrafts($r[$i]["flightPlan"]["aircraftId"]);
                 $sr[$i]["arrival"] = $r[$i]["flightPlan"]["arrivalId"];
@@ -163,7 +171,8 @@ class eventController extends Controller
         return $query;
     }
 
-    public function get_atc_online(){
+    public function get_atc_online()
+    {
         $whazzup = new whazzupController();
         $atc = $whazzup->position_search($this->icao);
         $sy = [];
@@ -190,15 +199,18 @@ class eventController extends Controller
                 array_push($online, $value);
             }
         }
-         return $online;
+        return $online;
     }
 
-    public function get_airport(){
-    $whazzup = new whazzupController();
-    $whazzup = $whazzup->get_airport($this->icao);
-    return $whazzup["centerId"];
+    public function get_airport()
+    {
+        $whazzup = new whazzupController();
+        $whazzup = $whazzup->get_airport($this->icao);
+        return $whazzup["centerId"];
     }
-    public function get_atc_online_fir(){
+
+    public function get_atc_online_fir()
+    {
         $whazzup = new whazzupController();
         $atc = $whazzup->position_search($this->get_airport());
         $sy = [];
@@ -225,10 +237,11 @@ class eventController extends Controller
                 array_push($online, $value);
             }
         }
-         return $online;
+        return $online;
     }
 
-    public function get_arrival_departure(){
+    public function get_arrival_departure()
+    {
 
         $arrival = $this->get_general();
         $departure = $this->Departure();

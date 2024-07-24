@@ -634,7 +634,7 @@ Route::prefix("devs")->group(function () {
             "id" => $request->id
         ]);
         $whazzup = new whazzupController();
-        $whazzup = $whazzup->position_search($request->id);
+        $whazzup = $whazzup->get_airport($request->id);
         return $whazzup;
 
     })->name("test");
