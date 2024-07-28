@@ -286,7 +286,7 @@ class metarController extends Controller
             $clouds = $this->clouds($metar->metar) ?? "None";
             $station = $this->station($metar->metar) ?? "None";
             $times = $this->time($metar->metar) ?? "None";
-            $tempo = $this->tempo($metar->metar) ?? "None";
+            $tempo = $this->tempo($metar->metar);
 
 
             $r = [
@@ -317,7 +317,7 @@ class metarController extends Controller
             'visibility' => "Not Found",
             'flight_rules' => "Not Found",
             "QNH" => "Not Found",
-            "tempo" => "Not Found",
+            "tempo" => null,
             "wind" => [
                 "wind" => "Not Found",
                 "direction" => "Not Found",
