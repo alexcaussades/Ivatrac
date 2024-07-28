@@ -639,4 +639,3 @@ Route::prefix("devs")->group(function () {
 
     })->name("test");
 });
-

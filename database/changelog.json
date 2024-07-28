@@ -304,7 +304,7 @@
     "13": {
         "id": 14,
         "name": "2024 / 02",
-        "date": "2024-07-23",
+        "date": "2024-07-31",
         "version": "26.3.1",
         "option": [
             {
@@ -354,6 +354,18 @@
                 "type": "Feature",
                 "btn": "success",
                 "description": "activation pages ATC on the metar plateforme page"
+            },
+            {
+                "id": 8,
+                "type": "Bug Fix",
+                "btn": "danger",
+                "description": "Fixing the metar page fot plateforme is not metar display"
+            },
+            {
+                "id": 9,
+                "type": "Feature",
+                "btn": "success",
+                "description": "Information new airac ont the push notification on discord"
             }
         ]
     }

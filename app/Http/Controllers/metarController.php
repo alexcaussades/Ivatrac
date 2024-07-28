@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DateTime;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Http;
@@ -277,40 +278,64 @@ class metarController extends Controller
         $whazzup = new whazzupController();
         $metar = $whazzup->Get_metar($icao);
         $metar = json_decode($metar);
-        $temp = $this->temp_qnh($metar->metar);
-        $winds = $this->winds($metar->metar);
-        $visibility = $this->visibility($metar->metar);
-        $clouds = $this->clouds($metar->metar) ?? "None";
-        $station = $this->station($metar->metar);
-        $times = $this->time($metar->metar);
-        $tempo = $this->tempo($metar->metar);
+        $info = $metar->statusCode ?? 200;
+        if($info == 200 ){
+            $temp = $this->temp_qnh($metar->metar) ?? "None";
+            $winds = $this->winds($metar->metar) ?? "None";
+            $visibility = $this->visibility($metar->metar) ?? "None";
+            $clouds = $this->clouds($metar->metar) ?? "None";
+            $station = $this->station($metar->metar) ?? "None";
+            $times = $this->time($metar->metar) ?? "None";
+            $tempo = $this->tempo($metar->metar) ?? "None";
 
 
+            $r = [
+                'metar' => $metar->metar,
+                'station' => $station,
+                'visibility' => $visibility ?? "None",
+                'flight_rules' => "None",
+                "QNH" => $temp["qnh"] ?? "None",
+                "tempo" => $tempo ?? null,
+                "wind" => [
+                    "wind" => $winds["direction"] ?? "None",
+                    "direction" => $winds["direction"] ?? "None",
+                    "wind_variable" => $winds["variable"] ?? "None",
+                    "speed_KT" => $winds["winds"] ?? "None",
+                    "speed_KM" => $winds["winds_KM"],
+                ],
+                "temperature" => $temp["temp"]["temp"] ?? "None",
+                "dewpoint" => $temp["temp"]["dewpoint"] ?? "None",
+                "clouds" => $clouds ?? "None",
+                "meta_day" => [
+                    "time" => $times. " Z"
+                ],
+        ];
+    }else{
         $r = [
-            'metar' => $metar->metar,
-            'station' => $station,
-            'visibility' => $visibility ?? "None",
-            'flight_rules' => "None",
-            "QNH" => $temp["qnh"] ?? "None",
-            "tempo" => $tempo ?? null,
+            'metar' => "Not Found",
+            'station' => "Not Found",
+            'visibility' => "Not Found",
+            'flight_rules' => "Not Found",
+            "QNH" => "Not Found",
+            "tempo" => "Not Found",
             "wind" => [
-                "wind" => $winds["direction"] ?? "None",
-                "direction" => $winds["direction"] ?? "None",
-                "wind_variable" => $winds["variable"] ?? "None",
-                "speed_KT" => $winds["winds"] ?? "None",
-                "speed_KM" => $winds["winds_KM"],
+                "wind" => "Not Found",
+                "direction" => "Not Found",
+                "wind_variable" => "Not Found",
+                "speed_KT" => "Not Found",
+                "speed_KM" => "Not Found",
             ],
-            "temperature" => $temp["temp"]["temp"] ?? "None",
-            "dewpoint" => $temp["temp"]["dewpoint"] ?? "None",
-            "clouds" => $clouds ?? "None",
+            "temperature" => "Not Found",
+            "dewpoint" => "Not Found",
+            "clouds" => "Not Found",
             "meta_day" => [
-                "time" => $times. " Z"
+                "time" => "Not Found"
             ],
         ];
-
-
+    }
         return $r;
     }
+    
 
     public function taf($icao)
     {
