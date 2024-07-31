@@ -74,10 +74,19 @@ Route::get('/', function (Request $request) {
     $whazzup = $whazzup->connexion();
     $w = new changelogController();
     $u = $w->info_update();
-    $event_world = new EventIvaoController();
-    $event_world = $event_world->get_event_ivao_RFE_RFO();
-    $event_fr = new EventIvaoController();
-    $event_fr = $event_fr->get_event_ivao_FR();
+    try {
+        $event_world = new EventIvaoController();
+        $event_world = $event_world->get_event_ivao_RFE_RFO();
+    } catch (Exception $e) {
+        $event_world = null;
+    }
+   
+    try {
+        $event_fr = new EventIvaoController();
+        $event_fr = $event_fr->get_event_ivao_FR();
+    } catch (Exception $e) {
+        $event_world = null;
+    }
     if (Session::get("ivao_tokens") != null) {
         $date = new DateTime();
         $date->setTimezone(new DateTimeZone('UTC'));
@@ -638,4 +647,9 @@ Route::prefix("devs")->group(function () {
         return $whazzup;
 
     })->name("test");
+});
+
+
+Route::get("test", function (Request $request) {
+    return view("test");
 });

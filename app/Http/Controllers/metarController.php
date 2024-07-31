@@ -278,6 +278,7 @@ class metarController extends Controller
         $whazzup = new whazzupController();
         $metar = $whazzup->Get_metar($icao);
         $metar = json_decode($metar);
+        
         $info = $metar->statusCode ?? 200;
         if($info == 200 ){
             $temp = $this->temp_qnh($metar->metar) ?? "None";

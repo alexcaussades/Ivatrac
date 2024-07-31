@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\eventController;
 use App\Http\Controllers\metarController;
 use App\Http\Controllers\logginController;
 use App\Http\Controllers\whazzupController;
@@ -84,8 +85,21 @@ Route::get("info_plateforme/{icao}", function(Request $request){
         "PILOT" => $PILOT,
         "METAR" => $METAR
     ];
-    $k = serialize($info);
-    $k = base64_encode($k);
+    
         
-    return $k;
+    return $info;
+});
+
+Route::get("atc/{icao}", function(Request $request){
+    $atconline = new eventController($request->icao);
+    $atc = $atconline->get_arrival_departure();
+    $metar = new metarController();
+    $metar = $metar->metar($request->icao);
+    $info_atc = null;
+    $r = [
+        "atc" => $atc,
+        "metar" => $metar,
+        "info_atc" => $info_atc
+    ];
+    return $r;
 });
