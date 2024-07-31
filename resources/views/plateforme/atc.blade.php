@@ -30,7 +30,7 @@
         <div class="col-md-3">
             <div class="card mt-5">
                 <div class="card-header">
-                    <h5 class="card-title text-primary text-center">{{ $atc["departure"]["count"] < 1 ? "Departure" : "Departures" }}</h5>
+                    <h5 class="card-title text-primary text-center">{{ $atc["departure"]["count"] >= 2 ? "Departures" : "Departure" }}</h5>
                 </div>
                 <div class="card-body">
                     <p class="card-text">
@@ -42,7 +42,7 @@
         <div class="col-md-3">
             <div class="card mt-5">
                 <div class="card-header">
-                    <h5 class="card-title text-primary text-center">{{ $atc["arrival"]["count"] < 1 ? "Arrival" : "Arrivals" }}</h5>
+                    <h5 class="card-title text-primary text-center">{{ $atc["arrival"]["count"] >= 2 ? "Arrivals" : "Arrival" }}</h5>
                 </div>
                 <div class="card-body">
                     <p class="card-text">
@@ -72,7 +72,21 @@
                             <div class="card-body">
                                 <h4 class="card-title fs-6 ">{{$atcs["callsign"]}}</h4>
                                 <p class="card-text">
-                                <div class="fs-6 text-center">{{$atcs["frequency"]}} Mhz</div>
+                                <div class="fs-6 text-center">Freq: {{$atcs["frequency"]}} Mhz</div>
+                                <div class="fs-6 text-center">Online: {{$atcs["time"]}}</div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                    @foreach ( $atc["fir"] as $atcs )
+                    <div class="row ms-2 ps-2">
+                        <div class="card text-white bg-primary ">
+                            <div class="card-body">
+                                <h4 class="card-title fs-6 ">{{$atcs["callsign"]}}</h4>
+                                <p class="card-text">
+                                <div class="fs-6 text-center">Freq: {{$atcs["frequency"]}} Mhz</div>
+                                <div class="fs-6 text-center">Online: {{$atcs["time"]}}</div>
                                 </p>
                             </div>
                         </div>
@@ -98,14 +112,16 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table">
+                            @if ($atc["departure"]["count"] >= 1) <table class="table">
+                                <h6 class="text-center">{{ $atc["departure"]["count"] >= 2 ? "Departures" : "Departure" }}</h6>
                                 <thead>
                                     <tr>
-                                        <th>Flight number</th>
-                                        <th>Time of departure :</th>
-                                        <th>Arrivals </th>
-                                        <th>Type Aircraft</th>
-                                        <th>Rules</th>
+                                        <th>Flight number:</th>
+                                        <th>VID:</th>
+                                        <th>Time of departure:</th>
+                                        <th>Destination:</th>
+                                        <th>Type Aircraft:</th>
+                                        <th>Rule:</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -113,6 +129,7 @@
                                     @foreach ($atc["departure"]["data"] as $departures)
                                     <tr>
                                         <td>{{$departures["callsign"]}}</td>
+                                        <td>{{$departures["userId"]}}</td>
                                         <td>{{$departures["departureTime"]}}</td>
                                         <td>{{$departures["arrival"]}}</td>
                                         <td>{{$departures["model"]}}</td>
@@ -121,27 +138,38 @@
                                     @endforeach
 
                                 </tbody>
-                            </table>
+                                </table>
+                                @endif
                         </div>
                         <div class="col-md-12">
-                            <table class="table">
+                            @if ($atc["arrival"]["count"] >= 1) <table class="table">
+                                <h6 class="text-center">{{ $atc["arrival"]["count"] >= 2 ? "Arrivals" : "Arrival" }}</h6>
                                 <thead>
                                     <tr>
-                                        <th>Flight number</th>
-                                        <th>Time of arrival :</th>
-                                        <th>Type Aircraft</th>
+                                        <th>Flight number:</th>
+                                        <th>VID:</th>
+                                        <th>Time of arrival:</th>
+                                        <th>Type Aircraft:</th>
+                                        <th>Model:</th>
+                                        <th>POB:</th>
+                                        <th>Rule:</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($atc["arrival"]["data"] as $arrivals)
                                     <tr>
                                         <td>{{$arrivals["callsign"]}}</td>
+                                        <td>{{$arrivals["userId"]}}</td>
                                         <td>{{$arrivals["eta"]}}</td>
                                         <td>{{$arrivals["wakeTurbulence"]}}</td>
+                                        <td>{{$arrivals["model"]}}</td>
+                                        <td>{{$arrivals["pob"]}}</td>
+                                        <td>{{$arrivals["rule"]}}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
-                            </table>
+                                </table>
+                            @endif
                         </div>
                     </div>
                 </div>

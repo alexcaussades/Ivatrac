@@ -74,10 +74,19 @@ Route::get('/', function (Request $request) {
     $whazzup = $whazzup->connexion();
     $w = new changelogController();
     $u = $w->info_update();
-    $event_world = new EventIvaoController();
-    $event_world = $event_world->get_event_ivao_RFE_RFO();
-    $event_fr = new EventIvaoController();
-    $event_fr = $event_fr->get_event_ivao_FR();
+    try {
+        $event_world = new EventIvaoController();
+        $event_world = $event_world->get_event_ivao_RFE_RFO();
+    } catch (Exception $e) {
+        $event_world = null;
+    }
+   
+    try {
+        $event_fr = new EventIvaoController();
+        $event_fr = $event_fr->get_event_ivao_FR();
+    } catch (Exception $e) {
+        $event_world = null;
+    }
     if (Session::get("ivao_tokens") != null) {
         $date = new DateTime();
         $date->setTimezone(new DateTimeZone('UTC'));
@@ -164,53 +173,6 @@ Route::prefix("serveur/")->group(function () {
 
         return view("serveur.index", ["users" => $users, "role" => $role]);
     })->name("serveur.index");
-
-    Route::get("api", function (Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $api = new ApiGestionController();
-            $information = $api->check_Informations(Auth::user()->id);
-            return view("serveur.api", ["information" => $information]);
-        }
-    })->name("serveur.api")->middleware(["auth:admin"]);
-
-    Route::post("api", function (Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $api = new ApiGestionController();
-            $information = $api->creat_keys_api();
-            /** Faire une function de masquage */
-
-            return view("serveur.api", ["information" => $information]);
-        }
-    })->name("serveur.api.post");
-
-    Route::post("api/create", function (Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $api = new ApiGestionController();
-            $api->creat_keys_api();
-            return to_route("serveur.api");
-        }
-    })->name("serveur.api.create");
-
-    Route::post("api/delete", function (Request $request) {
-        if (!Auth::user()) {
-            return redirect()->route("auth.login");
-        } else {
-            $api = new ApiGestionController();
-            $api->delete_keys_api($request);
-            return to_route("serveur.api");
-        }
-    })->name("serveur.api.delete");
-
-    Route::get("api/documentation", function (Request $request) {
-        /** verification des buttons d'action serveur */
-        return url("https://github.com/alexcaussades/L10/wiki/API");
-    })->name("serveur.api.documentation");
 
     Route::get("security", function (Request $request) {
         if (!Auth::user()) {
@@ -442,7 +404,7 @@ Route::prefix("fpl")->group(function () {
             $pirep->store_fpl($request);
             return redirect()->route("pirep.index");
         }
-    })->name("pirep.upload");
+    })->name("pirep.upload")->middleware(["auth:web"]);
 
     Route::get("/show/{id}", function (Request $request) {
         $request->merge([
@@ -471,6 +433,22 @@ Route::prefix("fpl")->group(function () {
     })->name("pirep.all");
 })->middleware(["auth:web"]);
 
+Route::get("atc/{icao}", function (Request $request) {
+    $request->merge([
+        "icao" => $request->icao
+    ]);
+    $request->validate([
+        "icao" => "required|size:4"
+    ]);
+    $atconline = new eventController($request->icao);
+    $atc = $atconline->get_arrival_departure();
+    $metar = new metarController();
+    $metar = $metar->metar($request->icao);
+    $info_atc = null;
+    return view("plateforme.atc", ["icao" => $request->icao, "atc" => $atc, "metar" => $metar, "info_atc" => $info_atc]);
+    
+    
+})->name("atc");
 
 Route::prefix("donwloader")->group(function () {
     Route::get("secure_auth", function (Request $request) {
@@ -570,26 +548,6 @@ Route::get("vid/{vid}", function (Request $request) {
     return $online;
 })->name("vid");
 
-Route::prefix("event")->group(function () {
-    Route::get("/ximea", function (Request $request) {
-        $airport = "LFMT";
-        $wazzup = new whazzupController();
-        $bookings = $wazzup->get_bookings_for_event($airport);
-        $event = new eventController($airport);
-        $metars = new metarController();
-        $metar = $metars->metar($airport);
-        $taf = $metars->taf($airport);
-        $r = $event->get_general();
-        return view("event.ximea.index", ["r" => $r, "bookings" => $bookings, "metar" => $metar["metar"], "taf" => $taf["taf"]]);
-    })->name("event.ximea");
-
-    Route::get("/{id}", function (Request $request) {
-        $whazzup = new whazzupController();
-        $event = $whazzup->get_event_id($request->id);
-        return view("event.show", ["event" => $event]);
-    })->name("event.show");
-})->middleware(["auth:web"]);
-
 Route::get("online", function (Request $request) {
     $online = new myOnlineServeurController(auth::user()->vid);
     $online = $online->getVerrifOnlineServeur();
@@ -679,22 +637,19 @@ Route::prefix("devs")->group(function () {
         dd($encrypted, $decrypted);
     })->name("crypto");
     
-    Route::get("atc/{icao}", function (Request $request) {
-        $request->merge([
-            "icao" => $request->icao
-        ]);
-        $request->validate([
-            "icao" => "required|size:4"
-        ]);
-        $atconline = new eventController($request->icao);
-        $atc = $atconline->get_arrival_departure();
-        $metar = new metarController();
-        $metar = $metar->metar($request->icao);
-        $info_atc = null;
-        return view("plateforme.atc", ["icao" => $request->icao, "atc" => $atc, "metar" => $metar, "info_atc" => $info_atc]);
-        
-        
-    })->name("devs.atc");
 
+    route::get("test/{id}", function (Request $request) {
+        $request->merge([
+            "id" => $request->id
+        ]);
+        $whazzup = new whazzupController();
+        $whazzup = $whazzup->get_airport($request->id);
+        return $whazzup;
+
+    })->name("test");
 });
 
+
+Route::get("test", function (Request $request) {
+    return view("test");
+});

@@ -300,5 +300,73 @@
                 "description": "Update AIRAC 2407"
             }
         ]
+    },
+    "13": {
+        "id": 14,
+        "name": "2024 / 02",
+        "date": "2024-07-31",
+        "version": "26.3.1",
+        "option": [
+            {
+                "id": 0,
+                "type": "Delect",
+                "btn": "dark",
+                "description": "Remove Pages Event Ximea"
+            },
+            {
+                "id": 1,
+                "type": "Delect",
+                "btn": "dark",
+                "description": "Remove Access to API IVATRAC"
+            },
+            {
+                "id": 2,
+                "type": "Feature",
+                "btn": "success",
+                "description": "Activation Chart VAC AND IFR"
+            },
+            {
+                "id": 3,
+                "type": "Feature",
+                "btn": "success",
+                "description": "Activation ATC pages from wold"
+            },
+            {
+                "id": 4,
+                "type": "Feature",
+                "btn": "success",
+                "description": "Activation link to the fpl on the page index"
+            },
+            {
+                "id": 5,
+                "type": "Feature",
+                "btn": "success",
+                "description": "Activation link to the github on the page index"
+            },
+            {
+                "id": 6,
+                "type": "Delect",
+                "btn": "dark",
+                "description": "Delect fav BTN on the page metar"
+            },
+            {
+                "id": 7,
+                "type": "Feature",
+                "btn": "success",
+                "description": "activation pages ATC on the metar plateforme page"
+            },
+            {
+                "id": 8,
+                "type": "Bug Fix",
+                "btn": "danger",
+                "description": "Fixing the metar page fot plateforme is not metar display"
+            },
+            {
+                "id": 9,
+                "type": "Feature",
+                "btn": "success",
+                "description": "Information new airac ont the push notification on discord"
+            }
+        ]
     }
 }

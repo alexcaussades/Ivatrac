@@ -1,4 +1,4 @@
-# Biogaz Pers'o
+# IVATRAC 
 
 <p align="center">
 <a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
@@ -33,13 +33,13 @@ Ce projet a pour but de gérer le suivit du biogaz des sites de production. :hot
 - [PHP](https://windows.php.net/download/)
 - [Composer](https://getcomposer.org/Composer-Setup.exe)
 
-Vous voulez suivre les étapes d'[installation pas à pas](https://github.com/alexcaussades/Gestion_Biogaz/wiki/%5BTech%5D-Installation) 
+Vous voulez suivre les étapes d'[installation pas à pas](https://github.com/alexcaussades/Ivatrac/wiki/%5BTech%5D-Installation) 
 
 # Installation
 Pour installer le projet, il suffit de suivre les étapes suivantes :
 
 ```bash
-git clone https://github.com/alexcaussades/Gestion_Biogaz.git
+git clone https://github.com/alexcaussades/ivatrac.git
 cd Gestion_biogaz
 composer install
 php -r "file_exists('.env') || copy('.env.example', '.env');"

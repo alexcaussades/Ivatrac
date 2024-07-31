@@ -77,38 +77,7 @@
         </div>
     </div>
     <hr>
-    <div class="col-12">
-        <div class="card text-white bg-dark">
-            <div class="card-body">
-                <h4 class="card-title">Departure</h4>
-                <p class="card-text">
-                <div class="row">
-                    <!-- Information des ATCs sur le depart -->
-                    <div class="col-12 mt-2">
-                        
-                    </div>
-                </div>
-                </p>
-            </div>
-        </div>
-    </div>
-    <hr>
-    <div class="col-12">
-        <div class="card text-white bg-dark">
-            <div class="card-body">
-                <h4 class="card-title">Arrival</h4>
-                <p class="card-text">
-                <div class="row">
-                    <!-- Information des ATCs sur le depart -->
-                    <div class="col-12 mt-2">
-                    </div>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
-
 
 @if (ENV('APP_ENV') == 'local')
 <script src="{{ asset("asset/js/update_friend.js") }}"></script>

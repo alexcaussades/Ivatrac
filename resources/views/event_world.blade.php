@@ -1,4 +1,5 @@
-<div class="container mt-2">
+@if ($event_worl != null)
+    <div class="container mt-2">
     <h5 class="fw-bold">IVAO Event World</h5>
     <div class="row">
         @foreach($event_worl as $eventss)
@@ -19,3 +20,5 @@
         </div>
         @endforeach
     </div>
+@endif
+

@@ -1,4 +1,6 @@
-<h5 class="fw-bold">IVAO Event FR</h5>
+
+@if ($event_fr != null)
+    <h5 class="fw-bold">IVAO Event FR</h5>
         
         <div class="row">
             @foreach($event_fr as $events)
@@ -31,3 +33,4 @@
         </div>
     </div>
     <hr>
+@endif
